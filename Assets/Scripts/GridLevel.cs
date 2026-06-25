@@ -45,29 +45,25 @@ public class GridLevel : MonoBehaviour
     
     public GridCell[,] Cells { get; private set; }
 
-    public void Start()
-    {
-        _levelData = LevelData.Load();
-        SetupGridForLevel(_levelData);
-    }
-
     public void SetupGridForLevel(LevelData data)
     {
-        Cells = new GridCell[_levelData.width,_levelData.height];
+        Debug.Log($"setting up level: {data.levelName}");
+        _levelData = data;
+        
+        Cells = new GridCell[data.width,data.height];
         
         foreach (Transform child in gridObjectParent) {
             Destroy(child.gameObject);
         }
-        
-        Debug.Log($"setting up level: {data}");
 
-        for (int y = 0; y < _levelData.height; y++)
+        for (int y = 0; y < data.height; y++)
         {
-            for (int x = 0; x < _levelData.width; x++)
+            for (int x = 0; x < data.width; x++)
             {
                 GridCell cell = CreateEmptyCell(x, y);
+                cell.ResetCell();
                 
-                ItemType itemType = _levelData.GetItem(x, y);
+                ItemType itemType = data.GetItem(x, y);
                 
                 PopulateCell(cell, itemType);
                 
@@ -83,7 +79,7 @@ public class GridLevel : MonoBehaviour
 
     public void PopulateCell(GridCell cell, ItemType itemType)
     {
-        Debug.Log($"populating cell: {cell.gridX}, {cell.gridY} with item {itemType}");
+        // Debug.Log($"populating cell: {cell.gridX}, {cell.gridY} with item {itemType}");
         _levelData.SetItem(itemType, cell.gridX, cell.gridY);
         
         cell.RemoveCellItem();
@@ -161,24 +157,80 @@ public class GridLevel : MonoBehaviour
         }
 
         MovePlayerToCell(_player.playerCell);
+
+        _hoveringCell.SetHoverState(HoverState.None);
+        foreach (GridCell cell in _validCellsFromHover)
+        {
+            cell.SetHoverState(HoverState.None);
+        }
+        
         _hoveringCell = null;
         _validCellsFromHover = new List<GridCell>();
     }
 
     private void UpdateHoveringCell()
     {
-        GridCell hoveringCell = CellFromPosition(_player.transform.position);
+        GridCell hoveringCell = CellAtMousePosition();
         if (hoveringCell == null)
         {
             return;
         }
 
-        _hoveringCell = hoveringCell;
+        if (hoveringCell != _hoveringCell)
+        {
+            if (_hoveringCell != null)
+            {
+                if (_validCellsFromHover.Contains(_hoveringCell))
+                {
+                    _hoveringCell.SetHoverState(HoverState.Valid);
+                }
+                else
+                {
+                    _hoveringCell.SetHoverState(HoverState.None);
+                }
+            }
+
+            if (hoveringCell != null)
+            {
+                if (_validCellsFromHover == null || _validCellsFromHover.Contains(hoveringCell))
+                {
+                    hoveringCell.SetHoverState(HoverState.Current);
+                }
+                else
+                {
+                    hoveringCell.SetHoverState(HoverState.Invalid);
+                }
+            }
+            
+            _hoveringCell = hoveringCell;
+        }
+    }
+
+    private GridCell CellAtMousePosition()
+    {
+        Vector2 localPos = gridObjectParent.InverseTransformPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+        return CellFromPosition(localPos);
     }
 
     private GridCell CellFromPosition(Vector3 position)
     {
-        return null;
+        int gridX = Mathf.FloorToInt(position.x + .5f);
+        int gridY = Mathf.FloorToInt(position.y + .5f);
+        return Cells[gridX, gridY];
+    }
+
+    private GridCell CellAtCoordinate(Vector2Int gridCoordinate)
+    {
+        return Cells[gridCoordinate.x, gridCoordinate.y];
+    }
+
+    private bool IsInBounds(Vector2Int gridCoordinate)
+    {
+        if (gridCoordinate.x < 0 || gridCoordinate.x >= _levelData.width) return false;
+        if (gridCoordinate.y < 0 || gridCoordinate.y >= _levelData.height) return false;
+
+        return true;
     }
 
     private void MovePlayerToCell(GridCell cell)
@@ -194,20 +246,24 @@ public class GridLevel : MonoBehaviour
 
     private void FindValidCells()
     {
-        _validCellsFromHover.Add(_player.playerCell);
+        _validCellsFromHover = new List<GridCell> { _player.playerCell };
 
-        /*
-        foreach (HexDirection direction in Enum.GetValues(typeof(HexDirection)))
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (Vector2Int dir in directions)
         {
-            HexCell cellNeighbor = _player.playerCell.GetNeighbor(direction);
-            while (cellNeighbor != null)
+            Vector2Int current = _player.playerCell.GridCoordinates + dir;
+            
+            while (IsInBounds(current))
             {
-                if (cellNeighbor.GridTerrain != null && cellNeighbor.GridTerrain.IsWall)
+                GridCell cell = CellAtCoordinate(current);
+                if (cell.GridItem?.itemType == ItemType.Wall)
                     break;
-                _validCellsFromHover.Add(cellNeighbor);
-                cellNeighbor = cellNeighbor.GetNeighbor(direction);
+                _validCellsFromHover.Add(cell);
+                cell.SetHoverState(HoverState.Valid);
+                
+                current += dir;
             }
         }
-        */
     }
 }

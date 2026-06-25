@@ -41,8 +41,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Hover Indicator
+    uniqueID: 629236629
+    locked: 0
   - name: Items
     uniqueID: 1484619857
+    locked: 0
+  - name: Player
+    uniqueID: 3464372741
     locked: 0
   m_RenderingLayers:
   - Default

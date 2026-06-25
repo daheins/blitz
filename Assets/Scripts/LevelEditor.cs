@@ -33,7 +33,7 @@ public class LevelEditor : MonoBehaviour
 
     public void SaveLevel()
     {
-        LevelData.Save(gridLevel.GetLevelData());
+        LevelSelector.Instance.SaveLevel(gridLevel.GetLevelData());
     }
 
     public void ItemModeNone()
@@ -49,6 +49,11 @@ public class LevelEditor : MonoBehaviour
     public void ItemModePlayer()
     {
         _currentSelectedItem = ItemType.Player;
+    }
+    
+    public void ItemModeGoal()
+    {
+        _currentSelectedItem = ItemType.Goal;
     }
 
     public void DidTapEditCell(GridCell cell)
