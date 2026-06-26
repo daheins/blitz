@@ -11,7 +11,7 @@ public class LevelEditor : MonoBehaviour
 
     public TextMeshProUGUI editLabel;
     
-    private ItemType _currentSelectedItem = ItemType.None;
+    private PieceType _currentSelectedPiece = PieceType.None;
 
     private void Start()
     {
@@ -39,34 +39,34 @@ public class LevelEditor : MonoBehaviour
     public void CreateNewLevel()
     {
         LevelData levelData = new LevelData();
-        levelData.levelIndex = LevelSelector.Instance.NextLevelIndex();
+        levelData.levelIndex = LevelSelector.Instance.LevelCount();
         levelData.levelName = "temp";
         
         gridLevel.SetupGridForLevel(levelData);
     }
 
-    public void ItemModeNone()
+    public void PieceModeNone()
     {
-        _currentSelectedItem = ItemType.None;
+        _currentSelectedPiece = PieceType.None;
     }
     
-    public void ItemModeWall()
+    public void PieceModeWall()
     {
-        _currentSelectedItem = ItemType.Wall;
+        _currentSelectedPiece = PieceType.Wall;
     }
     
-    public void ItemModePlayer()
+    public void PieceModePlayer()
     {
-        _currentSelectedItem = ItemType.Player;
+        _currentSelectedPiece = PieceType.Player;
     }
     
-    public void ItemModeGoal()
+    public void PieceModeGoal()
     {
-        _currentSelectedItem = ItemType.Goal;
+        _currentSelectedPiece = PieceType.Goal;
     }
 
     public void DidTapEditCell(GridCell cell)
     {
-        gridLevel.PopulateCell(cell, _currentSelectedItem);
+        gridLevel.PopulateCell(cell, _currentSelectedPiece);
     }
 }

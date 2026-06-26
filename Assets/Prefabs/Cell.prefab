@@ -233,7 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridCell
   terrainAnchor: {fileID: 2939620002907324892}
-  itemAnchor: {fileID: 6694805508335192277}
+  pieceAnchor: {fileID: 6694805508335192277}
   hoverIndicatorValid: {fileID: 8817809352778918122}
   hoverIndicatorInvalid: {fileID: 1135055459554404578}
   hoverIndicatorCurrent: {fileID: 918309044406894723}
@@ -326,7 +326,7 @@ GameObject:
   m_Component:
   - component: {fileID: 369613122561208663}
   m_Layer: 0
-  m_Name: Item Anchor
+  m_Name: Piece Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

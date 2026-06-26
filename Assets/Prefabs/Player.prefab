@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
   body: {fileID: 674394000058561417}
   playerCell: {fileID: 0}
-  playerItem: {fileID: 0}
+  playerPiece: {fileID: 0}
 --- !u!114 &6098921609068047320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba2d457c1660412e998dbfffc95b4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridItem
-  itemType: 1
+  pieceType: 1
 --- !u!65 &7217180207623782501
 BoxCollider:
   m_ObjectHideFlags: 0

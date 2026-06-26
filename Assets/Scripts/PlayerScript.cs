@@ -5,7 +5,7 @@ public class PlayerScript : MonoBehaviour
     public GridLevel Level { private get; set; }
     public GameObject body;
     public GridCell playerCell;
-    public GridItem playerItem;
+    public GridPiece playerPiece;
 
     private const float DragBodyRaiseY = .3f;
 

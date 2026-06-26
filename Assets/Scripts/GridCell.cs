@@ -6,10 +6,10 @@ public enum HoverState { None, Valid, Current, Invalid }
 public class GridCell : MonoBehaviour
 {
     public GridTerrain GridTerrain { get; set; }
-    public GridItem GridItem { get; set; }
+    public GridPiece GridPiece { get; set; }
 
     public GameObject terrainAnchor;
-    public GameObject itemAnchor;
+    public GameObject pieceAnchor;
     public GameObject hoverIndicatorValid;
     public GameObject hoverIndicatorInvalid;
     public GameObject hoverIndicatorCurrent;
@@ -21,9 +21,9 @@ public class GridCell : MonoBehaviour
 
     public Vector2Int GridCoordinates => new Vector2Int(gridX, gridY);
 
-    public void RemoveCellItem()
+    public void RemoveCellPiece()
     {
-        foreach (Transform child in itemAnchor.transform) {
+        foreach (Transform child in pieceAnchor.transform) {
             Destroy(child.gameObject);
         }
     }
@@ -63,7 +63,7 @@ public class GridCell : MonoBehaviour
             Destroy(child.gameObject);
         }
         
-        foreach (Transform child in itemAnchor.transform) {
+        foreach (Transform child in pieceAnchor.transform) {
             Destroy(child.gameObject);
         }
     }

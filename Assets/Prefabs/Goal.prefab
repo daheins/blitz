@@ -136,4 +136,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba2d457c1660412e998dbfffc95b4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridItem
-  itemType: 3
+  pieceType: 3

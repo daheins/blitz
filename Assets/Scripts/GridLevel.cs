@@ -11,11 +11,12 @@ public class GridLevel : MonoBehaviour
     public GridTerrain groundPrefab;
     public PlayerScript playerPrefab;
     
-    // Items
-    public GridItem goalPrefab;
-    public GridItem wallPrefab;
+    // Pieces
+    public GridPiece goalPrefab;
+    public GridPiece wallPrefab;
     
     public Transform gridObjectParent;
+    public BlitzUI blitzUI;
 
     private PlayerScript _player;
 
@@ -63,9 +64,9 @@ public class GridLevel : MonoBehaviour
                 GridCell cell = CreateEmptyCell(x, y);
                 cell.ResetCell();
                 
-                ItemType itemType = data.GetItem(x, y);
+                PieceType pieceType = data.GetPiece(x, y);
                 
-                PopulateCell(cell, itemType);
+                PopulateCell(cell, pieceType);
                 
                 // TerrainType terrainType = levelData.Terrains[x, y];
                 // make all cells ground
@@ -77,24 +78,24 @@ public class GridLevel : MonoBehaviour
         gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
     }
 
-    public void PopulateCell(GridCell cell, ItemType itemType)
+    public void PopulateCell(GridCell cell, PieceType pieceType)
     {
         // Debug.Log($"populating cell: {cell.gridX}, {cell.gridY} with item {itemType}");
-        _levelData.SetItem(itemType, cell.gridX, cell.gridY);
+        _levelData.SetPiece(pieceType, cell.gridX, cell.gridY);
         
-        cell.RemoveCellItem();
+        cell.RemoveCellPiece();
         
         // handle items
-        switch (itemType)
+        switch (pieceType)
         {
-            case ItemType.Player:
+            case PieceType.Player:
                 if (_player == null)
                 {
                     PlayerScript player = Instantiate(playerPrefab, cell.transform.position, Quaternion.identity,
-                        cell.itemAnchor.transform);
-                    GridItem playerItem = player.GetComponent<GridItem>();
-                    cell.GridItem = playerItem;
-                    SetupPlayer(player, cell, playerItem);
+                        cell.pieceAnchor.transform);
+                    GridPiece playerPiece = player.GetComponent<GridPiece>();
+                    cell.GridPiece = playerPiece;
+                    SetupPlayer(player, cell, playerPiece);
                 }
                 else
                 {
@@ -102,16 +103,16 @@ public class GridLevel : MonoBehaviour
                 }
 
                 break;
-            case ItemType.Wall:
-                cell.GridItem = Instantiate(wallPrefab, cell.transform.position, Quaternion.identity,
-                    cell.itemAnchor.transform);
+            case PieceType.Wall:
+                cell.GridPiece = Instantiate(wallPrefab, cell.transform.position, Quaternion.identity,
+                    cell.pieceAnchor.transform);
                 break;
-            case ItemType.Goal:
-                cell.GridItem = Instantiate(goalPrefab, cell.transform.position, Quaternion.identity,
-                    cell.itemAnchor.transform);
+            case PieceType.Goal:
+                cell.GridPiece = Instantiate(goalPrefab, cell.transform.position, Quaternion.identity,
+                    cell.pieceAnchor.transform);
                 break;
-            case ItemType.Enemy:
-            case ItemType.None:
+            case PieceType.Item:
+            case PieceType.None:
                 break;
         }
     }
@@ -129,19 +130,19 @@ public class GridLevel : MonoBehaviour
         return cell;
     }
     
-    private void SetupPlayer(PlayerScript player, GridCell cell, GridItem playerItem)
+    private void SetupPlayer(PlayerScript player, GridCell cell, GridPiece playerPiece)
     {
         _player = player;
         player.playerCell = cell;
-        player.playerItem = playerItem;
+        player.playerPiece = playerPiece;
         player.Level = this;
         MovePlayerToCell(cell);
     }
 
     public void PlayerLiftedUp()
     {
-        UpdateHoveringCell();
         FindValidCells();
+        UpdateHoveringCell();
     }
 
     public void PlayerDragged()
@@ -166,6 +167,8 @@ public class GridLevel : MonoBehaviour
         
         _hoveringCell = null;
         _validCellsFromHover = new List<GridCell>();
+
+        CheckForVictory();
     }
 
     private void UpdateHoveringCell()
@@ -236,12 +239,20 @@ public class GridLevel : MonoBehaviour
     private void MovePlayerToCell(GridCell cell)
     {
         _player.playerCell = cell;
-        TransferItemToCell(_player.playerItem, cell);
+        TransferPieceToCell(_player.playerPiece, cell);
     }
     
-    private void TransferItemToCell(GridItem item, GridCell cell)
+    private void TransferPieceToCell(GridPiece piece, GridCell cell)
     {
-        item.transform.SetParent(cell.itemAnchor.transform, false);
+        piece.transform.SetParent(cell.pieceAnchor.transform, false);
+    }
+
+    private void CheckForVictory()
+    {
+        if (_player.playerCell?.GridPiece?.pieceType == PieceType.Goal)
+        {
+            blitzUI.DisplayPlayerVictory();
+        }
     }
 
     private void FindValidCells()
@@ -257,7 +268,7 @@ public class GridLevel : MonoBehaviour
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
-                if (cell.GridItem?.itemType == ItemType.Wall)
+                if (cell.GridPiece?.pieceType == PieceType.Wall)
                     break;
                 _validCellsFromHover.Add(cell);
                 cell.SetHoverState(HoverState.Valid);
