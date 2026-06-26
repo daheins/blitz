@@ -74,7 +74,7 @@ public class GridLevel : MonoBehaviour
             }
         }
 
-        gridObjectParent.position = new Vector2(-(float)_levelData.width / 2, -(float)_levelData.height / 2);
+        gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
     }
 
     public void PopulateCell(GridCell cell, ItemType itemType)

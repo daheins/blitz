@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class LevelSelector : MonoBehaviour
 {
+    public static LevelSelector Instance;
+    
     public GridLevel gridLevel;
     public Transform levelsParent;
     public LevelButton levelButtonPrefab;
-    
-    public static LevelSelector Instance;
     
     private static string LevelsPath => Path.Combine(Application.dataPath, "Levels");
     
@@ -20,12 +20,19 @@ public class LevelSelector : MonoBehaviour
     {
         Instance = this;
 
+        levelsParent.gameObject.SetActive(false);
+
         LoadAllLevelPaths();
 
         LevelData levelData = _allLevels.First();
         Debug.Log($"level data: {levelData}");
         
         gridLevel.SetupGridForLevel(levelData);
+    }
+    
+    public void ToggleLevels()
+    {
+        levelsParent.gameObject.SetActive(!levelsParent.gameObject.activeSelf);
     }
 
     public void LoadAllLevelPaths()
@@ -45,6 +52,11 @@ public class LevelSelector : MonoBehaviour
             
             _allLevels.Add(levelData);
         }
+    }
+
+    public int NextLevelIndex()
+    {
+        return _allLevels.Count;
     }
     
     private LevelData ParseLevelFile(string filename)

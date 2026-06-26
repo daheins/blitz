@@ -70,7 +70,7 @@ public class GridCell : MonoBehaviour
 
     private void OnMouseDown()
     {
-        LevelEditor levelEditor = LevelEditor.Editor;
+        LevelEditor levelEditor = LevelEditor.Instance;
         if (!levelEditor.gridLevel.IsInEditMode) return;
         
         levelEditor.DidTapEditCell(this);

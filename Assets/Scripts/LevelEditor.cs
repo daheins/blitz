@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelEditor : MonoBehaviour
 {
-    public static LevelEditor Editor;
+    public static LevelEditor Instance;
     
     public GridLevel gridLevel;
     public GameObject editPanel;
@@ -15,7 +15,7 @@ public class LevelEditor : MonoBehaviour
 
     private void Start()
     {
-        Editor = this;
+        Instance = this;
     }
 
     private void Awake()
@@ -27,13 +27,22 @@ public class LevelEditor : MonoBehaviour
     {
         gridLevel.IsInEditMode = !gridLevel.IsInEditMode;
         
-        editLabel.text = $"Edit Mode: {(gridLevel.IsInEditMode ? "On" : "Off")}";
+        // editLabel.text = $"Edit Mode: {(gridLevel.IsInEditMode ? "On" : "Off")}";
         editPanel.SetActive(gridLevel.IsInEditMode);
     }
 
     public void SaveLevel()
     {
         LevelSelector.Instance.SaveLevel(gridLevel.GetLevelData());
+    }
+
+    public void CreateNewLevel()
+    {
+        LevelData levelData = new LevelData();
+        levelData.levelIndex = LevelSelector.Instance.NextLevelIndex();
+        levelData.levelName = "temp";
+        
+        gridLevel.SetupGridForLevel(levelData);
     }
 
     public void ItemModeNone()
@@ -60,9 +69,4 @@ public class LevelEditor : MonoBehaviour
     {
         gridLevel.PopulateCell(cell, _currentSelectedItem);
     }
-
-    // public void DidDragIntoCell(GridCell cell)
-    // {
-    //     
-    // }
 }
