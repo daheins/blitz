@@ -25,7 +25,6 @@ public class LevelSelector : MonoBehaviour
         LoadAllLevelPaths();
 
         LevelData levelData = _allLevels.First();
-        Debug.Log($"level data: {levelData}");
         
         gridLevel.SetupGridForLevel(levelData);
     }

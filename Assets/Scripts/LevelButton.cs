@@ -11,7 +11,7 @@ public class LevelButton : MonoBehaviour
     {
         _levelData = levelData;
 
-        levelText.text = levelData.levelName;
+        levelText.text = _levelData.levelIndex.ToString();
     }
     
     public void DidTapLevelButton()
