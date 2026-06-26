@@ -78,7 +78,7 @@ public class GridLevel : MonoBehaviour
         gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
     }
 
-    public void PopulateCell(GridCell cell, PieceType pieceType)
+    public void PopulateCell(GridCell cell, PieceType pieceType, GridItem gridItem = null)
     {
         // Debug.Log($"populating cell: {cell.gridX}, {cell.gridY} with item {itemType}");
         _levelData.SetPiece(pieceType, cell.gridX, cell.gridY);
