@@ -18,7 +18,7 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
     public List<GridItem> gridItems;
     
     private PieceType _currentSelectedPiece;
-    private GridItem _currentSelectedItem;
+    private ItemType _currentSelectedItem = ItemType.None;
 
     private void Awake()
     {
@@ -26,12 +26,18 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         
         editPanel.SetActive(false);
 
+        Dictionary<ItemType, GridItem> itemPrefabs = new Dictionary<ItemType, GridItem>();
+        
         foreach (GridItem piece in gridItems)
         {
             ItemButton itemButton = Instantiate(itemButtonPrefab, itemsPanel.transform);
             itemButton.Delegate = this;
             itemButton.LoadItem(piece);
+
+            itemPrefabs[piece.itemType] = piece;
         }
+
+        GridLevel.ItemPrefabMap = itemPrefabs;
     }
 
     public void ToggleEditMode()
@@ -44,13 +50,13 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     public void SaveLevel()
     {
-        LevelSelector.Instance.SaveLevel(gridLevel.GetLevelData());
+        LevelLoader.Instance.SaveLevel(gridLevel.GetLevelData());
     }
 
     public void CreateNewLevel()
     {
         LevelData levelData = new LevelData();
-        levelData.levelIndex = LevelSelector.Instance.LevelCount();
+        levelData.levelIndex = LevelLoader.Instance.LevelCount();
         levelData.levelName = "temp";
         
         gridLevel.SetupGridForLevel(levelData);
@@ -78,13 +84,13 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     public void DidTapEditCell(GridCell cell)
     {
-        gridLevel.PopulateCell(cell, _currentSelectedPiece, _currentSelectedPiece == PieceType.Item ? _currentSelectedItem : null);
+        gridLevel.PopulateCell(cell, _currentSelectedPiece, _currentSelectedItem);
     }
 
     public void DidTapItemButton(ItemButton itemButton)
     {
         // Piece Mode: Item
         _currentSelectedPiece = PieceType.Item;
-        _currentSelectedItem = itemButton.GridItem;
+        _currentSelectedItem = itemButton.GridItem.itemType;
     }
 }

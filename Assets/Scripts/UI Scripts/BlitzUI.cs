@@ -1,9 +1,15 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlitzUI : MonoBehaviour
 {
     public GameObject victoryNode;
-    public LevelSelector levelSelector;
+    public LevelLoader levelLoader;
+
+    public InventoryItemIcon itemIconPrefab;
+    public GameObject inventoryParent;
+
+    private List<InventoryItemIcon> _inventoryIcons = new List<InventoryItemIcon>();
 
     public void DisplayPlayerVictory()
     {
@@ -14,6 +20,18 @@ public class BlitzUI : MonoBehaviour
     {
         victoryNode.SetActive(false);
 
-        levelSelector.PlayNextLevel();
+        levelLoader.PlayNextLevel();
+    }
+
+    public void AddInventoryItem(GridItem gridItem)
+    {
+        InventoryItemIcon inventoryItemIcon = Instantiate(itemIconPrefab, inventoryParent.transform);
+        inventoryItemIcon.DisplayItem(gridItem);
+        _inventoryIcons.Add(inventoryItemIcon);
+    }
+
+    public void RemoveInventoryItem(ItemType itemType)
+    {
+        
     }
 }

@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public class LevelSelector : MonoBehaviour
+public class LevelLoader : MonoBehaviour
 {
-    public static LevelSelector Instance;
+    public static LevelLoader Instance;
     
     public GridLevel gridLevel;
     public Transform levelsParent;

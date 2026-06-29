@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public enum ItemType { Spring, }
+public enum ItemType { None, Spring, }
 
 public class GridItem : MonoBehaviour
 {
@@ -9,4 +10,10 @@ public class GridItem : MonoBehaviour
     public string itemDisplayName;
     public ItemType itemType;
     public SpriteRenderer itemSprite;
+    public GridPiece GridPiece { get; private set; }
+
+    public void Awake()
+    {
+        GridPiece = GetComponent<GridPiece>();
+    }
 }

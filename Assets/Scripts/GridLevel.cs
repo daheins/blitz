@@ -5,13 +5,13 @@ using UnityEngine.Serialization;
 
 public class GridLevel : MonoBehaviour
 {
+    public static Dictionary<ItemType, GridItem> ItemPrefabMap;
+    
     private LevelData _levelData;
     
     public GridCell cellPrefab;
     public GridTerrain groundPrefab;
     public PlayerScript playerPrefab;
-    
-    // Pieces
     public GridPiece goalPrefab;
     public GridPiece wallPrefab;
     
@@ -19,9 +19,12 @@ public class GridLevel : MonoBehaviour
     public BlitzUI blitzUI;
 
     private PlayerScript _player;
+    private List<ItemType> _itemInventory = new List<ItemType>();
 
     private GridCell _hoveringCell;
     private List<GridCell> _validCellsFromHover;
+    // Map from each cell in the valid hover, to all the cells that it passes through
+    private Dictionary<GridCell, List<GridCell>> _hoverCellTravelMap;
     private bool _isInEditMode;
 
     public bool IsInEditMode
@@ -65,8 +68,9 @@ public class GridLevel : MonoBehaviour
                 cell.ResetCell();
                 
                 PieceType pieceType = data.GetPiece(x, y);
+                ItemType itemType = data.GetItem(x, y);
                 
-                PopulateCell(cell, pieceType);
+                PopulateCell(cell, pieceType, itemType);
                 
                 // TerrainType terrainType = levelData.Terrains[x, y];
                 // make all cells ground
@@ -78,14 +82,15 @@ public class GridLevel : MonoBehaviour
         gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
     }
 
-    public void PopulateCell(GridCell cell, PieceType pieceType, GridItem gridItem = null)
+    public void PopulateCell(GridCell cell, PieceType pieceType, ItemType itemType)
     {
-        // Debug.Log($"populating cell: {cell.gridX}, {cell.gridY} with item {itemType}");
-        _levelData.SetPiece(pieceType, cell.gridX, cell.gridY);
+        _levelData.SetPiece(cell.gridX, cell.gridY, pieceType);
+        if (itemType != ItemType.None)
+            _levelData.SetItem(cell.gridX, cell.gridY, itemType);
         
         cell.RemoveCellPiece();
         
-        // handle items
+        // handle pieces
         switch (pieceType)
         {
             case PieceType.Player:
@@ -112,6 +117,12 @@ public class GridLevel : MonoBehaviour
                     cell.pieceAnchor.transform);
                 break;
             case PieceType.Item:
+                GridItem itemPrefab = ItemPrefabMap[itemType];
+                GridItem item = Instantiate(itemPrefab, cell.transform.position, Quaternion.identity,
+                    cell.pieceAnchor.transform);
+                cell.GridPiece = item.GridPiece;
+                cell.GridPiece.GridItem = item;
+                break;
             case PieceType.None:
                 break;
         }
@@ -152,12 +163,13 @@ public class GridLevel : MonoBehaviour
 
     public void PlayerPutDown()
     {
-        if (_validCellsFromHover.Contains(_hoveringCell))
+        bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
+        if (isValidMove)
         {
             _player.playerCell = _hoveringCell;
         }
 
-        MovePlayerToCell(_player.playerCell);
+        MovePlayerToCell(_player.playerCell, isValidMove ? _hoverCellTravelMap[_player.playerCell] : null);
 
         _hoveringCell.SetHoverState(HoverState.None);
         foreach (GridCell cell in _validCellsFromHover)
@@ -166,7 +178,8 @@ public class GridLevel : MonoBehaviour
         }
         
         _hoveringCell = null;
-        _validCellsFromHover = new List<GridCell>();
+        _validCellsFromHover = null;
+        _hoverCellTravelMap = null;
 
         CheckForVictory();
     }
@@ -220,6 +233,9 @@ public class GridLevel : MonoBehaviour
     {
         int gridX = Mathf.FloorToInt(position.x + .5f);
         int gridY = Mathf.FloorToInt(position.y + .5f);
+        
+        if (gridX < 0 || gridY < 0 || gridX >= _levelData.width || gridY >= _levelData.height) return null;
+        
         return Cells[gridX, gridY];
     }
 
@@ -236,10 +252,32 @@ public class GridLevel : MonoBehaviour
         return true;
     }
 
-    private void MovePlayerToCell(GridCell cell)
+    private void MovePlayerToCell(GridCell endCell, List<GridCell> passThroughCells = null)
     {
-        _player.playerCell = cell;
-        TransferPieceToCell(_player.playerPiece, cell);
+        _player.playerCell = endCell;
+
+        if (passThroughCells != null)
+        {
+            foreach (GridCell cell in passThroughCells)
+            {
+                TryPickupItemInCell(cell);
+            }
+        }
+        
+        TryPickupItemInCell(endCell);
+        
+        TransferPieceToCell(_player.playerPiece, endCell);
+    }
+
+    private void TryPickupItemInCell(GridCell cell)
+    {
+        if (cell.GridPiece?.pieceType != PieceType.Item) 
+            return;
+        
+        _itemInventory.Add(cell.GridPiece.GridItem.itemType);
+        blitzUI.AddInventoryItem(cell.GridPiece.GridItem);
+                
+        cell.RemoveCellPiece();
     }
     
     private void TransferPieceToCell(GridPiece piece, GridCell cell)
@@ -258,11 +296,14 @@ public class GridLevel : MonoBehaviour
     private void FindValidCells()
     {
         _validCellsFromHover = new List<GridCell> { _player.playerCell };
+        _hoverCellTravelMap = new Dictionary<GridCell, List<GridCell>>();
+        _hoverCellTravelMap[_player.playerCell] = new List<GridCell>();
 
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
         foreach (Vector2Int dir in directions)
         {
+            List<GridCell> cellsInDirection = new List<GridCell>();
             Vector2Int current = _player.playerCell.GridCoordinates + dir;
             
             while (IsInBounds(current))
@@ -272,6 +313,9 @@ public class GridLevel : MonoBehaviour
                     break;
                 _validCellsFromHover.Add(cell);
                 cell.SetHoverState(HoverState.Valid);
+                
+                _hoverCellTravelMap[cell] = new List<GridCell>(cellsInDirection);
+                cellsInDirection.Add(cell);
                 
                 current += dir;
             }

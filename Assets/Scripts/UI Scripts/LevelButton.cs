@@ -16,6 +16,6 @@ public class LevelButton : MonoBehaviour
     
     public void DidTapLevelButton()
     {
-        LevelSelector.Instance.gridLevel.SetupGridForLevel(_levelData);
+        LevelLoader.Instance.gridLevel.SetupGridForLevel(_levelData);
     }
 }

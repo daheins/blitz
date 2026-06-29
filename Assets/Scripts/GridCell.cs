@@ -23,9 +23,10 @@ public class GridCell : MonoBehaviour
 
     public void RemoveCellPiece()
     {
-        foreach (Transform child in pieceAnchor.transform) {
-            Destroy(child.gameObject);
-        }
+        if (GridPiece == null) return;
+        
+        Destroy(GridPiece.gameObject);
+        GridPiece = null;
     }
 
     public void SetHoverState(HoverState hoverState)
