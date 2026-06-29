@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BlitzUI : MonoBehaviour
@@ -23,15 +24,17 @@ public class BlitzUI : MonoBehaviour
         levelLoader.PlayNextLevel();
     }
 
-    public void AddInventoryItem(GridItem gridItem)
+    public void AddInventoryItemIcon(GridItem gridItem)
     {
         InventoryItemIcon inventoryItemIcon = Instantiate(itemIconPrefab, inventoryParent.transform);
         inventoryItemIcon.DisplayItem(gridItem);
         _inventoryIcons.Add(inventoryItemIcon);
     }
 
-    public void RemoveInventoryItem(ItemType itemType)
+    public void RemoveInventoryItemIcon(ItemType itemType)
     {
-        
+        InventoryItemIcon icon = _inventoryIcons.First(item => item.ItemType == itemType);
+        _inventoryIcons.Remove(icon);
+        Destroy(icon.gameObject);
     }
 }

@@ -14,30 +14,16 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
     public ItemButton itemButtonPrefab;
 
     public TextMeshProUGUI editLabel;
-
-    public List<GridItem> gridItems;
     
     private PieceType _currentSelectedPiece;
     private ItemType _currentSelectedItem = ItemType.None;
+    private bool _areItemsLoaded;
 
     private void Awake()
     {
         Instance = this;
         
         editPanel.SetActive(false);
-
-        Dictionary<ItemType, GridItem> itemPrefabs = new Dictionary<ItemType, GridItem>();
-        
-        foreach (GridItem piece in gridItems)
-        {
-            ItemButton itemButton = Instantiate(itemButtonPrefab, itemsPanel.transform);
-            itemButton.Delegate = this;
-            itemButton.LoadItem(piece);
-
-            itemPrefabs[piece.itemType] = piece;
-        }
-
-        GridLevel.ItemPrefabMap = itemPrefabs;
     }
 
     public void ToggleEditMode()
@@ -46,6 +32,16 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         
         // editLabel.text = $"Edit Mode: {(gridLevel.IsInEditMode ? "On" : "Off")}";
         editPanel.SetActive(gridLevel.IsInEditMode);
+
+        if (_areItemsLoaded)
+        {
+            foreach (GridItem piece in gridLevel.gridItems)
+            {
+                ItemButton itemButton = Instantiate(itemButtonPrefab, itemsPanel.transform);
+                itemButton.Delegate = this;
+                itemButton.LoadItem(piece);
+            }
+        }
     }
 
     public void SaveLevel()

@@ -14,6 +14,7 @@ public class GridLevel : MonoBehaviour
     public PlayerScript playerPrefab;
     public GridPiece goalPrefab;
     public GridPiece wallPrefab;
+    public List<GridItem> gridItems;
     
     public Transform gridObjectParent;
     public BlitzUI blitzUI;
@@ -25,6 +26,8 @@ public class GridLevel : MonoBehaviour
     private List<GridCell> _validCellsFromHover;
     // Map from each cell in the valid hover, to all the cells that it passes through
     private Dictionary<GridCell, List<GridCell>> _hoverCellTravelMap;
+    // Map from each cell in the valid hover, to the items that it uses to get there
+    private Dictionary<GridCell, List<ItemType>> _hoverCellItemUsageMap;
     private bool _isInEditMode;
 
     public bool IsInEditMode
@@ -46,7 +49,19 @@ public class GridLevel : MonoBehaviour
         return _levelData;
     }
 
-    
+    private void Awake()
+    {
+        Dictionary<ItemType, GridItem> itemPrefabs = new Dictionary<ItemType, GridItem>();
+        
+        foreach (GridItem piece in gridItems)
+        {
+            itemPrefabs[piece.itemType] = piece;
+        }
+
+        ItemPrefabMap = itemPrefabs;
+    }
+
+
     public GridCell[,] Cells { get; private set; }
 
     public void SetupGridForLevel(LevelData data)
@@ -164,12 +179,18 @@ public class GridLevel : MonoBehaviour
     public void PlayerPutDown()
     {
         bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
+
+        List<GridCell> cellsTraveled = null;
+        List<ItemType> itemsUsed = null;
+        
         if (isValidMove)
         {
             _player.playerCell = _hoveringCell;
+            cellsTraveled = _hoverCellTravelMap[_player.playerCell];
+            itemsUsed = _hoverCellItemUsageMap[_player.playerCell];
         }
 
-        MovePlayerToCell(_player.playerCell, isValidMove ? _hoverCellTravelMap[_player.playerCell] : null);
+        MovePlayerToCell(_player.playerCell, cellsTraveled, itemsUsed);
 
         _hoveringCell.SetHoverState(HoverState.None);
         foreach (GridCell cell in _validCellsFromHover)
@@ -180,6 +201,7 @@ public class GridLevel : MonoBehaviour
         _hoveringCell = null;
         _validCellsFromHover = null;
         _hoverCellTravelMap = null;
+        _hoverCellItemUsageMap = null;
 
         CheckForVictory();
     }
@@ -252,7 +274,10 @@ public class GridLevel : MonoBehaviour
         return true;
     }
 
-    private void MovePlayerToCell(GridCell endCell, List<GridCell> passThroughCells = null)
+    private void MovePlayerToCell(
+        GridCell endCell,
+        List<GridCell> passThroughCells = null,
+        List<ItemType> itemsUsedInMove = null)
     {
         _player.playerCell = endCell;
 
@@ -260,24 +285,41 @@ public class GridLevel : MonoBehaviour
         {
             foreach (GridCell cell in passThroughCells)
             {
-                TryPickupItemInCell(cell);
+                PickupItemInCell(cell);
+            }
+        }
+
+        if (itemsUsedInMove != null)
+        {
+            foreach (ItemType item in itemsUsedInMove)
+            {
+                SpendItem(item);
             }
         }
         
-        TryPickupItemInCell(endCell);
+        PickupItemInCell(endCell);
         
         TransferPieceToCell(_player.playerPiece, endCell);
     }
 
-    private void TryPickupItemInCell(GridCell cell)
+    private void PickupItemInCell(GridCell cell)
     {
         if (cell.GridPiece?.pieceType != PieceType.Item) 
             return;
         
         _itemInventory.Add(cell.GridPiece.GridItem.itemType);
-        blitzUI.AddInventoryItem(cell.GridPiece.GridItem);
+        blitzUI.AddInventoryItemIcon(cell.GridPiece.GridItem);
                 
         cell.RemoveCellPiece();
+    }
+
+    private void SpendItem(ItemType item)
+    {
+        if (!_itemInventory.Contains(item))
+            return;
+
+        _itemInventory.Remove(item);
+        blitzUI.RemoveInventoryItemIcon(item);
     }
     
     private void TransferPieceToCell(GridPiece piece, GridCell cell)
@@ -296,24 +338,42 @@ public class GridLevel : MonoBehaviour
     private void FindValidCells()
     {
         _validCellsFromHover = new List<GridCell> { _player.playerCell };
+        
         _hoverCellTravelMap = new Dictionary<GridCell, List<GridCell>>();
         _hoverCellTravelMap[_player.playerCell] = new List<GridCell>();
+
+        _hoverCellItemUsageMap = new Dictionary<GridCell, List<ItemType>>();
+        _hoverCellItemUsageMap[_player.playerCell] = new List<ItemType>();
 
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
         foreach (Vector2Int dir in directions)
         {
-            List<GridCell> cellsInDirection = new List<GridCell>();
             Vector2Int current = _player.playerCell.GridCoordinates + dir;
+            
+            List<ItemType> availableItems = new List<ItemType>(_itemInventory);
+            
+            List<GridCell> cellsInDirection = new List<GridCell>();
+            List<ItemType> itemsUsedInDirection = new List<ItemType>();
             
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
                 if (cell.GridPiece?.pieceType == PieceType.Wall)
-                    break;
-                _validCellsFromHover.Add(cell);
-                cell.SetHoverState(HoverState.Valid);
-                
+                {
+                    if (!availableItems.Contains(ItemType.Spring))
+                        break;
+
+                    availableItems.Remove(ItemType.Spring);
+                    itemsUsedInDirection.Add(ItemType.Spring);
+                }
+                else
+                {
+                    _validCellsFromHover.Add(cell);
+                    cell.SetHoverState(HoverState.Valid);
+                }
+
+                _hoverCellItemUsageMap[cell] = new List<ItemType>(itemsUsedInDirection);
                 _hoverCellTravelMap[cell] = new List<GridCell>(cellsInDirection);
                 cellsInDirection.Add(cell);
                 
