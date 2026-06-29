@@ -30,6 +30,8 @@ public class GridLevel : MonoBehaviour
     private Dictionary<GridCell, List<ItemType>> _hoverCellItemUsageMap;
     private bool _isInEditMode;
 
+    public int MoveCounter { get; private set; }
+
     public bool IsInEditMode
     {
         get => _isInEditMode;
@@ -95,6 +97,9 @@ public class GridLevel : MonoBehaviour
         }
 
         gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
+
+        MoveCounter = 0;
+        blitzUI.UpdateMoveCounter(this);
     }
 
     public void PopulateCell(GridCell cell, PieceType pieceType, ItemType itemType)
@@ -178,19 +183,21 @@ public class GridLevel : MonoBehaviour
 
     public void PlayerPutDown()
     {
-        bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
-
-        List<GridCell> cellsTraveled = null;
-        List<ItemType> itemsUsed = null;
-        
-        if (isValidMove)
+        if (_hoveringCell != _player.playerCell)
         {
-            _player.playerCell = _hoveringCell;
-            cellsTraveled = _hoverCellTravelMap[_player.playerCell];
-            itemsUsed = _hoverCellItemUsageMap[_player.playerCell];
-        }
+            bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
 
-        MovePlayerToCell(_player.playerCell, cellsTraveled, itemsUsed);
+            List<GridCell> cellsTraveled = null;
+            List<ItemType> itemsUsed = null;
+        
+            if (isValidMove)
+            {
+                cellsTraveled = _hoverCellTravelMap[_hoveringCell];
+                itemsUsed = _hoverCellItemUsageMap[_hoveringCell];
+            }
+
+            MovePlayerToCell(_hoveringCell, cellsTraveled, itemsUsed);
+        }
 
         _hoveringCell.SetHoverState(HoverState.None);
         foreach (GridCell cell in _validCellsFromHover)
@@ -300,6 +307,9 @@ public class GridLevel : MonoBehaviour
         PickupItemInCell(endCell);
         
         TransferPieceToCell(_player.playerPiece, endCell);
+
+        MoveCounter++;
+        blitzUI.UpdateMoveCounter(this);
     }
 
     private void PickupItemInCell(GridCell cell)
@@ -331,7 +341,20 @@ public class GridLevel : MonoBehaviour
     {
         if (_player.playerCell?.GridPiece?.pieceType == PieceType.Goal)
         {
+            UpdateMoveTarget();
             blitzUI.DisplayPlayerVictory();
+        }
+    }
+
+    private void UpdateMoveTarget()
+    {
+        if (LevelEditor.Instance == null || LevelLoader.Instance == null)
+            return;
+        
+        if (MoveCounter < _levelData.moveTarget)
+        {
+            _levelData.moveTarget = MoveCounter;
+            LevelLoader.Instance.SaveLevel(_levelData);
         }
     }
 

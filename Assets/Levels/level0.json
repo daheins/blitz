@@ -3,6 +3,7 @@
     "levelIndex": 0,
     "width": 14,
     "height": 8,
+    "moveTarget": 7,
     "pieces": [
         0,
         0,

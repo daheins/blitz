@@ -90,6 +90,7 @@ public class LevelLoader : MonoBehaviour
     
     public void SaveLevel(LevelData data)
     {
+        Debug.LogWarning("SAVING LEVEL");
         string levelFileName = $"level{data.levelIndex}.json";
         string path = Path.Combine(LevelsPath, levelFileName);
         string json = JsonUtility.ToJson(data, true);

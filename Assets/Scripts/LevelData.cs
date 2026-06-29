@@ -9,15 +9,18 @@ public class LevelData
     public int levelIndex;
     public int width;
     public int height;
+    public int moveTarget;
+    
     public PieceType[] pieces;
     public ItemType[] items;
-
+    
     public LevelData()
     {
         width = 14;
         height = 10;
         pieces = new PieceType[width * height];
         items = new ItemType[width * height];
+        moveTarget = 100;
     }
     
     public PieceType GetPiece(int x, int y)
