@@ -21,6 +21,12 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     private void Awake()
     {
+        if (!DevelopmentTools.Instance.showDebugUI)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+        
         Instance = this;
         
         editPanel.SetActive(false);
@@ -33,7 +39,7 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         // editLabel.text = $"Edit Mode: {(gridLevel.IsInEditMode ? "On" : "Off")}";
         editPanel.SetActive(gridLevel.IsInEditMode);
 
-        if (_areItemsLoaded)
+        if (!_areItemsLoaded)
         {
             foreach (GridItem piece in gridLevel.gridItems)
             {
@@ -41,6 +47,8 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
                 itemButton.Delegate = this;
                 itemButton.LoadItem(piece);
             }
+
+            _areItemsLoaded = true;
         }
     }
 

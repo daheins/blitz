@@ -15,7 +15,6 @@ public class LevelLoader : MonoBehaviour
     private static string LevelsPath => Path.Combine(Application.dataPath, "Levels");
     
     private List<LevelData> _allLevels;
-    private int _currentLevelIndex = -1;
 
     private void Start()
     {
@@ -25,7 +24,12 @@ public class LevelLoader : MonoBehaviour
 
         LoadAllLevelPaths();
 
-        PlayLevelAtIndex(0);
+        int levelIndexToStart = 0;
+        if (DevelopmentTools.Instance.startAtLastLevel)
+        {
+            levelIndexToStart = LevelCount() - 1;
+        }
+        PlayLevelAtIndex(levelIndexToStart);
     }
     
     public void ToggleLevels()
@@ -54,7 +58,10 @@ public class LevelLoader : MonoBehaviour
 
     public void PlayNextLevel()
     {
-        PlayLevelAtIndex(_currentLevelIndex + 1);
+        int nextIndex = _allLevels.IndexOf(gridLevel.GetLevelData()) + 1;
+        if (nextIndex >= _allLevels.Count)
+            nextIndex = 0;
+        PlayLevelAtIndex(nextIndex);
     }
 
     public void PlayLevelAtIndex(int levelIndex)
@@ -68,7 +75,6 @@ public class LevelLoader : MonoBehaviour
         LevelData levelData = _allLevels[levelIndex];
         
         gridLevel.SetupGridForLevel(levelData);
-        _currentLevelIndex = levelIndex;
     }
 
     public int LevelCount()

@@ -68,7 +68,7 @@ public class GridLevel : MonoBehaviour
 
     public void SetupGridForLevel(LevelData data)
     {
-        Debug.Log($"setting up level: {data.levelName}");
+        Debug.Log($"setting up level: {data.levelName} ({data.levelIndex})");
         _levelData = data;
         
         Cells = new GridCell[data.width,data.height];
@@ -96,10 +96,23 @@ public class GridLevel : MonoBehaviour
             }
         }
 
+        FitCameraToGrid();
+
         gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
 
         MoveCounter = 0;
         blitzUI.UpdateMoveCounter(this);
+    }
+    
+    private void FitCameraToGrid()
+    {
+        float screenAspect = (float)Screen.width / Screen.height;
+
+        float sizeByHeight = _levelData.height / 2f;
+        float sizeByWidth = _levelData.width / (2f * screenAspect);
+
+        // Use whichever is larger to guarantee everything fits
+        Camera.main.orthographicSize = Mathf.Max(sizeByHeight, sizeByWidth) * 1.2f;
     }
 
     public void PopulateCell(GridCell cell, PieceType pieceType, ItemType itemType)
@@ -194,9 +207,9 @@ public class GridLevel : MonoBehaviour
             {
                 cellsTraveled = _hoverCellTravelMap[_hoveringCell];
                 itemsUsed = _hoverCellItemUsageMap[_hoveringCell];
+                
+                MovePlayerToCell(_hoveringCell, cellsTraveled, itemsUsed);
             }
-
-            MovePlayerToCell(_hoveringCell, cellsTraveled, itemsUsed);
         }
 
         _hoveringCell.SetHoverState(HoverState.None);
@@ -351,7 +364,7 @@ public class GridLevel : MonoBehaviour
         if (LevelEditor.Instance == null || LevelLoader.Instance == null)
             return;
         
-        if (MoveCounter < _levelData.moveTarget)
+        if (DevelopmentTools.Instance.updateMoveTarget && MoveCounter < _levelData.moveTarget)
         {
             _levelData.moveTarget = MoveCounter;
             LevelLoader.Instance.SaveLevel(_levelData);
