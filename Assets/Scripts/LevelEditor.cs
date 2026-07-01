@@ -18,7 +18,7 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     public TextMeshProUGUI editLabel;
     
-    private GridPiece _currentSelectedPiece;
+    private EditorPieceButton _currentSelectedButton;
     private bool _arePiecesLoaded;
 
     private void Awake()
@@ -46,7 +46,7 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
             List<GridPiece> specialPieces = new List<GridPiece>
             {
                 gridLevel.goalPrefab,
-                gridLevel.playerPrefab.playerPiece
+                gridLevel.playerPrefab
             };
             
             foreach (GridPiece piece in specialPieces)
@@ -97,11 +97,23 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     public void DidTapEditCell(GridCell cell)
     {
-        gridLevel.AddPieceToCell(cell, _currentSelectedPiece);
+        gridLevel.AddPieceToCell(cell, _currentSelectedButton.GridPiece);
+        gridLevel.GetLevelData().AddPiece(cell.gridX, cell.gridY, _currentSelectedButton.GridPiece.identifier);
+
     }
 
-    public void DidTapItemButton(EditorPieceButton editorPieceButton, GridPiece gridPiece)
+    public void DidTapItemButton(EditorPieceButton editorPieceButton)
     {
-        _currentSelectedPiece = gridPiece;
+        _currentSelectedButton?.highlight.gameObject.SetActive(false);
+
+        if (editorPieceButton == _currentSelectedButton)
+        {
+            _currentSelectedButton = null;
+            return;
+        }
+        
+        editorPieceButton.highlight.gameObject.SetActive(true);
+        
+        _currentSelectedButton = editorPieceButton;
     }
 }

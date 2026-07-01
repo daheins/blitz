@@ -11,7 +11,7 @@ public class GridLevel : MonoBehaviour
     private LevelData _levelData;
     
     public GridCell cellPrefab;
-    public PlayerScript playerPrefab;
+    public GridPiece playerPrefab;
     public GridPiece goalPrefab;
     public List<GridPiece> gridItems;
     public List<GridPiece> gridTerrains;
@@ -22,6 +22,8 @@ public class GridLevel : MonoBehaviour
 
     private PlayerScript _player;
     private List<ItemType> _itemInventory = new List<ItemType>();
+    
+    public GridCell[,] Cells { get; private set; }
 
     private GridCell _hoveringCell;
     private List<GridCell> _validCellsFromHover;
@@ -55,8 +57,7 @@ public class GridLevel : MonoBehaviour
     private void Awake()
     {
         PiecePrefabByIdentifier = new Dictionary<string, GridPiece>();
-        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
-        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
+        PiecePrefabByIdentifier[playerPrefab.identifier] = playerPrefab;
         PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
 
         foreach (GridPiece gridPiece in gridItems.Concat(gridTerrains).Concat(gridEnemies))
@@ -64,8 +65,6 @@ public class GridLevel : MonoBehaviour
             PiecePrefabByIdentifier[gridPiece.identifier] = gridPiece;
         }
     }
-    
-    public GridCell[,] Cells { get; private set; }
 
     public void SetupGridForLevel(LevelData data)
     {
@@ -116,8 +115,6 @@ public class GridLevel : MonoBehaviour
 
     public void AddPieceToCell(GridCell cell, GridPiece gridPiecePrefab)
     {
-        _levelData.AddPiece(cell.gridX, cell.gridY, gridPiecePrefab.identifier);
-        
         GridPiece gridPiece = Instantiate(gridPiecePrefab, cell.transform.position, Quaternion.identity,
             cell.pieceAnchor.transform);
         cell.AddCellPiece(gridPiece);
