@@ -101,7 +101,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7583392084297247680}
   - component: {fileID: 7246340937273291456}
-  - component: {fileID: 240941500630242762}
   m_Layer: 0
   m_Name: Shovel
   m_TagString: Untagged
@@ -139,22 +138,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridItem
   pieceType: 4
---- !u!114 &240941500630242762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1520973459131452513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00d5d302efbd74185bdedfca418d73a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridItem
-  itemIdentifier: spring
-  itemDisplayName: Shovel
+  identifier: spring
+  displayName: Shovel
+  sprite: {fileID: 2476019932673291201}
   itemType: 1
-  itemSprite: {fileID: 2476019932673291201}
+  terrainType: 0
+  enemyType: 0
 --- !u!1 &5389225406950525926
 GameObject:
   m_ObjectHideFlags: 0

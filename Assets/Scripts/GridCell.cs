@@ -1,13 +1,12 @@
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public enum HoverState { None, Valid, Current, Invalid }
 
 public class GridCell : MonoBehaviour
 {
-    public GridTerrain GridTerrain { get; set; }
-    public GridPiece GridPiece { get; set; }
-
     public GameObject terrainAnchor;
     public GameObject pieceAnchor;
     public GameObject hoverIndicatorValid;
@@ -16,19 +15,46 @@ public class GridCell : MonoBehaviour
 
     public int gridX = -1;
     public int gridY = -1;
+    
+    private List<GridPiece> _gridPieces = new List<GridPiece>();
+    
+    public GridPiece TerrainPiece { get; private set; }
+    public GridPiece ItemPiece { get; private set; }
+    public GridPiece GoalPiece { get; private set; }
 
     private HoverState _hoverState; 
 
     public Vector2Int GridCoordinates => new Vector2Int(gridX, gridY);
 
-    public void RemoveCellPiece()
+    public void AddCellPiece(GridPiece gridPiece)
     {
-        if (GridPiece == null) return;
-        
-        Destroy(GridPiece.gameObject);
-        GridPiece = null;
-    }
+        _gridPieces.Add(gridPiece);
 
+        if (gridPiece.pieceType == PieceType.Terrain)
+            TerrainPiece = gridPiece;
+        
+        if (gridPiece.pieceType == PieceType.Item)
+            ItemPiece = gridPiece;
+        
+        if (gridPiece.pieceType == PieceType.Goal)
+            GoalPiece = gridPiece;
+    }
+    
+    public void RemoveCellPiece(GridPiece gridPiece)
+    {
+        if (gridPiece == ItemPiece)
+            ItemPiece = null;
+
+        if (gridPiece == TerrainPiece)
+            TerrainPiece = null;
+        
+        if (gridPiece == GoalPiece)
+            GoalPiece = null;
+        
+        Destroy(gridPiece.gameObject);
+        _gridPieces.Remove(gridPiece);
+    }
+    
     public void SetHoverState(HoverState hoverState)
     {
         if (hoverState == _hoverState) return;
@@ -57,16 +83,17 @@ public class GridCell : MonoBehaviour
     
     public void ResetCell()
     {
+        foreach (GridPiece gridPiece in _gridPieces)
+        {
+            Destroy(gridPiece.gameObject);
+        }
+        
         hoverIndicatorValid.SetActive(false);
         hoverIndicatorCurrent.SetActive(false);
         
-        foreach (Transform child in terrainAnchor.transform) {
-            Destroy(child.gameObject);
-        }
-        
-        foreach (Transform child in pieceAnchor.transform) {
-            Destroy(child.gameObject);
-        }
+        _gridPieces = new List<GridPiece>();
+        TerrainPiece = null;
+        ItemPiece = null;
     }
 
     private void OnMouseDown()

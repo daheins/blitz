@@ -9,15 +9,17 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
     
     public GridLevel gridLevel;
     public GameObject editPanel;
-    public GameObject itemsPanel;
+    public GameObject specialPiecesPanel;
+    public GameObject itemPiecesPanel;
+    public GameObject terrainPiecesPanel;
+    public GameObject enemyPiecesPanel;
 
-    public ItemButton itemButtonPrefab;
+    public EditorPieceButton editorPieceButtonPrefab;
 
     public TextMeshProUGUI editLabel;
     
-    private PieceType _currentSelectedPiece;
-    private ItemType _currentSelectedItem = ItemType.None;
-    private bool _areItemsLoaded;
+    private GridPiece _currentSelectedPiece;
+    private bool _arePiecesLoaded;
 
     private void Awake()
     {
@@ -39,16 +41,43 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         // editLabel.text = $"Edit Mode: {(gridLevel.IsInEditMode ? "On" : "Off")}";
         editPanel.SetActive(gridLevel.IsInEditMode);
 
-        if (!_areItemsLoaded)
+        if (!_arePiecesLoaded)
         {
-            foreach (GridItem piece in gridLevel.gridItems)
+            List<GridPiece> specialPieces = new List<GridPiece>
             {
-                ItemButton itemButton = Instantiate(itemButtonPrefab, itemsPanel.transform);
-                itemButton.Delegate = this;
-                itemButton.LoadItem(piece);
+                gridLevel.goalPrefab,
+                gridLevel.playerPrefab.playerPiece
+            };
+            
+            foreach (GridPiece piece in specialPieces)
+            {
+                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, specialPiecesPanel.transform);
+                editorPieceButton.Delegate = this;
+                editorPieceButton.LoadPiece(piece);
+            }
+            
+            foreach (GridPiece piece in gridLevel.gridItems)
+            {
+                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, itemPiecesPanel.transform);
+                editorPieceButton.Delegate = this;
+                editorPieceButton.LoadPiece(piece);
+            }
+            
+            foreach (GridPiece piece in gridLevel.gridTerrains)
+            {
+                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, terrainPiecesPanel.transform);
+                editorPieceButton.Delegate = this;
+                editorPieceButton.LoadPiece(piece);
+            }
+            
+            foreach (GridPiece piece in gridLevel.gridEnemies)
+            {
+                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, enemyPiecesPanel.transform);
+                editorPieceButton.Delegate = this;
+                editorPieceButton.LoadPiece(piece);
             }
 
-            _areItemsLoaded = true;
+            _arePiecesLoaded = true;
         }
     }
 
@@ -66,35 +95,13 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         gridLevel.SetupGridForLevel(levelData);
     }
 
-    public void PieceModeNone()
-    {
-        _currentSelectedPiece = PieceType.None;
-    }
-    
-    public void PieceModeWall()
-    {
-        _currentSelectedPiece = PieceType.Wall;
-    }
-    
-    public void PieceModePlayer()
-    {
-        _currentSelectedPiece = PieceType.Player;
-    }
-    
-    public void PieceModeGoal()
-    {
-        _currentSelectedPiece = PieceType.Goal;
-    }
-
     public void DidTapEditCell(GridCell cell)
     {
-        gridLevel.PopulateCell(cell, _currentSelectedPiece, _currentSelectedItem);
+        gridLevel.AddPieceToCell(cell, _currentSelectedPiece);
     }
 
-    public void DidTapItemButton(ItemButton itemButton)
+    public void DidTapItemButton(EditorPieceButton editorPieceButton, GridPiece gridPiece)
     {
-        // Piece Mode: Item
-        _currentSelectedPiece = PieceType.Item;
-        _currentSelectedItem = itemButton.GridItem.itemType;
+        _currentSelectedPiece = gridPiece;
     }
 }

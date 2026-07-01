@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8498233211031668556, guid: 5b6c9282c4c8b496aadef8a38f77b2dc, type: 3}
+  m_Sprite: {fileID: 843629608526838009, guid: ef9500ae160bf49cb8393541a686711a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 7583392084297247680}
   - component: {fileID: 7246340937273291456}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: Goal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,4 +136,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba2d457c1660412e998dbfffc95b4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridItem
-  pieceType: 2
+  pieceType: 3
+  identifier: goal
+  displayName: Goal
+  sprite: {fileID: 2476019932673291201}
+  itemType: 0
+  terrainType: 0
+  enemyType: 0

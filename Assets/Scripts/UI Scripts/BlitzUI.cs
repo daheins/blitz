@@ -29,10 +29,10 @@ public class BlitzUI : MonoBehaviour
         levelLoader.PlayNextLevel();
     }
 
-    public void AddInventoryItemIcon(GridItem gridItem)
+    public void AddInventoryItemIcon(GridPiece gridPiece)
     {
         InventoryItemIcon inventoryItemIcon = Instantiate(itemIconPrefab, inventoryParent.transform);
-        inventoryItemIcon.DisplayItem(gridItem);
+        inventoryItemIcon.DisplayItem(gridPiece);
         _inventoryIcons.Add(inventoryItemIcon);
     }
 

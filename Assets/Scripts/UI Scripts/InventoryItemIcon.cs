@@ -7,10 +7,10 @@ public class InventoryItemIcon : MonoBehaviour
     
     public Image itemIconImage;
     
-    public void DisplayItem(GridItem gridItem)
+    public void DisplayItem(GridPiece gridPiece)
     {
-        itemIconImage.sprite = gridItem.itemSprite.sprite;
+        itemIconImage.sprite = gridPiece.sprite.sprite;
 
-        ItemType = gridItem.itemType;
+        ItemType = gridPiece.itemType;
     }
 }

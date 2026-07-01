@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+[Serializable]
+public class CellData
+{
+    public List<string> pieceIds = new List<string>();
+}
+
 public class LevelData
 {
     public string levelName = "tempLevel";
@@ -11,35 +17,33 @@ public class LevelData
     public int height;
     public int moveTarget;
     
-    public PieceType[] pieces;
-    public ItemType[] items;
+    public CellData[] cells;
     
     public LevelData()
     {
         width = 14;
         height = 10;
-        pieces = new PieceType[width * height];
-        items = new ItemType[width * height];
+        cells = new CellData[width * height];
+        for (int i = 0; i < cells.Length; i++)
+            cells[i] = new CellData();
+        
         moveTarget = 100;
     }
     
-    public PieceType GetPiece(int x, int y)
+    public List<string> GetPieceIds(int x, int y)
     {
-        return pieces[y * width + x];
+        return cells[y * width + x].pieceIds;
     }
 
-    public ItemType GetItem(int x, int y)
+    public void AddPiece(int x, int y, string pieceId)
     {
-        return items[y * width + x];
+        CellData cellData = cells[y * width + x];
+        cellData.pieceIds.Add(pieceId);
     }
-
-    public void SetPiece(int x, int y, PieceType pieceType)
+    
+    public void RemovePiece(int x, int y, string pieceId)
     {
-        pieces[y * width + x] = pieceType;
-    }
-
-    public void SetItem(int x, int y, ItemType itemType)
-    {
-        items[y * width + x] = itemType;
+        CellData cellData = cells[y * width + x];
+        cellData.pieceIds.Remove(pieceId);
     }
 }

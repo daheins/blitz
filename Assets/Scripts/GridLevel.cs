@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class GridLevel : MonoBehaviour
 {
-    public static Dictionary<ItemType, GridItem> ItemPrefabMap;
+    public static Dictionary<string, GridPiece> PiecePrefabByIdentifier;
     
     private LevelData _levelData;
     
     public GridCell cellPrefab;
-    public GridTerrain groundPrefab;
     public PlayerScript playerPrefab;
     public GridPiece goalPrefab;
-    public GridPiece wallPrefab;
-    public List<GridItem> gridItems;
+    public List<GridPiece> gridItems;
+    public List<GridPiece> gridTerrains;
+    public List<GridPiece> gridEnemies;
     
     public Transform gridObjectParent;
     public BlitzUI blitzUI;
@@ -53,17 +54,17 @@ public class GridLevel : MonoBehaviour
 
     private void Awake()
     {
-        Dictionary<ItemType, GridItem> itemPrefabs = new Dictionary<ItemType, GridItem>();
-        
-        foreach (GridItem piece in gridItems)
+        PiecePrefabByIdentifier = new Dictionary<string, GridPiece>();
+        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
+        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
+        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
+
+        foreach (GridPiece gridPiece in gridItems.Concat(gridTerrains).Concat(gridEnemies))
         {
-            itemPrefabs[piece.itemType] = piece;
+            PiecePrefabByIdentifier[gridPiece.identifier] = gridPiece;
         }
-
-        ItemPrefabMap = itemPrefabs;
     }
-
-
+    
     public GridCell[,] Cells { get; private set; }
 
     public void SetupGridForLevel(LevelData data)
@@ -84,15 +85,13 @@ public class GridLevel : MonoBehaviour
                 GridCell cell = CreateEmptyCell(x, y);
                 cell.ResetCell();
                 
-                PieceType pieceType = data.GetPiece(x, y);
-                ItemType itemType = data.GetItem(x, y);
-                
-                PopulateCell(cell, pieceType, itemType);
-                
-                // TerrainType terrainType = levelData.Terrains[x, y];
-                // make all cells ground
-                cell.GridTerrain = Instantiate(groundPrefab, cell.transform.position, Quaternion.identity,
-                    cell.terrainAnchor.transform);
+                List<string> pieces = data.GetPieceIds(x, y);
+
+                foreach (string pieceId in pieces)
+                {
+                    GridPiece gridPiecePrefab = PiecePrefabByIdentifier[pieceId];
+                    AddPieceToCell(cell, gridPiecePrefab);
+                }
             }
         }
 
@@ -115,47 +114,23 @@ public class GridLevel : MonoBehaviour
         Camera.main.orthographicSize = Mathf.Max(sizeByHeight, sizeByWidth) * 1.2f;
     }
 
-    public void PopulateCell(GridCell cell, PieceType pieceType, ItemType itemType)
+    public void AddPieceToCell(GridCell cell, GridPiece gridPiecePrefab)
     {
-        _levelData.SetPiece(cell.gridX, cell.gridY, pieceType);
-        if (itemType != ItemType.None)
-            _levelData.SetItem(cell.gridX, cell.gridY, itemType);
+        _levelData.AddPiece(cell.gridX, cell.gridY, gridPiecePrefab.identifier);
         
-        cell.RemoveCellPiece();
+        GridPiece gridPiece = Instantiate(gridPiecePrefab, cell.transform.position, Quaternion.identity,
+            cell.pieceAnchor.transform);
+        cell.AddCellPiece(gridPiece);
         
-        // handle pieces
-        switch (pieceType)
+        // handle special pieces
+        switch (gridPiece.pieceType)
         {
             case PieceType.Player:
-                if (_player == null)
-                {
-                    PlayerScript player = Instantiate(playerPrefab, cell.transform.position, Quaternion.identity,
-                        cell.pieceAnchor.transform);
-                    GridPiece playerPiece = player.GetComponent<GridPiece>();
-                    cell.GridPiece = playerPiece;
-                    SetupPlayer(player, cell, playerPiece);
-                }
-                else
-                {
-                    MovePlayerToCell(cell);
-                }
-
+                SetupPlayer(gridPiece.GetComponent<PlayerScript>(), cell, gridPiece);
                 break;
-            case PieceType.Wall:
-                cell.GridPiece = Instantiate(wallPrefab, cell.transform.position, Quaternion.identity,
-                    cell.pieceAnchor.transform);
-                break;
+            case PieceType.Terrain:
             case PieceType.Goal:
-                cell.GridPiece = Instantiate(goalPrefab, cell.transform.position, Quaternion.identity,
-                    cell.pieceAnchor.transform);
-                break;
             case PieceType.Item:
-                GridItem itemPrefab = ItemPrefabMap[itemType];
-                GridItem item = Instantiate(itemPrefab, cell.transform.position, Quaternion.identity,
-                    cell.pieceAnchor.transform);
-                cell.GridPiece = item.GridPiece;
-                cell.GridPiece.GridItem = item;
-                break;
             case PieceType.None:
                 break;
         }
@@ -327,13 +302,13 @@ public class GridLevel : MonoBehaviour
 
     private void PickupItemInCell(GridCell cell)
     {
-        if (cell.GridPiece?.pieceType != PieceType.Item) 
-            return;
-        
-        _itemInventory.Add(cell.GridPiece.GridItem.itemType);
-        blitzUI.AddInventoryItemIcon(cell.GridPiece.GridItem);
-                
-        cell.RemoveCellPiece();
+        if (cell.ItemPiece != null)
+        {
+            _itemInventory.Add(cell.ItemPiece.itemType);
+            blitzUI.AddInventoryItemIcon(cell.ItemPiece);
+
+            cell.RemoveCellPiece(cell.ItemPiece);
+        }
     }
 
     private void SpendItem(ItemType item)
@@ -352,7 +327,7 @@ public class GridLevel : MonoBehaviour
 
     private void CheckForVictory()
     {
-        if (_player.playerCell?.GridPiece?.pieceType == PieceType.Goal)
+        if (_player.playerCell.GoalPiece != null)
         {
             UpdateMoveTarget();
             blitzUI.DisplayPlayerVictory();
@@ -395,7 +370,7 @@ public class GridLevel : MonoBehaviour
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
-                if (cell.GridPiece?.pieceType == PieceType.Wall)
+                if (cell.TerrainPiece != null)
                 {
                     if (!availableItems.Contains(ItemType.Spring))
                         break;
