@@ -244,7 +244,9 @@
             "pieceIds": []
         },
         {
-            "pieceIds": []
+            "pieceIds": [
+                "spikes"
+            ]
         },
         {
             "pieceIds": [
@@ -252,7 +254,9 @@
             ]
         },
         {
-            "pieceIds": []
+            "pieceIds": [
+                "spikes"
+            ]
         },
         {
             "pieceIds": []
@@ -352,7 +356,9 @@
             ]
         },
         {
-            "pieceIds": []
+            "pieceIds": [
+                "spikes"
+            ]
         },
         {
             "pieceIds": [
@@ -360,7 +366,9 @@
             ]
         },
         {
-            "pieceIds": []
+            "pieceIds": [
+                "spikes"
+            ]
         },
         {
             "pieceIds": [
