@@ -1,291 +1,599 @@
 {
     "levelName": "temp",
     "levelIndex": 2,
-    "width": 10,
-    "height": 10,
+    "width": 14,
+    "height": 12,
     "moveTarget": 100,
-    "pieces": [
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        2,
-        2,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        2,
-        2,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        2,
-        2,
-        0,
-        0,
-        0,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        0,
-        0,
-        0,
-        2,
-        0,
-        0,
-        0,
-        2,
-        2,
-        2,
-        0,
-        4,
-        0,
-        2,
-        0,
-        3,
-        0,
-        2,
-        2,
-        2,
-        0,
-        0,
-        0,
-        2,
-        0,
-        0,
-        0,
-        2,
-        2,
-        2,
-        0,
-        0,
-        0,
-        2,
-        2,
-        2,
-        2,
-        2,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-    ],
-    "items": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+    "cells": [
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "player"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "spring"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "spring"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "goal"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "spring"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        }
     ]
 }

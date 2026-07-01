@@ -20,9 +20,9 @@ public class GridLevel : MonoBehaviour
     public Transform gridObjectParent;
     public BlitzUI blitzUI;
 
-    private PlayerScript _player;
     private List<ItemType> _itemInventory = new List<ItemType>();
     
+    public PlayerScript Player { get; private set; }
     public GridCell[,] Cells { get; private set; }
 
     private GridCell _hoveringCell;
@@ -148,7 +148,7 @@ public class GridLevel : MonoBehaviour
     
     private void SetupPlayer(PlayerScript player, GridCell cell, GridPiece playerPiece)
     {
-        _player = player;
+        Player = player;
         player.playerCell = cell;
         player.playerPiece = playerPiece;
         player.Level = this;
@@ -168,7 +168,7 @@ public class GridLevel : MonoBehaviour
 
     public void PlayerPutDown()
     {
-        if (_hoveringCell != _player.playerCell)
+        if (_hoveringCell != Player.playerCell)
         {
             bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
 
@@ -271,7 +271,7 @@ public class GridLevel : MonoBehaviour
         List<GridCell> passThroughCells = null,
         List<ItemType> itemsUsedInMove = null)
     {
-        _player.playerCell = endCell;
+        Player.playerCell = endCell;
 
         if (passThroughCells != null)
         {
@@ -291,7 +291,7 @@ public class GridLevel : MonoBehaviour
         
         PickupItemInCell(endCell);
         
-        TransferPieceToCell(_player.playerPiece, endCell);
+        TransferPieceToCell(Player.playerPiece, endCell);
 
         MoveCounter++;
         blitzUI.UpdateMoveCounter(this);
@@ -324,7 +324,7 @@ public class GridLevel : MonoBehaviour
 
     private void CheckForVictory()
     {
-        if (_player.playerCell.GoalPiece != null)
+        if (Player.playerCell.GoalPiece != null)
         {
             UpdateMoveTarget();
             blitzUI.DisplayPlayerVictory();
@@ -345,19 +345,19 @@ public class GridLevel : MonoBehaviour
 
     private void FindValidCells()
     {
-        _validCellsFromHover = new List<GridCell> { _player.playerCell };
+        _validCellsFromHover = new List<GridCell> { Player.playerCell };
         
         _hoverCellTravelMap = new Dictionary<GridCell, List<GridCell>>();
-        _hoverCellTravelMap[_player.playerCell] = new List<GridCell>();
+        _hoverCellTravelMap[Player.playerCell] = new List<GridCell>();
 
         _hoverCellItemUsageMap = new Dictionary<GridCell, List<ItemType>>();
-        _hoverCellItemUsageMap[_player.playerCell] = new List<ItemType>();
+        _hoverCellItemUsageMap[Player.playerCell] = new List<ItemType>();
 
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
         foreach (Vector2Int dir in directions)
         {
-            Vector2Int current = _player.playerCell.GridCoordinates + dir;
+            Vector2Int current = Player.playerCell.GridCoordinates + dir;
             
             List<ItemType> availableItems = new List<ItemType>(_itemInventory);
             
@@ -367,18 +367,38 @@ public class GridLevel : MonoBehaviour
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
-                if (cell.TerrainPiece != null)
-                {
-                    if (!availableItems.Contains(ItemType.Spring))
-                        break;
-
-                    availableItems.Remove(ItemType.Spring);
-                    itemsUsedInDirection.Add(ItemType.Spring);
-                }
-                else
+                GridPiece terrain = cell.TerrainPiece;
+                if (terrain == null)
                 {
                     _validCellsFromHover.Add(cell);
                     cell.SetHoverState(HoverState.Valid);
+                }
+                else
+                {
+                    bool shouldStopMovement = false;
+                    
+                    switch (terrain.terrainType)
+                    {
+                        case TerrainType.Wall:
+                            if (availableItems.Contains(ItemType.Spring))
+                            {
+                                availableItems.Remove(ItemType.Spring);
+                                itemsUsedInDirection.Add(ItemType.Spring);
+                            }
+                            else
+                            {
+                                shouldStopMovement = true;
+                            }
+                            break;
+                        case TerrainType.Spikes:
+                        case TerrainType.Mud:
+                        case TerrainType.None:
+                            break;
+
+                    }
+
+                    if (shouldStopMovement)
+                        break;
                 }
 
                 _hoverCellItemUsageMap[cell] = new List<ItemType>(itemsUsedInDirection);

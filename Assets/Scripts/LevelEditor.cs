@@ -97,9 +97,19 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     public void DidTapEditCell(GridCell cell)
     {
-        gridLevel.AddPieceToCell(cell, _currentSelectedButton.GridPiece);
-        gridLevel.GetLevelData().AddPiece(cell.gridX, cell.gridY, _currentSelectedButton.GridPiece.identifier);
-
+        if (_currentSelectedButton != null)
+        {
+            if (!cell.CanAddPieceToCell(_currentSelectedButton.GridPiece))
+                return;
+            
+            gridLevel.AddPieceToCell(cell, _currentSelectedButton.GridPiece);
+            gridLevel.GetLevelData().AddPiece(cell.gridX, cell.gridY, _currentSelectedButton.GridPiece.identifier);
+        }
+        else
+        {
+            cell.ResetCell();
+            gridLevel.GetLevelData().RemoveAllPieces(cell.gridX, cell.gridY);
+        }
     }
 
     public void DidTapItemButton(EditorPieceButton editorPieceButton)

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum HoverState { None, Valid, Current, Invalid }
 
@@ -55,6 +57,11 @@ public class GridCell : MonoBehaviour
         _gridPieces.Remove(gridPiece);
     }
     
+    public bool CanAddPieceToCell(GridPiece gridPiecePrefab)
+    {
+        return _gridPieces.All(piece => piece.identifier != gridPiecePrefab.identifier);
+    }
+    
     public void SetHoverState(HoverState hoverState)
     {
         if (hoverState == _hoverState) return;
@@ -94,10 +101,14 @@ public class GridCell : MonoBehaviour
         _gridPieces = new List<GridPiece>();
         TerrainPiece = null;
         ItemPiece = null;
+        GoalPiece = null;
     }
 
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        
         LevelEditor levelEditor = LevelEditor.Instance;
         if (!levelEditor) return;
         if (!levelEditor.gridLevel.IsInEditMode) return;

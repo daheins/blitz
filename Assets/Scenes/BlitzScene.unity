@@ -880,7 +880,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 90, y: 500}
+  m_SizeDelta: {x: 65, y: 500}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &359936086
 MonoBehaviour:
@@ -2433,6 +2433,7 @@ MonoBehaviour:
   - {fileID: 7246340937273291456, guid: ee3f191dafb1e47c1830c1f7b03f0cbf, type: 3}
   gridTerrains:
   - {fileID: 7246340937273291456, guid: 22124febfc9c744fe98c00c0a498ddf5, type: 3}
+  - {fileID: 7246340937273291456, guid: feb1ee16f78a94d36936b1ab27fcfced, type: 3}
   gridEnemies: []
   gridObjectParent: {fileID: 1078868307}
   blitzUI: {fileID: 556862010}
@@ -2503,7 +2504,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2625,7 +2626,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 90, y: 500}
+  m_SizeDelta: {x: 65, y: 500}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1264367486
 MonoBehaviour:
@@ -3191,7 +3192,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 90, y: 500}
+  m_SizeDelta: {x: 65, y: 500}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1532176952
 MonoBehaviour:
@@ -3253,7 +3254,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 90, y: 500}
+  m_SizeDelta: {x: 65, y: 500}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1532423279
 MonoBehaviour:

@@ -29,6 +29,21 @@ public class LevelData
         
         moveTarget = 100;
     }
+
+    public void FixCellsLength()
+    {
+        int targetSize = width * height;
+        int originalSize = cells.Length;
+        if (originalSize == targetSize) return;
+        
+        Array.Resize(ref cells, targetSize);
+
+        if (targetSize > originalSize)
+        {
+            for (int i = originalSize; i < targetSize; i++)
+                cells[i] = new CellData();
+        }
+    }
     
     public List<string> GetPieceIds(int x, int y)
     {
@@ -45,5 +60,11 @@ public class LevelData
     {
         CellData cellData = cells[y * width + x];
         cellData.pieceIds.Remove(pieceId);
+    }
+    
+    public void RemoveAllPieces(int x, int y)
+    {
+        CellData cellData = cells[y * width + x];
+        cellData.pieceIds.Clear();
     }
 }

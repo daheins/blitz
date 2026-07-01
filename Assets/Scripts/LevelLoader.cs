@@ -48,6 +48,7 @@ public class LevelLoader : MonoBehaviour
         foreach (string levelFilename in levelFilenames)
         {
             LevelData levelData = ParseLevelFile(levelFilename);
+            levelData.FixCellsLength();
             
             LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
             levelButton.LoadWithLevelData(levelData);
