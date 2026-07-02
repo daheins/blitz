@@ -82,6 +82,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         }
 
         BuildLevelGridCells();
+        
+        Player.SetupPlayerForLevel();
 
         FitCameraToGrid();
         
@@ -146,7 +148,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             case PieceType.Goal:
                 break;
             case PieceType.Item:
-                gridPiece.sprite.AddComponent<HoverEffect>();
+                gridPiece.sprite.AddComponent<FloatingEffect>();
                 break;
             case PieceType.None:
                 break;
@@ -183,6 +185,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     public void PlayerLiftedUp()
     {
+        Player.WakeUp();
         UpdateValidCells();
     }
 

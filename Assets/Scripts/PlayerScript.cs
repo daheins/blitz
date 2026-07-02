@@ -6,16 +6,23 @@ public class PlayerScript : MonoBehaviour
     public GameObject body;
     public GridCell playerCell;
     public GridPiece playerPiece;
+    public GameObject playerAwakeNode;
+    public GameObject playerAsleepNode;
 
     private const float DragBodyRaiseY = .3f;
-
     private Vector3 _mOffset;
     private float _mZCoord;
-    // private bool _isDragging;
 
-    private Vector3 GetMouseAsWorldPoint()
+    public void SetupPlayerForLevel()
     {
-        return Camera.main!.ScreenToWorldPoint(Input.mousePosition);
+        playerAsleepNode.SetActive(true);
+        playerAwakeNode.SetActive(false);
+    }
+
+    public void WakeUp()
+    {
+        playerAsleepNode.SetActive(false);
+        playerAwakeNode.SetActive(true);
     }
 
     private void OnMouseDown()

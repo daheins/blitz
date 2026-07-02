@@ -9,18 +9,18 @@
       "highScore": 3
     },
     "2": {
-      "isComplete": false,
-      "highScore": -1
+      "isComplete": true,
+      "highScore": 7
     },
     "3": {
-      "isComplete": false,
-      "highScore": -1
+      "isComplete": true,
+      "highScore": 8
     },
     "4": {
-      "isComplete": false,
-      "highScore": -1
+      "isComplete": true,
+      "highScore": 8
     }
   },
-  "FeatureUnlockHighScores": false,
+  "FeatureUnlockHighScores": true,
   "FeatureUnlockUndoAndRestart": true
 }

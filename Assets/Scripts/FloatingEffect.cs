@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HoverEffect : MonoBehaviour
+public class FloatingEffect : MonoBehaviour
 {
     [SerializeField] private float amplitude = 0.05f;
     [SerializeField] private float frequency = .4f;
