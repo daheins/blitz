@@ -83,13 +83,13 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     public void SaveLevel()
     {
-        LevelLoader.Instance.SaveLevel(gridLevel.GetLevelData());
+        SaveStateManager.Instance.SaveLevel(gridLevel.GetLevelData());
     }
 
     public void CreateNewLevel()
     {
         LevelData levelData = new LevelData();
-        levelData.levelIndex = LevelLoader.Instance.LevelCount();
+        levelData.levelIndex = SaveStateManager.Instance.LevelCount();
         levelData.levelName = "temp";
         
         gridLevel.SetupGridForLevel(levelData);

@@ -9,6 +9,7 @@ public class CellData
     public List<string> pieceIds = new List<string>();
 }
 
+[Serializable]
 public class LevelData
 {
     public string levelName = "tempLevel";

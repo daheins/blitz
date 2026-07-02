@@ -3,7 +3,7 @@
     "levelIndex": 0,
     "width": 10,
     "height": 10,
-    "moveTarget": 100,
+    "moveTarget": 5,
     "cells": [
         {
             "pieceIds": [
@@ -316,126 +316,6 @@
             "pieceIds": [
                 "wall"
             ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
         },
         {
             "pieceIds": []

@@ -1,0 +1,24 @@
+{
+  "LevelProgressStates": {
+    "0": {
+      "isComplete": true,
+      "highScore": 5
+    },
+    "1": {
+      "isComplete": false,
+      "highScore": -1
+    },
+    "2": {
+      "isComplete": false,
+      "highScore": -1
+    },
+    "3": {
+      "isComplete": false,
+      "highScore": -1
+    },
+    "4": {
+      "isComplete": false,
+      "highScore": -1
+    }
+  }
+}

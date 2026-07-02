@@ -7,7 +7,6 @@ public class BlitzUI : MonoBehaviour
 {
     public GridLevel gridLevel;
     public GameObject victoryNode;
-    public LevelLoader levelLoader;
 
     public InventoryItemIcon itemIconPrefab;
     public GameObject inventoryParent;
@@ -33,6 +32,7 @@ public class BlitzUI : MonoBehaviour
     
     public void DisplayPlayerVictory()
     {
+        
         victoryNode.SetActive(true);
     }
     
@@ -40,7 +40,7 @@ public class BlitzUI : MonoBehaviour
     {
         victoryNode.SetActive(false);
 
-        levelLoader.PlayNextLevel();
+        SaveStateManager.Instance.PlayNextLevel();
     }
 
     public void AddInventoryItemIcon(GridPiece gridPiece)

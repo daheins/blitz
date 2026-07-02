@@ -300,19 +300,23 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         if (Player.playerCell.GoalPiece != null)
         {
             UpdateMoveTarget();
+
+            bool isPerfect = MoveCounter == _levelData.moveTarget;
+            SaveStateManager.Instance.SetLevelState(_levelData.levelIndex, true, MoveCounter, isPerfect);
+            
             blitzUI.DisplayPlayerVictory();
         }
     }
 
     private void UpdateMoveTarget()
     {
-        if (LevelEditor.Instance == null || LevelLoader.Instance == null)
+        if (LevelEditor.Instance == null || SaveStateManager.Instance == null)
             return;
         
         if (DevelopmentTools.Instance.updateMoveTarget && MoveCounter < _levelData.moveTarget)
         {
             _levelData.moveTarget = MoveCounter;
-            LevelLoader.Instance.SaveLevel(_levelData);
+            SaveStateManager.Instance.SaveLevel(_levelData);
         }
     }
 
