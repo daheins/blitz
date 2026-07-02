@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BlitzUI : MonoBehaviour
 {
+    public GridLevel gridLevel;
     public GameObject victoryNode;
     public LevelLoader levelLoader;
 
@@ -22,6 +23,11 @@ public class BlitzUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             GridLevel.GridCommandSystem.Undo();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gridLevel.RestartLevel();
         }
     }
     
@@ -51,9 +57,9 @@ public class BlitzUI : MonoBehaviour
         Destroy(icon.gameObject);
     }
 
-    public void UpdateMoveCounter(GridLevel level)
+    public void UpdateMoveCounter()
     {
-        LevelData levelData = level.GetLevelData();
+        LevelData levelData = gridLevel.GetLevelData();
         if (levelData.moveTarget <= 0)
         {
             moveCounterParent.SetActive(false);
@@ -61,7 +67,7 @@ public class BlitzUI : MonoBehaviour
         }
         
         moveCounterParent.SetActive(true);
-        moveCounterLabel.text = $"{level.MoveCounter}";
+        moveCounterLabel.text = $"{gridLevel.MoveCounter}";
         moveTargetLabel.text = $"{levelData.moveTarget}";
     }
 }

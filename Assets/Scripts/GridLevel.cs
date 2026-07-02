@@ -106,7 +106,7 @@ public class GridLevel : MonoBehaviour
         GridCommandSystem.ClearHistory();
         
         MoveCounter = 0;
-        blitzUI.UpdateMoveCounter(this);
+        blitzUI.UpdateMoveCounter();
     }
     
     private void FitCameraToGrid()
@@ -163,6 +163,11 @@ public class GridLevel : MonoBehaviour
         player.Level = this;
         
         player.transform.SetParent(cell.pieceAnchor.transform, false);
+    }
+
+    public void RestartLevel()
+    {
+        SetupGridForLevel(_levelData);
     }
 
     public void PlayerLiftedUp()
@@ -293,7 +298,7 @@ public class GridLevel : MonoBehaviour
             itemsUsedInMove, gridItemsRemoved);
         GridCommandSystem.Execute(moveCommand);
         
-        blitzUI.UpdateMoveCounter(this);
+        blitzUI.UpdateMoveCounter();
     }
 
     public void IncrementMoveCounter()

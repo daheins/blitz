@@ -7,6 +7,30 @@ public interface ICommand
     void Undo();
 }
 
+public class CommandSystem
+{
+    public static CommandSystem Instance;
+    
+    private Stack<ICommand> _history = new Stack<ICommand>();
+    
+    public void Execute(ICommand command)
+    {
+        command.Execute();
+        _history.Push(command);
+    }
+
+    public void Undo()
+    {
+        if (_history.Count == 0) return;
+        _history.Pop().Undo();
+    }
+    
+    public void ClearHistory()
+    {
+        _history.Clear();
+    }
+}
+
 public class MoveCommand : ICommand
 {
     private GridLevel _level;
@@ -66,30 +90,20 @@ public class MoveCommand : ICommand
         
         _level.DecrementMoveCounter();
         
-        _level.blitzUI.UpdateMoveCounter(_level);
+        _level.blitzUI.UpdateMoveCounter();
     }
 }
 
-public class CommandSystem
+
+public class RestartCommand : ICommand
 {
-    public static CommandSystem Instance;
-    
-    private Stack<ICommand> _history = new Stack<ICommand>();
-    
-    public void Execute(ICommand command)
+    public void Execute()
     {
-        command.Execute();
-        _history.Push(command);
+        
     }
 
     public void Undo()
     {
-        if (_history.Count == 0) return;
-        _history.Pop().Undo();
-    }
-    
-    public void ClearHistory()
-    {
-        _history.Clear();
+        
     }
 }
