@@ -80,7 +80,6 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         {
             ItemInventory[itemPiece.itemType] = 0;
         }
-        BlitzUI.Instance.ClearInventoryItemIcons();
 
         BuildLevelGridCells();
 
@@ -90,7 +89,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         
         MoveCounter = 0;
         
-        BlitzUI.Instance.UpdateMoveCounter();
+        BlitzUI.Instance.StartGridLevel();
     }
 
     private void BuildLevelGridCells()

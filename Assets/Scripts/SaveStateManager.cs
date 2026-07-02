@@ -147,6 +147,11 @@ public class SaveStateManager : MonoBehaviour
         {
             PlayerSaveState.FeatureUnlockHighScores = true;
         }
+        
+        if (totalLevelsComplete >= PlayerSaveState.KLevelsToUnlockUndoAndRestart)
+        {
+            PlayerSaveState.FeatureUnlockUndoAndRestart = true;
+        }
     }
 
     private void WriteSaveState()

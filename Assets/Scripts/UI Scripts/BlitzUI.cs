@@ -18,6 +18,8 @@ public class BlitzUI : MonoBehaviour
     public TextMeshProUGUI moveCounterLabel;
     public TextMeshProUGUI moveTargetLabel;
     
+    public GameObject undoAndRestartInfoNode;
+    
     // Levels
     public Transform levelsParent;
     public Transform levelsScreen;
@@ -53,6 +55,14 @@ public class BlitzUI : MonoBehaviour
             _allLevelButtonsByIndex[levelData.levelIndex] = levelButton;
         }
     }
+
+    public void StartGridLevel()
+    {
+        ClearInventoryItemIcons();
+        UpdateMoveCounter();
+        UpdateUndoAndRestartState();
+    }
+    
     
     public void ToggleLevels()
     {
@@ -67,12 +77,12 @@ public class BlitzUI : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z) && SaveStateManager.Instance.PlayerSaveState.FeatureUnlockUndoAndRestart)
         {
             GridLevel.GridCommandSystem.Undo();
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && SaveStateManager.Instance.PlayerSaveState.FeatureUnlockUndoAndRestart)
         {
             gridLevel.RestartLevel();
         }
@@ -136,5 +146,10 @@ public class BlitzUI : MonoBehaviour
         moveCounterParent.SetActive(true);
         moveCounterLabel.text = $"{gridLevel.MoveCounter}";
         moveTargetLabel.text = $"{levelData.moveTarget}";
+    }
+
+    public void UpdateUndoAndRestartState()
+    {
+        undoAndRestartInfoNode.SetActive(SaveStateManager.Instance.PlayerSaveState.FeatureUnlockUndoAndRestart);
     }
 }
