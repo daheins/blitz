@@ -3,7 +3,7 @@
     "levelIndex": 1,
     "width": 9,
     "height": 9,
-    "moveTarget": 4,
+    "moveTarget": 3,
     "cells": [
         {
             "pieceIds": [

@@ -90,7 +90,8 @@ public class MoveCommand : ICommand
         
         _level.DecrementMoveCounter();
         
-        _level.blitzUI.UpdateMoveCounter();
+        BlitzUI.Instance.UpdateMoveCounter();
+        
         _level.UpdateValidCells();
     }
 }

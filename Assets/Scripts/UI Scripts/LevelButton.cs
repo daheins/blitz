@@ -20,28 +20,14 @@ public class LevelButton : MonoBehaviour
 
     public void UpdateState(bool isComplete, bool isPerfect)
     {
-        levelCompleteHighlight.SetActive(false);
-        levelPerfectHighlight.SetActive(false);
-
-        if (!isComplete)
-        {
-            return;
-        }
-
-        if (isPerfect)
-        {
-            levelPerfectHighlight.SetActive(true);
-        }
-        else
-        {
-            levelCompleteHighlight.SetActive(true);
-        }
+        levelCompleteHighlight.SetActive(isComplete);
+        levelPerfectHighlight.SetActive(isPerfect);
     }
     
     
     public void DidTapLevelButton()
     {
-        SaveStateManager.Instance.ToggleLevels();
+        BlitzUI.Instance.ToggleLevels();
         SaveStateManager.Instance.gridLevel.SetupGridForLevel(_levelData);
     }
 }

@@ -19,7 +19,6 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public List<GridPiece> gridEnemies;
     
     public Transform gridObjectParent;
-    public BlitzUI blitzUI;
 
     public Dictionary<ItemType, int> ItemInventory = new Dictionary<ItemType, int>();
     
@@ -81,7 +80,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         {
             ItemInventory[itemPiece.itemType] = 0;
         }
-        blitzUI.ClearInventoryItemIcons();
+        BlitzUI.Instance.ClearInventoryItemIcons();
 
         BuildLevelGridCells();
 
@@ -90,7 +89,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         GridCommandSystem.ClearHistory();
         
         MoveCounter = 0;
-        blitzUI.UpdateMoveCounter();
+        
+        BlitzUI.Instance.UpdateMoveCounter();
     }
 
     private void BuildLevelGridCells()
@@ -249,7 +249,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             itemsUsedInMove, gridItemsRemoved);
         GridCommandSystem.Execute(moveCommand);
         
-        blitzUI.UpdateMoveCounter();
+        BlitzUI.Instance.UpdateMoveCounter();
     }
 
     public void IncrementMoveCounter()
@@ -279,7 +279,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             return;
 
         ItemInventory[itemType]--;
-        blitzUI.RemoveInventoryItemIcon(itemType);
+        BlitzUI.Instance.RemoveInventoryItemIcon(itemType);
     }
 
     public void EarnItem(ItemType itemType)
@@ -287,7 +287,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         ItemInventory[itemType]++;
 
         GridPiece itemPiece = gridItems.Find(piece => piece.itemType == itemType); // yuck
-        blitzUI.AddInventoryItemIcon(itemPiece);
+        BlitzUI.Instance.AddInventoryItemIcon(itemPiece);
     }
     
     public void TransferPieceToCell(GridPiece piece, GridCell cell)
@@ -304,7 +304,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             bool isPerfect = MoveCounter == _levelData.moveTarget;
             SaveStateManager.Instance.SetLevelState(_levelData.levelIndex, true, MoveCounter, isPerfect);
             
-            blitzUI.DisplayPlayerVictory();
+            BlitzUI.Instance.DisplayPlayerVictory();
         }
     }
 

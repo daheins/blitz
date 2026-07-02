@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -5,6 +6,8 @@ using UnityEngine;
 
 public class BlitzUI : MonoBehaviour
 {
+    public static BlitzUI Instance;
+    
     public GridLevel gridLevel;
     public GameObject victoryNode;
 
@@ -14,8 +17,53 @@ public class BlitzUI : MonoBehaviour
     public GameObject moveCounterParent;
     public TextMeshProUGUI moveCounterLabel;
     public TextMeshProUGUI moveTargetLabel;
+    
+    // Levels
+    public Transform levelsParent;
+    public Transform levelsScreen;
+    public LevelButton levelButtonPrefab;
+    public GameObject perfectLevelExplanation;
+    private Dictionary<int, LevelButton> _allLevelButtonsByIndex;
+    // Levels end
 
     private List<InventoryItemIcon> _inventoryIcons = new List<InventoryItemIcon>();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        levelsScreen.gameObject.SetActive(false);
+
+        CreateLevelButtons();
+        UpdateAllLevelButtons();
+    }
+
+    private void CreateLevelButtons()
+    {
+        _allLevelButtonsByIndex = new();
+        
+        foreach (var levelData in SaveStateManager.Instance.AllLevelDatasByIndex.Values)
+        {
+            LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
+            levelButton.LoadWithLevelData(levelData);
+
+            _allLevelButtonsByIndex[levelData.levelIndex] = levelButton;
+        }
+    }
+    
+    public void ToggleLevels()
+    {
+        levelsScreen.gameObject.SetActive(!levelsScreen.gameObject.activeSelf);
+        perfectLevelExplanation.SetActive(SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores);
+
+        if (levelsScreen.gameObject.activeSelf)
+        {
+            UpdateAllLevelButtons();
+        }
+    }
     
     void Update()
     {
@@ -32,7 +80,6 @@ public class BlitzUI : MonoBehaviour
     
     public void DisplayPlayerVictory()
     {
-        
         victoryNode.SetActive(true);
     }
     
@@ -41,6 +88,20 @@ public class BlitzUI : MonoBehaviour
         victoryNode.SetActive(false);
 
         SaveStateManager.Instance.PlayNextLevel();
+    }
+    
+    private void UpdateAllLevelButtons()
+    {
+        PlayerSaveState playerSaveState = SaveStateManager.Instance.PlayerSaveState;
+        
+        foreach (int levelIndex in _allLevelButtonsByIndex.Keys)
+        {
+            var levelState = playerSaveState.LevelProgressStates[levelIndex];
+            
+            int moveTarget = SaveStateManager.Instance.AllLevelDatasByIndex[levelIndex].moveTarget;
+            bool isPerfect = moveTarget == levelState.highScore;
+            _allLevelButtonsByIndex[levelIndex].UpdateState(levelState.isComplete, isPerfect);
+        }
     }
 
     public void AddInventoryItemIcon(GridPiece gridPiece)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -8,28 +9,20 @@ public class SaveStateManager : MonoBehaviour
     public static SaveStateManager Instance;
     
     public GridLevel gridLevel;
-    public Transform levelsParent;
-    public Transform levelsScreen;
-    public LevelButton levelButtonPrefab;
     
     private static string LevelsPath => Path.Combine(Application.dataPath, "Levels");
     private static string SaveStatePath => Path.Combine(Application.dataPath, "SaveState");
 
-    private PlayerSaveState _playerSaveState;
-    private Dictionary<int, LevelData> _allLevelsByIndex;
-    private Dictionary<int, LevelButton> _allLevelButtonsByIndex;
+    public PlayerSaveState PlayerSaveState { get; private set; }
+    public Dictionary<int, LevelData> AllLevelDatasByIndex;
 
     private void Start()
     {
         Instance = this;
 
-        levelsScreen.gameObject.SetActive(false);
-
         LoadAllLevelPaths();
         
         LoadSaveState();
-
-        UpdateAllLevelButtons();
 
         int levelIndexToStart = 0;
         if (DevelopmentTools.Instance.startAtLastLevel)
@@ -53,7 +46,7 @@ public class SaveStateManager : MonoBehaviour
         }
         
         bool didModifySaveState = false;
-        foreach (var pair in _allLevelsByIndex)
+        foreach (var pair in AllLevelDatasByIndex)
         {
             if (!saveState.LevelProgressStates.ContainsKey(pair.Key))
             {
@@ -62,29 +55,12 @@ public class SaveStateManager : MonoBehaviour
             }
         }
         
-        _playerSaveState = saveState;
+        PlayerSaveState = saveState;
 
         if (didModifySaveState)
         {
             WriteSaveState();
         }
-    }
-
-    private void UpdateAllLevelButtons()
-    {
-        foreach (int levelIndex in _allLevelButtonsByIndex.Keys)
-        {
-            var levelState = _playerSaveState.LevelProgressStates[levelIndex];
-            
-            int moveTarget = _allLevelsByIndex[levelIndex].moveTarget;
-            bool isPerfect = moveTarget == levelState.highScore;
-            _allLevelButtonsByIndex[levelIndex].UpdateState(levelState.isComplete, isPerfect);
-        }
-    }
-    
-    public void ToggleLevels()
-    {
-        levelsScreen.gameObject.SetActive(!levelsScreen.gameObject.activeSelf);
     }
 
     private void LoadAllLevelPaths()
@@ -93,46 +69,41 @@ public class SaveStateManager : MonoBehaviour
         levelFilenames.Sort();
         Debug.Log($"i found {levelFilenames.Count} levels");
 
-        _allLevelsByIndex = new();
-        _allLevelButtonsByIndex = new();
+        AllLevelDatasByIndex = new();
 
         foreach (string levelFilename in levelFilenames)
         {
             LevelData levelData = ParseLevelFile(levelFilename);
             levelData.FixCellsLength();
             
-            LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
-            levelButton.LoadWithLevelData(levelData);
-
-            _allLevelButtonsByIndex[levelData.levelIndex] = levelButton;
-            _allLevelsByIndex[levelData.levelIndex] = levelData;
+            AllLevelDatasByIndex[levelData.levelIndex] = levelData;
         }
     }
 
     public void PlayNextLevel()
     {
         int nextIndex = gridLevel.GetLevelData().levelIndex + 1;
-        if (nextIndex >= _allLevelsByIndex.Count)
+        if (nextIndex >= AllLevelDatasByIndex.Count)
             nextIndex = 0;
         PlayLevelAtIndex(nextIndex);
     }
 
     private void PlayLevelAtIndex(int levelIndex)
     {
-        if (levelIndex < 0 || levelIndex >= _allLevelsByIndex.Count)
+        if (levelIndex < 0 || levelIndex >= AllLevelDatasByIndex.Count)
         {
-            Debug.LogError($"Trying to load level #{levelIndex} but there are {_allLevelsByIndex.Count} different levels!");
+            Debug.LogError($"Trying to load level #{levelIndex} but there are {AllLevelDatasByIndex.Count} different levels!");
             return;
         }
         
-        LevelData levelData = _allLevelsByIndex[levelIndex];
+        LevelData levelData = AllLevelDatasByIndex[levelIndex];
         
         gridLevel.SetupGridForLevel(levelData);
     }
 
     public int LevelCount()
     {
-        return _allLevelsByIndex.Count;
+        return AllLevelDatasByIndex.Count;
     }
     
     private LevelData ParseLevelFile(string filename)
@@ -159,17 +130,28 @@ public class SaveStateManager : MonoBehaviour
     
     public void SetLevelState(int levelIndex, bool isComplete, int highScore, bool isPerfect)
     {
-        LevelState levelState = _playerSaveState.LevelProgressStates[levelIndex];
+        LevelState levelState = PlayerSaveState.LevelProgressStates[levelIndex];
         levelState.isComplete = isComplete;
         levelState.highScore = highScore;
-        WriteSaveState();
         
-        _allLevelButtonsByIndex[levelIndex].UpdateState(isComplete, isPerfect);
+        CheckFeatureUnlocks();
+        
+        WriteSaveState();
+    }
+
+    private void CheckFeatureUnlocks()
+    {
+        int totalLevelsComplete = PlayerSaveState.LevelProgressStates.Values.Count(state => state.isComplete);
+
+        if (totalLevelsComplete >= PlayerSaveState.KLevelsToUnlockHighScores)
+        {
+            PlayerSaveState.FeatureUnlockHighScores = true;
+        }
     }
 
     private void WriteSaveState()
     {
-        string json = JsonConvert.SerializeObject(_playerSaveState, Formatting.Indented);
+        string json = JsonConvert.SerializeObject(PlayerSaveState, Formatting.Indented);
         File.WriteAllText(SaveStatePath, json);
     }
 }

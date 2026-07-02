@@ -11,4 +11,7 @@ public class LevelState
 public class PlayerSaveState
 {
     public Dictionary<int, LevelState> LevelProgressStates = new();
+    
+    public bool FeatureUnlockHighScores = false;
+    public const int KLevelsToUnlockHighScores = 4;
 }

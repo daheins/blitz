@@ -5,20 +5,21 @@
       "highScore": 5
     },
     "1": {
-      "isComplete": false,
-      "highScore": -1
+      "isComplete": true,
+      "highScore": 3
     },
     "2": {
-      "isComplete": false,
-      "highScore": -1
+      "isComplete": true,
+      "highScore": 8
     },
     "3": {
-      "isComplete": false,
-      "highScore": -1
+      "isComplete": true,
+      "highScore": 9
     },
     "4": {
       "isComplete": false,
       "highScore": -1
     }
-  }
+  },
+  "FeatureUnlockHighScores": true
 }
