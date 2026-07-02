@@ -39,15 +39,15 @@
             "pieceIds": []
         },
         {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
             "pieceIds": [
                 "wall"
             ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
         },
         {
             "pieceIds": []
@@ -89,54 +89,54 @@
             "pieceIds": []
         },
         {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
             "pieceIds": [
                 "wall"
             ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
         },
         {
             "pieceIds": []
@@ -474,7 +474,9 @@
             "pieceIds": []
         },
         {
-            "pieceIds": []
+            "pieceIds": [
+                "wall"
+            ]
         },
         {
             "pieceIds": []

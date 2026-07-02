@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 
-public class GridLevel : MonoBehaviour
+public class GridLevel : MonoBehaviour, IGridCellDelegate
 {
     public static Dictionary<string, GridPiece> PiecePrefabByIdentifier;
     public static CommandSystem GridCommandSystem;
@@ -24,8 +24,7 @@ public class GridLevel : MonoBehaviour
     
     public PlayerScript Player { get; private set; }
     public GridCell[,] Cells { get; private set; }
-
-    private GridCell _hoveringCell;
+    
     private List<GridCell> _validCellsFromHover;
     // Map from each cell in the valid hover, to all the cells that it passes through
     private Dictionary<GridCell, List<GridCell>> _hoverCellTravelMap;
@@ -66,11 +65,6 @@ public class GridLevel : MonoBehaviour
         {
             PiecePrefabByIdentifier[gridPiece.identifier] = gridPiece;
         }
-
-        foreach (GridPiece itemPiece in gridItems)
-        {
-            ItemInventory[itemPiece.itemType] = 0;
-        }
     }
 
     public void SetupGridForLevel(LevelData data)
@@ -80,18 +74,39 @@ public class GridLevel : MonoBehaviour
         
         Cells = new GridCell[data.width,data.height];
         
+        _validCellsFromHover = new List<GridCell>();
+
+        foreach (GridPiece itemPiece in gridItems)
+        {
+            ItemInventory[itemPiece.itemType] = 0;
+        }
+        blitzUI.ClearInventoryItemIcons();
+
+        BuildLevelGridCells();
+
+        FitCameraToGrid();
+        
+        GridCommandSystem.ClearHistory();
+        
+        MoveCounter = 0;
+        blitzUI.UpdateMoveCounter();
+    }
+
+    private void BuildLevelGridCells()
+    {
         foreach (Transform child in gridObjectParent) {
             Destroy(child.gameObject);
         }
 
-        for (int y = 0; y < data.height; y++)
+        for (int y = 0; y < _levelData.height; y++)
         {
-            for (int x = 0; x < data.width; x++)
+            for (int x = 0; x < _levelData.width; x++)
             {
                 GridCell cell = CreateEmptyCell(x, y);
+                cell.Delegate = this;
                 cell.ResetCell();
                 
-                List<string> pieces = data.GetPieceIds(x, y);
+                List<string> pieces = _levelData.GetPieceIds(x, y);
 
                 foreach (string pieceId in pieces)
                 {
@@ -100,13 +115,6 @@ public class GridLevel : MonoBehaviour
                 }
             }
         }
-
-        FitCameraToGrid();
-        
-        GridCommandSystem.ClearHistory();
-        
-        MoveCounter = 0;
-        blitzUI.UpdateMoveCounter();
     }
     
     private void FitCameraToGrid()
@@ -172,80 +180,19 @@ public class GridLevel : MonoBehaviour
 
     public void PlayerLiftedUp()
     {
-        FindValidCells();
-        UpdateHoveringCell();
+        UpdateValidCells();
     }
 
-    public void PlayerDragged()
+    public void DidTapValidGridCell(GridCell gridCell)
     {
-        UpdateHoveringCell();
-    }
+        var cellsTraveled = _hoverCellTravelMap[gridCell];
+        var itemsUsed = _hoverCellItemUsageMap[gridCell];
 
-    public void PlayerPutDown()
-    {
-        if (_hoveringCell != Player.playerCell)
-        {
-            bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
-
-            if (isValidMove)
-            {
-                var cellsTraveled = _hoverCellTravelMap[_hoveringCell];
-                var itemsUsed = _hoverCellItemUsageMap[_hoveringCell];
-                
-                MovePlayerToCell(_hoveringCell, cellsTraveled, itemsUsed);
-            }
-        }
-
-        _hoveringCell.SetHoverState(HoverState.None);
-        foreach (GridCell cell in _validCellsFromHover)
-        {
-            cell.SetHoverState(HoverState.None);
-        }
+        MovePlayerToCell(gridCell, cellsTraveled, itemsUsed);
         
-        _hoveringCell = null;
-        _validCellsFromHover = null;
-        _hoverCellTravelMap = null;
-        _hoverCellItemUsageMap = null;
+        UpdateValidCells();
 
         CheckForVictory();
-    }
-
-    private void UpdateHoveringCell()
-    {
-        GridCell hoveringCell = CellAtMousePosition();
-        if (hoveringCell == null)
-        {
-            return;
-        }
-
-        if (hoveringCell != _hoveringCell)
-        {
-            if (_hoveringCell != null)
-            {
-                if (_validCellsFromHover.Contains(_hoveringCell))
-                {
-                    _hoveringCell.SetHoverState(HoverState.Valid);
-                }
-                else
-                {
-                    _hoveringCell.SetHoverState(HoverState.None);
-                }
-            }
-
-            if (hoveringCell != null)
-            {
-                if (_validCellsFromHover == null || _validCellsFromHover.Contains(hoveringCell))
-                {
-                    hoveringCell.SetHoverState(HoverState.Current);
-                }
-                else
-                {
-                    hoveringCell.SetHoverState(HoverState.Invalid);
-                }
-            }
-            
-            _hoveringCell = hoveringCell;
-        }
     }
 
     private GridCell CellAtMousePosition()
@@ -294,7 +241,7 @@ public class GridLevel : MonoBehaviour
             }
         }
         
-        MoveCommand moveCommand = new MoveCommand(this, Player.playerCell, _hoveringCell,
+        MoveCommand moveCommand = new MoveCommand(this, Player.playerCell, endCell,
             itemsUsedInMove, gridItemsRemoved);
         GridCommandSystem.Execute(moveCommand);
         
@@ -365,8 +312,10 @@ public class GridLevel : MonoBehaviour
         }
     }
 
-    private void FindValidCells()
+    public void UpdateValidCells()
     {
+        _validCellsFromHover.ForEach(cell => cell.SetHoverState(HoverState.None));
+        
         _validCellsFromHover = new List<GridCell> { Player.playerCell };
         
         _hoverCellTravelMap = new Dictionary<GridCell, List<GridCell>>();

@@ -7,6 +7,11 @@ using UnityEngine.EventSystems;
 
 public enum HoverState { None, Valid, Current, Invalid }
 
+public interface IGridCellDelegate
+{
+    public void DidTapValidGridCell(GridCell gridCell);
+}
+
 public class GridCell : MonoBehaviour
 {
     public GameObject terrainAnchor;
@@ -14,6 +19,8 @@ public class GridCell : MonoBehaviour
     public GameObject hoverIndicatorValid;
     public GameObject hoverIndicatorInvalid;
     public GameObject hoverIndicatorCurrent;
+
+    public IGridCellDelegate Delegate;
 
     public int gridX = -1;
     public int gridY = -1;
@@ -110,9 +117,15 @@ public class GridCell : MonoBehaviour
             return;
         
         LevelEditor levelEditor = LevelEditor.Instance;
-        if (!levelEditor) return;
-        if (!levelEditor.gridLevel.IsInEditMode) return;
-        
-        levelEditor.DidTapEditCell(this);
+        if (levelEditor != null && levelEditor.gridLevel.IsInEditMode)
+        {
+            levelEditor.DidTapEditCell(this);
+            return;
+        }
+
+        if (_hoverState == HoverState.Valid)
+        {
+            Delegate.DidTapValidGridCell(this);
+        }
     }
 }

@@ -57,6 +57,12 @@ public class BlitzUI : MonoBehaviour
         Destroy(icon.gameObject);
     }
 
+    public void ClearInventoryItemIcons()
+    {
+        _inventoryIcons.ForEach(icon => Destroy(icon.gameObject));
+        _inventoryIcons.Clear();
+    }
+
     public void UpdateMoveCounter()
     {
         LevelData levelData = gridLevel.GetLevelData();

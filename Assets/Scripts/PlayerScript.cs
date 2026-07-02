@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour
 
     private Vector3 _mOffset;
     private float _mZCoord;
-    private bool _isDragging;
+    // private bool _isDragging;
 
     private Vector3 GetMouseAsWorldPoint()
     {
@@ -24,28 +24,10 @@ public class PlayerScript : MonoBehaviour
 
         // Store offset = gameobject world pos - mouse world pos
         Vector3 bodyRaiseVector = Vector2.up * DragBodyRaiseY;
-        _mOffset = body.transform.localPosition - GetMouseAsWorldPoint() + bodyRaiseVector;
-        _isDragging = true;
+        body.transform.localPosition = bodyRaiseVector;
+        // _mOffset = body.transform.localPosition - GetMouseAsWorldPoint() + bodyRaiseVector;
+        // _isDragging = true;
 
         Level.PlayerLiftedUp();
-    }
-
-    private void OnMouseDrag()
-    {
-        if (!_isDragging) return;
-        
-        body.transform.localPosition = GetMouseAsWorldPoint() + _mOffset;
-
-        Level.PlayerDragged();
-    }
-
-    private void OnMouseUp()
-    {
-        if (!_isDragging) return;
-
-        _isDragging = false;
-        body.transform.localPosition = Vector3.zero;
-
-        Level.PlayerPutDown();
     }
 }
