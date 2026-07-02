@@ -115,7 +115,7 @@ public class SaveStateManager : MonoBehaviour
             return null;
         }
         string json = File.ReadAllText(path);
-        return JsonUtility.FromJson<LevelData>(json);
+        return JsonConvert.DeserializeObject<LevelData>(json);
     }
     
     public void SaveLevel(LevelData data)
@@ -123,7 +123,7 @@ public class SaveStateManager : MonoBehaviour
         Debug.LogWarning("SAVING LEVEL");
         string levelFileName = $"level{data.levelIndex}.json";
         string path = Path.Combine(LevelsPath, levelFileName);
-        string json = JsonUtility.ToJson(data, true);
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(path, json);
         Debug.Log($"Saved level to {path}");
     }

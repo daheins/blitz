@@ -127,7 +127,7 @@ public class BlitzUI : MonoBehaviour
     public void UpdateMoveCounter()
     {
         LevelData levelData = gridLevel.GetLevelData();
-        if (levelData.moveTarget <= 0)
+        if (levelData.moveTarget <= 0 || !SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores)
         {
             moveCounterParent.SetActive(false);
             return;

@@ -21,7 +21,7 @@ public class LevelButton : MonoBehaviour
     public void UpdateState(bool isComplete, bool isPerfect)
     {
         levelCompleteHighlight.SetActive(isComplete);
-        levelPerfectHighlight.SetActive(isPerfect);
+        levelPerfectHighlight.SetActive(isPerfect && SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores);
     }
     
     
