@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -144,7 +145,10 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                 break;
             case PieceType.Terrain:
             case PieceType.Goal:
+                break;
             case PieceType.Item:
+                gridPiece.sprite.AddComponent<HoverEffect>();
+                break;
             case PieceType.None:
                 break;
         }
