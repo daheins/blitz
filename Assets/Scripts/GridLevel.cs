@@ -1,12 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 public class GridLevel : MonoBehaviour
 {
     public static Dictionary<string, GridPiece> PiecePrefabByIdentifier;
+    public static CommandSystem GridCommandSystem;
     
     private LevelData _levelData;
     
@@ -20,7 +20,7 @@ public class GridLevel : MonoBehaviour
     public Transform gridObjectParent;
     public BlitzUI blitzUI;
 
-    private List<ItemType> _itemInventory = new List<ItemType>();
+    public Dictionary<ItemType, int> ItemInventory = new Dictionary<ItemType, int>();
     
     public PlayerScript Player { get; private set; }
     public GridCell[,] Cells { get; private set; }
@@ -56,6 +56,8 @@ public class GridLevel : MonoBehaviour
 
     private void Awake()
     {
+        GridCommandSystem = new CommandSystem();
+        
         PiecePrefabByIdentifier = new Dictionary<string, GridPiece>();
         PiecePrefabByIdentifier[playerPrefab.identifier] = playerPrefab;
         PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
@@ -64,12 +66,17 @@ public class GridLevel : MonoBehaviour
         {
             PiecePrefabByIdentifier[gridPiece.identifier] = gridPiece;
         }
+
+        foreach (GridPiece itemPiece in gridItems)
+        {
+            ItemInventory[itemPiece.itemType] = 0;
+        }
     }
 
     public void SetupGridForLevel(LevelData data)
     {
-        Debug.Log($"setting up level: {data.levelName} ({data.levelIndex})");
         _levelData = data;
+        Debug.Log($"setting up level: {data.levelName} ({data.levelIndex})");
         
         Cells = new GridCell[data.width,data.height];
         
@@ -95,22 +102,24 @@ public class GridLevel : MonoBehaviour
         }
 
         FitCameraToGrid();
-
-        gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
-
+        
+        GridCommandSystem.ClearHistory();
+        
         MoveCounter = 0;
         blitzUI.UpdateMoveCounter(this);
     }
     
     private void FitCameraToGrid()
     {
+        gridObjectParent.position = new Vector2(-(_levelData.width - 1f) / 2, -(_levelData.height - 1f) / 2);
+        
         float screenAspect = (float)Screen.width / Screen.height;
 
         float sizeByHeight = _levelData.height / 2f;
         float sizeByWidth = _levelData.width / (2f * screenAspect);
 
         // Use whichever is larger to guarantee everything fits
-        Camera.main.orthographicSize = Mathf.Max(sizeByHeight, sizeByWidth) * 1.2f;
+        Camera.main!.orthographicSize = Mathf.Max(sizeByHeight, sizeByWidth) * 1.2f;
     }
 
     public void AddPieceToCell(GridCell cell, GridPiece gridPiecePrefab)
@@ -152,7 +161,8 @@ public class GridLevel : MonoBehaviour
         player.playerCell = cell;
         player.playerPiece = playerPiece;
         player.Level = this;
-        MovePlayerToCell(cell);
+        
+        player.transform.SetParent(cell.pieceAnchor.transform, false);
     }
 
     public void PlayerLiftedUp()
@@ -172,13 +182,10 @@ public class GridLevel : MonoBehaviour
         {
             bool isValidMove = _validCellsFromHover.Contains(_hoveringCell);
 
-            List<GridCell> cellsTraveled = null;
-            List<ItemType> itemsUsed = null;
-        
             if (isValidMove)
             {
-                cellsTraveled = _hoverCellTravelMap[_hoveringCell];
-                itemsUsed = _hoverCellItemUsageMap[_hoveringCell];
+                var cellsTraveled = _hoverCellTravelMap[_hoveringCell];
+                var itemsUsed = _hoverCellItemUsageMap[_hoveringCell];
                 
                 MovePlayerToCell(_hoveringCell, cellsTraveled, itemsUsed);
             }
@@ -238,7 +245,7 @@ public class GridLevel : MonoBehaviour
 
     private GridCell CellAtMousePosition()
     {
-        Vector2 localPos = gridObjectParent.InverseTransformPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        Vector2 localPos = gridObjectParent.InverseTransformPoint(Camera.main!.ScreenToWorldPoint(Input.mousePosition));
 
         return CellFromPosition(localPos);
     }
@@ -271,53 +278,63 @@ public class GridLevel : MonoBehaviour
         List<GridCell> passThroughCells = null,
         List<ItemType> itemsUsedInMove = null)
     {
-        Player.playerCell = endCell;
-
+        Dictionary<GridCell, ItemType> gridItemsRemoved = new Dictionary<GridCell, ItemType>();
         if (passThroughCells != null)
         {
-            foreach (GridCell cell in passThroughCells)
+            foreach (GridCell cell in passThroughCells.Append(endCell))
             {
-                PickupItemInCell(cell);
-            }
-        }
+                if (cell.ItemPiece == null) continue;
 
-        if (itemsUsedInMove != null)
-        {
-            foreach (ItemType item in itemsUsedInMove)
-            {
-                SpendItem(item);
+                gridItemsRemoved[cell] = cell.ItemPiece.itemType;
             }
         }
         
-        PickupItemInCell(endCell);
+        MoveCommand moveCommand = new MoveCommand(this, Player.playerCell, _hoveringCell,
+            itemsUsedInMove, gridItemsRemoved);
+        GridCommandSystem.Execute(moveCommand);
         
-        TransferPieceToCell(Player.playerPiece, endCell);
-
-        MoveCounter++;
         blitzUI.UpdateMoveCounter(this);
     }
 
-    private void PickupItemInCell(GridCell cell)
+    public void IncrementMoveCounter()
+    {
+        MoveCounter++;
+    }
+    
+    public void DecrementMoveCounter()
+    {
+        MoveCounter--;
+    }
+
+    public void PickupItemInCell(GridCell cell)
     {
         if (cell.ItemPiece != null)
         {
-            _itemInventory.Add(cell.ItemPiece.itemType);
-            blitzUI.AddInventoryItemIcon(cell.ItemPiece);
+            EarnItem(cell.ItemPiece.itemType);
 
             cell.RemoveCellPiece(cell.ItemPiece);
         }
     }
 
-    private void SpendItem(ItemType item)
+    public void SpendItem(ItemType itemType)
     {
-        if (!_itemInventory.Contains(item))
+        int itemCount = ItemInventory[itemType];
+        if (itemCount == 0)
             return;
 
-        _itemInventory.Remove(item);
-        blitzUI.RemoveInventoryItemIcon(item);
+        ItemInventory[itemType]--;
+        blitzUI.RemoveInventoryItemIcon(itemType);
+    }
+
+    public void EarnItem(ItemType itemType)
+    {
+        ItemInventory[itemType]++;
+
+        GridPiece itemPiece = gridItems.Find(piece => piece.itemType == itemType); // yuck
+        blitzUI.AddInventoryItemIcon(itemPiece);
     }
     
-    private void TransferPieceToCell(GridPiece piece, GridCell cell)
+    public void TransferPieceToCell(GridPiece piece, GridCell cell)
     {
         piece.transform.SetParent(cell.pieceAnchor.transform, false);
     }
@@ -359,7 +376,7 @@ public class GridLevel : MonoBehaviour
         {
             Vector2Int current = Player.playerCell.GridCoordinates + dir;
             
-            List<ItemType> availableItems = new List<ItemType>(_itemInventory);
+            Dictionary<ItemType, int> availableItems = new Dictionary<ItemType, int>(ItemInventory);
             
             List<GridCell> cellsInDirection = new List<GridCell>();
             List<ItemType> itemsUsedInDirection = new List<ItemType>();
@@ -380,9 +397,9 @@ public class GridLevel : MonoBehaviour
                     switch (terrain.terrainType)
                     {
                         case TerrainType.Wall:
-                            if (availableItems.Contains(ItemType.Spring))
+                            if (availableItems[ItemType.Spring] > 0)
                             {
-                                availableItems.Remove(ItemType.Spring);
+                                availableItems[ItemType.Spring]--;
                                 itemsUsedInDirection.Add(ItemType.Spring);
                             }
                             else

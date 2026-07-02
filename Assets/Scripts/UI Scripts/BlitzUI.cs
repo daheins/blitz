@@ -16,7 +16,15 @@ public class BlitzUI : MonoBehaviour
     public TextMeshProUGUI moveTargetLabel;
 
     private List<InventoryItemIcon> _inventoryIcons = new List<InventoryItemIcon>();
-
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            GridLevel.GridCommandSystem.Undo();
+        }
+    }
+    
     public void DisplayPlayerVictory()
     {
         victoryNode.SetActive(true);

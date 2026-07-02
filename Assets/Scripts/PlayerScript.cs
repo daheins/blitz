@@ -15,7 +15,7 @@ public class PlayerScript : MonoBehaviour
 
     private Vector3 GetMouseAsWorldPoint()
     {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return Camera.main!.ScreenToWorldPoint(Input.mousePosition);
     }
 
     private void OnMouseDown()
