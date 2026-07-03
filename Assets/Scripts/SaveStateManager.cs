@@ -12,6 +12,7 @@ public class SaveStateManager : MonoBehaviour
     
     private static string LevelsPath => Path.Combine(Application.dataPath, "Levels");
     private static string SaveStatePath => Path.Combine(Application.dataPath, "SaveState");
+    private static string PrefsSaveState = "SaveState";
 
     public PlayerSaveState PlayerSaveState { get; private set; }
     public Dictionary<int, LevelData> AllLevelDatasByIndex;
@@ -29,20 +30,31 @@ public class SaveStateManager : MonoBehaviour
         {
             levelIndexToStart = LevelCount() - 1;
         }
+        else
+        {
+            var firstIncompleteLevel = PlayerSaveState.LevelProgressStates
+                .OrderBy(pair => pair.Key)
+                .FirstOrDefault(pair => !pair.Value.isComplete);
+
+            if (firstIncompleteLevel.Value != null)
+            {
+                levelIndexToStart = firstIncompleteLevel.Key;
+            }
+        }
         PlayLevelAtIndex(levelIndexToStart);
     }
 
     private void LoadSaveState()
     {
         PlayerSaveState saveState;
-        if (!File.Exists(SaveStatePath))
+        if (PlayerPrefs.HasKey(PrefsSaveState))
         {
-            saveState = new PlayerSaveState();
+            string json = PlayerPrefs.GetString(PrefsSaveState);
+            saveState = JsonConvert.DeserializeObject<PlayerSaveState>(json);
         }
         else
         {
-            string json = File.ReadAllText(SaveStatePath);
-            saveState = JsonConvert.DeserializeObject<PlayerSaveState>(json);
+            saveState = new PlayerSaveState();
         }
         
         bool didModifySaveState = false;
@@ -157,6 +169,6 @@ public class SaveStateManager : MonoBehaviour
     private void WriteSaveState()
     {
         string json = JsonConvert.SerializeObject(PlayerSaveState, Formatting.Indented);
-        File.WriteAllText(SaveStatePath, json);
+        PlayerPrefs.SetString(PrefsSaveState, json);
     }
 }
