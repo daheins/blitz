@@ -10,8 +10,7 @@ public class SaveStateManager : MonoBehaviour
     
     public GridLevel gridLevel;
     
-    private static string LevelsPath => Path.Combine(Application.dataPath, "Levels");
-    private static string SaveStatePath => Path.Combine(Application.dataPath, "SaveState");
+    private static string LevelsPath => Path.Combine(Application.dataPath, "Resources", "Levels");
     private static string PrefsSaveState = "SaveState";
 
     public PlayerSaveState PlayerSaveState { get; private set; }

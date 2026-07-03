@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Terrain
+    uniqueID: 2505534165
+    locked: 0
   - name: Hover Indicator
     uniqueID: 629236629
     locked: 0
