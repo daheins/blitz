@@ -77,15 +77,14 @@ public class SaveStateManager : MonoBehaviour
 
     private void LoadAllLevelPaths()
     {
-        List<string> levelFilenames = new List<string>(Directory.GetFiles(LevelsPath, "*.json"));
-        levelFilenames.Sort();
-        Debug.Log($"i found {levelFilenames.Count} levels");
+        TextAsset[] levelFiles = Resources.LoadAll<TextAsset>("Levels");
+        List<TextAsset> sortedFiles = levelFiles.OrderBy(f => f.name).ToList();
 
         AllLevelDatasByIndex = new();
 
-        foreach (string levelFilename in levelFilenames)
+        foreach (TextAsset levelFile in sortedFiles)
         {
-            LevelData levelData = ParseLevelFile(levelFilename);
+            LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
             levelData.FixCellsLength();
             
             AllLevelDatasByIndex[levelData.levelIndex] = levelData;
@@ -116,18 +115,6 @@ public class SaveStateManager : MonoBehaviour
     public int LevelCount()
     {
         return AllLevelDatasByIndex.Count;
-    }
-    
-    private LevelData ParseLevelFile(string filename)
-    {
-        string path = Path.Combine(LevelsPath, filename);
-        if (!File.Exists(path))
-        {
-            Debug.LogWarning($"Level not found: {path}");
-            return null;
-        }
-        string json = File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<LevelData>(json);
     }
     
     public void SaveLevel(LevelData data)
