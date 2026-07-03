@@ -70,7 +70,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public void SetupGridForLevel(LevelData data)
     {
         _levelData = data;
-        Debug.Log($"setting up level: {data.levelName} ({data.levelIdentifier})");
+        Debug.Log($"Loading Level: {data.levelIdentifier}");
         
         Cells = new GridCell[data.width,data.height];
         

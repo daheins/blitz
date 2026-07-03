@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4efa3bf60320b4065b1c8fab4779441c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  showDebugUI: 1
+  showDebugUI: 0
   startAtLastLevel: 0
   updateMoveTarget: 0
 --- !u!4 &180509980
@@ -2052,7 +2052,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 0000000051807d589563812505227ece
+  m_ApplyToSortingLayers: 0000000051807d589563812505227eced56a5795
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0

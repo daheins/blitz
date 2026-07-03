@@ -77,8 +77,19 @@ public class SaveStateManager : MonoBehaviour
         TextAsset manifestAsset = Resources.Load<TextAsset>("level_manifest");
         LevelManifest manifest = JsonConvert.DeserializeObject<LevelManifest>(manifestAsset.text);
 
-        TextAsset[] levelFiles = Resources.LoadAll<TextAsset>("Levels");
         Dictionary<string, LevelData> levelsByIdentifier = new();
+#if UNITY_EDITOR
+        string[] filePaths = Directory.GetFiles(LevelsPath, "*.json");
+        foreach (string filePath in filePaths)
+        {
+            string json = File.ReadAllText(filePath);
+            LevelData levelData = JsonConvert.DeserializeObject<LevelData>(json);
+            levelData.Filename = Path.GetFileNameWithoutExtension(filePath);
+            levelData.FixCellsLength();
+            levelsByIdentifier[levelData.levelIdentifier] = levelData;
+        }
+#else
+        TextAsset[] levelFiles = Resources.LoadAll<TextAsset>("Levels");
         foreach (TextAsset levelFile in levelFiles)
         {
             LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
@@ -86,6 +97,7 @@ public class SaveStateManager : MonoBehaviour
             levelData.FixCellsLength();
             levelsByIdentifier[levelData.levelIdentifier] = levelData;
         }
+#endif
 
         AllLevelDatas = new();
         foreach (string id in manifest.levelIdentifiers)
@@ -134,7 +146,7 @@ public class SaveStateManager : MonoBehaviour
         string path = Path.Combine(LevelsPath, levelFileName);
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(path, json);
-        Debug.Log($"Saved level to {path}");
+        Debug.Log($"Saved level {levelFileName} to {path}. Data: {json}");
     }
     
     public void SetLevelState(string levelIdentifier, bool isComplete, int highScore, bool isPerfect)
