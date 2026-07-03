@@ -14,7 +14,7 @@ public class SaveStateManager : MonoBehaviour
     private static string PrefsSaveState = "SaveState";
 
     public PlayerSaveState PlayerSaveState { get; private set; }
-    public Dictionary<int, LevelData> AllLevelDatasByIndex;
+    public List<LevelData> AllLevelDatas { get; private set; }
 
     private void Start()
     {
@@ -31,14 +31,12 @@ public class SaveStateManager : MonoBehaviour
         }
         else
         {
-            var firstIncompleteLevel = PlayerSaveState.LevelProgressStates
-                .OrderBy(pair => pair.Key)
-                .FirstOrDefault(pair => !pair.Value.isComplete);
+            // Claude did this, it's messy but works for now
+            int firstIncomplete = AllLevelDatas.FindIndex(levelData => 
+                PlayerSaveState.LevelProgressStates.TryGetValue(levelData.levelIdentifier, out LevelState state) && !state.isComplete);
 
-            if (firstIncompleteLevel.Value != null)
-            {
-                levelIndexToStart = firstIncompleteLevel.Key;
-            }
+            if (firstIncomplete != -1)
+                levelIndexToStart = firstIncomplete;
         }
         PlayLevelAtIndex(levelIndexToStart);
     }
@@ -57,11 +55,11 @@ public class SaveStateManager : MonoBehaviour
         }
         
         bool didModifySaveState = false;
-        foreach (var pair in AllLevelDatasByIndex)
+        foreach (LevelData levelData in AllLevelDatas)
         {
-            if (!saveState.LevelProgressStates.ContainsKey(pair.Key))
+            if (!saveState.LevelProgressStates.ContainsKey(levelData.levelIdentifier))
             {
-                saveState.LevelProgressStates[pair.Key] = new LevelState();
+                saveState.LevelProgressStates[levelData.levelIdentifier] = new();
                 didModifySaveState = true;
             }
         }
@@ -76,59 +74,72 @@ public class SaveStateManager : MonoBehaviour
 
     private void LoadAllLevelPaths()
     {
+        TextAsset manifestAsset = Resources.Load<TextAsset>("level_manifest");
+        LevelManifest manifest = JsonConvert.DeserializeObject<LevelManifest>(manifestAsset.text);
+
         TextAsset[] levelFiles = Resources.LoadAll<TextAsset>("Levels");
-        List<TextAsset> sortedFiles = levelFiles.OrderBy(f => f.name).ToList();
-
-        AllLevelDatasByIndex = new();
-
-        foreach (TextAsset levelFile in sortedFiles)
+        Dictionary<string, LevelData> levelsByIdentifier = new();
+        foreach (TextAsset levelFile in levelFiles)
         {
             LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
+            levelData.Filename = levelFile.name;
             levelData.FixCellsLength();
-            
-            AllLevelDatasByIndex[levelData.levelIndex] = levelData;
+            levelsByIdentifier[levelData.levelIdentifier] = levelData;
         }
+
+        AllLevelDatas = new();
+        foreach (string id in manifest.levelIdentifiers)
+        {
+            if (levelsByIdentifier.TryGetValue(id, out LevelData levelData))
+                AllLevelDatas.Add(levelData);
+            else
+                Debug.LogWarning($"Manifest references unknown level: {id}");
+        }
+
     }
 
     public void PlayNextLevel()
     {
-        int nextIndex = gridLevel.GetLevelData().levelIndex + 1;
-        if (nextIndex >= AllLevelDatasByIndex.Count)
+        string currentIdentifier = gridLevel.GetLevelData().levelIdentifier;
+        int currentIndex = AllLevelDatas.FindIndex(l => l.levelIdentifier == currentIdentifier);
+
+        int nextIndex = currentIndex + 1;
+        if (nextIndex >= AllLevelDatas.Count)
             nextIndex = 0;
+
         PlayLevelAtIndex(nextIndex);
     }
 
     private void PlayLevelAtIndex(int levelIndex)
     {
-        if (levelIndex < 0 || levelIndex >= AllLevelDatasByIndex.Count)
+        if (levelIndex < 0 || levelIndex >= AllLevelDatas.Count)
         {
-            Debug.LogError($"Trying to load level #{levelIndex} but there are {AllLevelDatasByIndex.Count} different levels!");
+            Debug.LogError($"Trying to load level #{levelIndex} but there are {AllLevelDatas.Count} different levels!");
             return;
         }
         
-        LevelData levelData = AllLevelDatasByIndex[levelIndex];
+        LevelData levelData = AllLevelDatas[levelIndex];
         
         gridLevel.SetupGridForLevel(levelData);
     }
 
     public int LevelCount()
     {
-        return AllLevelDatasByIndex.Count;
+        return AllLevelDatas.Count;
     }
     
     public void SaveLevel(LevelData data)
     {
-        Debug.LogWarning("SAVING LEVEL");
-        string levelFileName = $"level{data.levelIndex}.json";
+        string levelFileName = $"{data.Filename}.json";
         string path = Path.Combine(LevelsPath, levelFileName);
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(path, json);
         Debug.Log($"Saved level to {path}");
     }
     
-    public void SetLevelState(int levelIndex, bool isComplete, int highScore, bool isPerfect)
+    public void SetLevelState(string levelIdentifier, bool isComplete, int highScore, bool isPerfect)
     {
-        LevelState levelState = PlayerSaveState.LevelProgressStates[levelIndex];
+        LevelState levelState = PlayerSaveState.LevelProgressStates[levelIdentifier];
         levelState.isComplete = isComplete;
         levelState.highScore = highScore;
         

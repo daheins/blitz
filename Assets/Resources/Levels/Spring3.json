@@ -1,10 +1,22 @@
 {
     "levelName": "temp",
-    "levelIndex": 0,
-    "width": 10,
-    "height": 10,
-    "moveTarget": 5,
+    "levelIdentifier": "spring3",
+    "width": 14,
+    "height": 12,
+    "moveTarget": 8,
     "cells": [
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
         {
             "pieceIds": [
                 "wall"
@@ -23,16 +35,9 @@
             "pieceIds": []
         },
         {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
+            "pieceIds": [
+                "wall"
+            ]
         },
         {
             "pieceIds": []
@@ -64,11 +69,6 @@
             "pieceIds": []
         },
         {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
             "pieceIds": []
         },
         {
@@ -99,113 +99,6 @@
         },
         {
             "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": [
-                "wall"
-            ]
         },
         {
             "pieceIds": []
@@ -254,6 +147,95 @@
             "pieceIds": []
         },
         {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "spring"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
             "pieceIds": [
                 "wall"
             ]
@@ -276,6 +258,39 @@
             "pieceIds": []
         },
         {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "spring"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
             "pieceIds": []
         },
         {
@@ -294,6 +309,229 @@
         },
         {
             "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "spring"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
         },
         {
             "pieceIds": [
@@ -301,18 +539,6 @@
             ]
         },
         {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
-            "pieceIds": []
-        },
-        {
             "pieceIds": [
                 "wall"
             ]
@@ -330,7 +556,9 @@
             "pieceIds": []
         },
         {
-            "pieceIds": []
+            "pieceIds": [
+                "spring"
+            ]
         },
         {
             "pieceIds": []
@@ -340,6 +568,34 @@
         },
         {
             "pieceIds": []
+        },
+        {
+            "pieceIds": []
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
+        },
+        {
+            "pieceIds": [
+                "wall"
+            ]
         }
     ]
 }

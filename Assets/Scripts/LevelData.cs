@@ -12,11 +12,14 @@ public class CellData
 [Serializable]
 public class LevelData
 {
-    public string levelName = "tempLevel";
-    public int levelIndex;
+    public string levelIdentifier;
+    public string levelName;
     public int width;
     public int height;
     public int moveTarget;
+    
+    [NonSerialized] 
+    public string Filename;
     
     public CellData[] cells;
     

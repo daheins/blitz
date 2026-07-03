@@ -89,8 +89,10 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
     public void CreateNewLevel()
     {
         LevelData levelData = new LevelData();
-        levelData.levelIndex = SaveStateManager.Instance.LevelCount();
-        levelData.levelName = "temp";
+        string guid = Guid.NewGuid().ToString("N")[..8];
+        levelData.levelName = "temp name";
+        levelData.levelIdentifier = guid;
+        levelData.Filename = guid;
         
         gridLevel.SetupGridForLevel(levelData);
     }

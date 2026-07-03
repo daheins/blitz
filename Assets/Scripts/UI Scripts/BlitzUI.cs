@@ -25,7 +25,7 @@ public class BlitzUI : MonoBehaviour
     public Transform levelsScreen;
     public LevelButton levelButtonPrefab;
     public GameObject perfectLevelExplanation;
-    private Dictionary<int, LevelButton> _allLevelButtonsByIndex;
+    private Dictionary<string, LevelButton> _levelButtonsByIdentifier;
     // Levels end
 
     private List<InventoryItemIcon> _inventoryIcons = new List<InventoryItemIcon>();
@@ -45,14 +45,14 @@ public class BlitzUI : MonoBehaviour
 
     private void CreateLevelButtons()
     {
-        _allLevelButtonsByIndex = new();
+        _levelButtonsByIdentifier = new();
         
-        foreach (var levelData in SaveStateManager.Instance.AllLevelDatasByIndex.Values)
+        foreach (var levelData in SaveStateManager.Instance.AllLevelDatas)
         {
             LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
             levelButton.LoadWithLevelData(levelData);
 
-            _allLevelButtonsByIndex[levelData.levelIndex] = levelButton;
+            _levelButtonsByIdentifier[levelData.levelIdentifier] = levelButton;
         }
     }
 
@@ -104,13 +104,14 @@ public class BlitzUI : MonoBehaviour
     {
         PlayerSaveState playerSaveState = SaveStateManager.Instance.PlayerSaveState;
         
-        foreach (int levelIndex in _allLevelButtonsByIndex.Keys)
+        foreach (var pair in _levelButtonsByIdentifier)
         {
-            var levelState = playerSaveState.LevelProgressStates[levelIndex];
+            LevelData levelData = pair.Value.LevelData;
+            var levelState = playerSaveState.LevelProgressStates[pair.Key];
             
-            int moveTarget = SaveStateManager.Instance.AllLevelDatasByIndex[levelIndex].moveTarget;
+            int moveTarget = levelData.moveTarget;
             bool isPerfect = moveTarget == levelState.highScore;
-            _allLevelButtonsByIndex[levelIndex].UpdateState(levelState.isComplete, isPerfect);
+            pair.Value.UpdateState(levelState.isComplete, isPerfect);
         }
     }
 

@@ -70,7 +70,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public void SetupGridForLevel(LevelData data)
     {
         _levelData = data;
-        Debug.Log($"setting up level: {data.levelName} ({data.levelIndex})");
+        Debug.Log($"setting up level: {data.levelName} ({data.levelIdentifier})");
         
         Cells = new GridCell[data.width,data.height];
         
@@ -304,7 +304,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             UpdateMoveTarget();
 
             bool isPerfect = MoveCounter == _levelData.moveTarget;
-            SaveStateManager.Instance.SetLevelState(_levelData.levelIndex, true, MoveCounter, isPerfect);
+            SaveStateManager.Instance.SetLevelState(_levelData.levelIdentifier, true, MoveCounter, isPerfect);
             
             BlitzUI.Instance.DisplayPlayerVictory();
         }
