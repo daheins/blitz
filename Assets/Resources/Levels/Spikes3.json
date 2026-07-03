@@ -1,9 +1,9 @@
 {
-  "levelName": "temp",
   "levelIdentifier": "spikes3",
+  "levelName": "temp",
   "width": 14,
   "height": 10,
-  "moveTarget": 100,
+  "moveTarget": 6,
   "cells": [
     {
       "pieceIds": []
