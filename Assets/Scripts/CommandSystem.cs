@@ -95,7 +95,7 @@ public class MoveCommand : ICommand
         
         BlitzUI.Instance.UpdateMoveCounter();
         
-        _level.UpdateValidCells();
+        _level.UpdateValidAndThreatenedCells();
     }
 }
 

@@ -2098,7 +2098,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 0000000051807d589563812505227eced56a5795
+  m_ApplyToSortingLayers: 0000000051807d589563812505227eced56a5795372d806e
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2690,7 +2690,9 @@ MonoBehaviour:
   gridTerrains:
   - {fileID: 7246340937273291456, guid: 22124febfc9c744fe98c00c0a498ddf5, type: 3}
   - {fileID: 7246340937273291456, guid: feb1ee16f78a94d36936b1ab27fcfced, type: 3}
-  gridEnemies: []
+  gridEnemies:
+  - {fileID: 7246340937273291456, guid: f9e651847d47940a78e46095aaad1d9f, type: 3}
+  - {fileID: 7246340937273291456, guid: d5a1bc0b9a34a4872b79849092162456, type: 3}
   gridObjectParent: {fileID: 1078868307}
 --- !u!4 &1183156191
 Transform:

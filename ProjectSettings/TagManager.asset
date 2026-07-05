@@ -47,6 +47,9 @@ TagManager:
   - name: Hover Indicator
     uniqueID: 629236629
     locked: 0
+  - name: Enemies
+    uniqueID: 1853893943
+    locked: 0
   - name: Items
     uniqueID: 1484619857
     locked: 0

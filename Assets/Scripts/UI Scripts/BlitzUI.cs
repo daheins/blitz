@@ -79,7 +79,7 @@ public class BlitzUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Z) && SaveStateManager.Instance.PlayerSaveState.FeatureUnlockUndoAndRestart)
         {
-            GridLevel.GridCommandSystem.Undo();
+            gridLevel.GridCommandSystem.Undo();
         }
 
         if (Input.GetKeyDown(KeyCode.R) && SaveStateManager.Instance.PlayerSaveState.FeatureUnlockUndoAndRestart)

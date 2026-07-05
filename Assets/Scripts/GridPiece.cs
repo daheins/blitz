@@ -4,7 +4,7 @@ public enum PieceType { None, Player, Terrain, Goal, Item, Enemy }
 
 public enum ItemType { None, Spring, }
 public enum TerrainType { None, Wall, Mud, Spikes, }
-public enum EnemyType { None, Goomba, }
+public enum EnemyType { None, GoombaSmall, GoombaBig,  }
 
 public class GridPiece : MonoBehaviour
 {
@@ -17,4 +17,6 @@ public class GridPiece : MonoBehaviour
     public ItemType itemType;
     public TerrainType terrainType;
     public EnemyType enemyType;
+    
+    public GridCell Cell { get; set; }
 }

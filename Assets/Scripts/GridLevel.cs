@@ -6,7 +6,8 @@ using UnityEngine;
 public class GridLevel : MonoBehaviour, IGridCellDelegate
 {
     public static Dictionary<string, GridPiece> PiecePrefabByIdentifier;
-    public static CommandSystem GridCommandSystem;
+    public CommandSystem GridCommandSystem;
+    public EnemyPatternSystem EnemyPatternSystem;
     
     private LevelData _levelData;
     
@@ -29,6 +30,9 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     private Dictionary<GridCell, List<GridCell>> _hoverCellTravelMap;
     // Map from each cell in the valid hover, to the items that it uses to get there
     private Dictionary<GridCell, Dictionary<GridCell, ItemType>> _hoverCellItemUsageMap;
+    
+    private HashSet<GridCell> _threatenedEnemyCells;
+    
     private bool _isInEditMode;
 
     public int MoveCounter { get; private set; }
@@ -55,6 +59,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     private void Awake()
     {
         GridCommandSystem = new CommandSystem();
+        EnemyPatternSystem = new EnemyPatternSystem(this);
         
         PiecePrefabByIdentifier = new Dictionary<string, GridPiece>();
         PiecePrefabByIdentifier[playerPrefab.identifier] = playerPrefab;
@@ -82,7 +87,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
         BuildLevelGridCells();
         
-        Player.SetupPlayerForLevel();
+        Player?.SetupPlayerForLevel();
 
         FitCameraToGrid();
         
@@ -149,6 +154,9 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             case PieceType.Item:
                 gridPiece.sprite.AddComponent<FloatingEffect>();
                 break;
+            case PieceType.Enemy:
+                gridPiece.sprite.AddComponent<FloatingEffect>();
+                break;
             case PieceType.None:
                 break;
         }
@@ -185,7 +193,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public void PlayerLiftedUp()
     {
         Player.WakeUp();
-        UpdateValidCells();
+        UpdateValidAndThreatenedCells();
     }
 
     public void DidTapValidGridCell(GridCell gridCell)
@@ -194,10 +202,6 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         var itemsUsed = _hoverCellItemUsageMap[gridCell];
 
         MovePlayerToCell(gridCell, cellsTraveled, itemsUsed);
-        
-        UpdateValidCells();
-
-        CheckForVictory();
     }
 
     private GridCell CellAtMousePosition()
@@ -251,6 +255,10 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         GridCommandSystem.Execute(moveCommand);
         
         BlitzUI.Instance.UpdateMoveCounter();
+        
+        UpdateValidAndThreatenedCells();
+
+        CheckForVictory();
     }
 
     public void IncrementMoveCounter()
@@ -328,7 +336,13 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         }
     }
 
-    public void UpdateValidCells()
+    public void UpdateValidAndThreatenedCells()
+    {
+        UpdateValidCells();
+        UpdateThreatenedCells();
+    }
+
+    private void UpdateValidCells()
     {
         _validCellsFromHover.ForEach(cell => cell.SetHoverState(HoverState.None));
         
@@ -354,38 +368,27 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
-                GridPiece terrain = cell.TerrainPiece;
-                if (terrain == null)
+
+                bool canPassThroughCell = cell.CanPlayerPassThroughCell(availableItems, out ItemType itemUsed);
+
+                if (!canPassThroughCell)
+                {
+                    break;
+                }
+
+                bool canMoveToCell = cell.CanPlayerMoveToCell();
+                if (canMoveToCell)
                 {
                     _validCellsFromHover.Add(cell);
                     cell.SetHoverState(HoverState.Valid);
                 }
                 else
                 {
-                    bool shouldStopMovement = false;
-                    
-                    switch (terrain.terrainType)
+                    if (itemUsed != ItemType.None)
                     {
-                        case TerrainType.Wall:
-                            if (availableItems[ItemType.Spring] > 0)
-                            {
-                                availableItems[ItemType.Spring]--;
-                                itemsUsedInTravelCells[cell] = ItemType.Spring;
-                            }
-                            else
-                            {
-                                shouldStopMovement = true;
-                            }
-                            break;
-                        case TerrainType.Spikes:
-                        case TerrainType.Mud:
-                        case TerrainType.None:
-                            break;
-
+                        availableItems[itemUsed]--;
+                        itemsUsedInTravelCells[cell] = itemUsed;
                     }
-
-                    if (shouldStopMovement)
-                        break;
                 }
 
                 _hoverCellItemUsageMap[cell] = new Dictionary<GridCell, ItemType>(itemsUsedInTravelCells);
@@ -394,6 +397,28 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                 
                 current += dir;
             }
+        }
+    }
+
+    private void UpdateThreatenedCells()
+    {
+        _threatenedEnemyCells = new();
+        
+        Debug.Log("finding threatened cells");
+
+        foreach (GridCell cell in Cells)
+        {
+            if (cell.EnemyPiece != null)
+            {
+                Debug.Log($"this cell {cell} has an enemy {cell.EnemyPiece}");
+                List<GridCell> threatenedCells = EnemyPatternSystem.GetThreatenedCellsForEnemy(cell.EnemyPiece);
+                _threatenedEnemyCells.UnionWith(threatenedCells);
+            }
+        }
+
+        foreach (GridCell threatenedCell in _threatenedEnemyCells)
+        {
+            threatenedCell.SetHoverState(HoverState.Invalid);
         }
     }
 }

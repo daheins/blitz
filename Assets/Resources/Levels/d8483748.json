@@ -1,5 +1,5 @@
 {
-  "levelIdentifier": "be6b88a2",
+  "levelIdentifier": "d8483748",
   "levelName": "temp name",
   "width": 14,
   "height": 10,
@@ -84,6 +84,50 @@
       "pieceIds": []
     },
     {
+      "pieceIds": [
+        "player"
+      ]
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
       "pieceIds": []
     },
     {
@@ -184,102 +228,8 @@
     },
     {
       "pieceIds": [
-        "wall"
+        "goombaSmall"
       ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
     },
     {
       "pieceIds": []
@@ -292,39 +242,7 @@
     },
     {
       "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
+        "goombaBig"
       ]
     },
     {
@@ -364,9 +282,85 @@
       "pieceIds": []
     },
     {
-      "pieceIds": [
-        "wall"
-      ]
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
     },
     {
       "pieceIds": []
