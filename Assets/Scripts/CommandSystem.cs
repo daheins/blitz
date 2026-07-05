@@ -36,19 +36,19 @@ public class MoveCommand : ICommand
     private GridLevel _level;
     private GridCell _startCell;
     private GridCell _endCell;
-    private List<ItemType> _itemsUsed;
+    private Dictionary<GridCell, ItemType> _itemsUsed;
     private Dictionary<GridCell, ItemType> _gridItemsRemoved;
     
     public MoveCommand(GridLevel level, GridCell startCell, GridCell endCell,
         // List<ItemType> itemsGained = null,
-        List<ItemType> itemsUsed = null,
+        Dictionary<GridCell, ItemType> itemsUsed = null,
         // Dictionary<GridCell, GridPiece> piecesAdded = null,
         Dictionary<GridCell, ItemType> gridItemsRemoved = null)
     {
         _level = level;
         _startCell = startCell;
         _endCell = endCell;
-        _itemsUsed = itemsUsed ?? new List<ItemType>();
+        _itemsUsed = itemsUsed ?? new();
         _gridItemsRemoved = gridItemsRemoved ?? new Dictionary<GridCell, ItemType>();
     }
 
@@ -59,9 +59,12 @@ public class MoveCommand : ICommand
             _level.PickupItemInCell(cell);
         }
         
-        foreach (ItemType item in _itemsUsed)
+        foreach (var pair in _itemsUsed)
         {
-            _level.SpendItem(item);
+            _level.SpendItem(pair.Value);
+
+            GridPiece itemPiece = _level.gridItems.Find(piece => piece.itemType == pair.Value);
+            DooberManager.Instance.SpawnDoober(pair.Key, itemPiece);
         }
         
         _level.Player.playerCell = _endCell;
@@ -80,7 +83,7 @@ public class MoveCommand : ICommand
             _level.SpendItem(pair.Value);
         }
 
-        foreach (ItemType item in _itemsUsed)
+        foreach (ItemType item in _itemsUsed.Values)
         {
             _level.EarnItem(item);
         }

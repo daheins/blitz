@@ -28,7 +28,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     // Map from each cell in the valid hover, to all the cells that it passes through
     private Dictionary<GridCell, List<GridCell>> _hoverCellTravelMap;
     // Map from each cell in the valid hover, to the items that it uses to get there
-    private Dictionary<GridCell, List<ItemType>> _hoverCellItemUsageMap;
+    private Dictionary<GridCell, Dictionary<GridCell, ItemType>> _hoverCellItemUsageMap;
     private bool _isInEditMode;
 
     public int MoveCounter { get; private set; }
@@ -233,7 +233,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     private void MovePlayerToCell(
         GridCell endCell,
         List<GridCell> passThroughCells = null,
-        List<ItemType> itemsUsedInMove = null)
+        Dictionary<GridCell, ItemType> itemsUsedInMove = null)
     {
         Dictionary<GridCell, ItemType> gridItemsRemoved = new Dictionary<GridCell, ItemType>();
         if (passThroughCells != null)
@@ -337,8 +337,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         _hoverCellTravelMap = new Dictionary<GridCell, List<GridCell>>();
         _hoverCellTravelMap[Player.playerCell] = new List<GridCell>();
 
-        _hoverCellItemUsageMap = new Dictionary<GridCell, List<ItemType>>();
-        _hoverCellItemUsageMap[Player.playerCell] = new List<ItemType>();
+        _hoverCellItemUsageMap = new();
+        _hoverCellItemUsageMap[Player.playerCell] = new ();
 
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
@@ -349,7 +349,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             Dictionary<ItemType, int> availableItems = new Dictionary<ItemType, int>(ItemInventory);
             
             List<GridCell> cellsInDirection = new List<GridCell>();
-            List<ItemType> itemsUsedInDirection = new List<ItemType>();
+            Dictionary<GridCell, ItemType> itemsUsedInTravelCells = new();
             
             while (IsInBounds(current))
             {
@@ -370,7 +370,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                             if (availableItems[ItemType.Spring] > 0)
                             {
                                 availableItems[ItemType.Spring]--;
-                                itemsUsedInDirection.Add(ItemType.Spring);
+                                itemsUsedInTravelCells[cell] = ItemType.Spring;
                             }
                             else
                             {
@@ -388,7 +388,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                         break;
                 }
 
-                _hoverCellItemUsageMap[cell] = new List<ItemType>(itemsUsedInDirection);
+                _hoverCellItemUsageMap[cell] = new Dictionary<GridCell, ItemType>(itemsUsedInTravelCells);
                 _hoverCellTravelMap[cell] = new List<GridCell>(cellsInDirection);
                 cellsInDirection.Add(cell);
                 
