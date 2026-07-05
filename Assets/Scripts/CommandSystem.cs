@@ -65,7 +65,7 @@ public class MoveCommand : ICommand
         }
         
         _level.Player.playerCell = _endCell;
-        _level.TransferPieceToCell(_level.Player.playerPiece, _endCell);
+        _level.TransferPlayerToCell(_endCell, false);
 
         _level.IncrementMoveCounter();
     }
@@ -86,7 +86,7 @@ public class MoveCommand : ICommand
         }
         
         _level.Player.playerCell = _startCell;
-        _level.TransferPieceToCell(_level.Player.playerPiece, _startCell);
+        _level.TransferPlayerToCell(_startCell);
         
         _level.DecrementMoveCounter();
         

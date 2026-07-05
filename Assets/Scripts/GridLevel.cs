@@ -3,7 +3,6 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
 public class GridLevel : MonoBehaviour, IGridCellDelegate
 {
     public static Dictionary<string, GridPiece> PiecePrefabByIdentifier;
@@ -292,9 +291,16 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         BlitzUI.Instance.AddInventoryItemIcon(itemPiece);
     }
     
-    public void TransferPieceToCell(GridPiece piece, GridCell cell)
+    public void TransferPlayerToCell(GridCell cell, bool isInstant = true)
     {
-        piece.transform.SetParent(cell.pieceAnchor.transform, false);
+        if (isInstant)
+        {
+            Player.CancelAllAnimations();
+            Player.playerPiece.transform.SetParent(cell.pieceAnchor.transform, false);
+            return;
+        }
+        
+        Player.AnimateToCell(cell);
     }
 
     private void CheckForVictory()
