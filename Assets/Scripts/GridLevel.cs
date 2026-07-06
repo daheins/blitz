@@ -200,7 +200,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     public void DidTapGridCell(GridCell gridCell)
     {
-        if (!_playerMoveTravelMap.ContainsKey(gridCell))
+        if (_playerMoveTravelMap == null || !_playerMoveTravelMap.ContainsKey(gridCell))
             return;
         
         var cellsTraveled = _playerMoveTravelMap[gridCell];
@@ -212,7 +212,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         foreach (GridCell cellTraveled in cellsTraveled)
         {
             if (_cellItemPassThroughMap.ContainsKey(cellTraveled))
-                itemsUsed[cellTraveled] = _cellItemMoveToMap[cellTraveled];
+                itemsUsed[cellTraveled] = _cellItemPassThroughMap[cellTraveled];
         }
 
         MovePlayerToCell(gridCell, cellsTraveled, itemsUsed);
