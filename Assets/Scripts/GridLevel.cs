@@ -27,9 +27,11 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     
     private List<GridCell> _validCellsFromHover;
     // Map from each cell in the valid hover, to all the cells that it passes through
-    private Dictionary<GridCell, List<GridCell>> _hoverCellTravelMap;
-    // Map from each cell in the valid hover, to the items that it uses to get there
-    private Dictionary<GridCell, Dictionary<GridCell, ItemType>> _hoverCellItemUsageMap;
+    private Dictionary<GridCell, List<GridCell>> _playerMoveTravelMap;
+    // Map from each cell in the valid hover, to the item that it uses to pass through that cell
+    private Dictionary<GridCell, ItemType> _cellItemPassThroughMap;
+    // Map from each cell in the valid hover, to the item that it uses to move into that cell
+    private Dictionary<GridCell, ItemType> _cellItemMoveToMap;
     
     private HashSet<GridCell> _threatenedEnemyCells;
     
@@ -196,10 +198,22 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         UpdateValidAndThreatenedCells();
     }
 
-    public void DidTapValidGridCell(GridCell gridCell)
+    public void DidTapGridCell(GridCell gridCell)
     {
-        var cellsTraveled = _hoverCellTravelMap[gridCell];
-        var itemsUsed = _hoverCellItemUsageMap[gridCell];
+        if (!_playerMoveTravelMap.ContainsKey(gridCell))
+            return;
+        
+        var cellsTraveled = _playerMoveTravelMap[gridCell];
+
+        Dictionary<GridCell, ItemType> itemsUsed = new();
+        if (_cellItemMoveToMap.ContainsKey(gridCell))
+            itemsUsed[gridCell] = _cellItemMoveToMap[gridCell];
+
+        foreach (GridCell cellTraveled in cellsTraveled)
+        {
+            if (_cellItemPassThroughMap.ContainsKey(cellTraveled))
+                itemsUsed[cellTraveled] = _cellItemMoveToMap[cellTraveled];
+        }
 
         MovePlayerToCell(gridCell, cellsTraveled, itemsUsed);
     }
@@ -348,11 +362,11 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         
         _validCellsFromHover = new List<GridCell> { Player.playerCell };
         
-        _hoverCellTravelMap = new Dictionary<GridCell, List<GridCell>>();
-        _hoverCellTravelMap[Player.playerCell] = new List<GridCell>();
+        _playerMoveTravelMap = new Dictionary<GridCell, List<GridCell>>();
+        _playerMoveTravelMap[Player.playerCell] = new List<GridCell>();
 
-        _hoverCellItemUsageMap = new();
-        _hoverCellItemUsageMap[Player.playerCell] = new ();
+        _cellItemMoveToMap = new();
+        _cellItemPassThroughMap = new();
 
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
@@ -363,36 +377,35 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             Dictionary<ItemType, int> availableItems = new Dictionary<ItemType, int>(ItemInventory);
             
             List<GridCell> cellsInDirection = new List<GridCell>();
-            Dictionary<GridCell, ItemType> itemsUsedInTravelCells = new();
             
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
-
-                bool canPassThroughCell = cell.CanPlayerPassThroughCell(availableItems, out ItemType itemUsed);
-
-                if (!canPassThroughCell)
-                {
-                    break;
-                }
-
-                bool canMoveToCell = cell.CanPlayerMoveToCell();
+                
+                bool canMoveToCell = cell.CanPlayerMoveToCell(availableItems, out ItemType itemUsedMoveTo);
                 if (canMoveToCell)
                 {
                     _validCellsFromHover.Add(cell);
+                    _playerMoveTravelMap[cell] = new List<GridCell>(cellsInDirection);
+                    
+                    if (itemUsedMoveTo != ItemType.None)
+                    {
+                        _cellItemMoveToMap[cell] = itemUsedMoveTo;
+                    }
+                    
                     cell.SetHoverState(HoverState.Valid);
                 }
-                else
+                
+                bool canPassThroughCell = cell.CanPlayerPassThroughCell(availableItems, out ItemType itemUsedPassThrough);
+                if (!canPassThroughCell)
+                    break;
+
+                if (itemUsedPassThrough != ItemType.None)
                 {
-                    if (itemUsed != ItemType.None)
-                    {
-                        availableItems[itemUsed]--;
-                        itemsUsedInTravelCells[cell] = itemUsed;
-                    }
+                    _cellItemPassThroughMap[cell] = itemUsedPassThrough;
+                    availableItems[itemUsedPassThrough]--;
                 }
 
-                _hoverCellItemUsageMap[cell] = new Dictionary<GridCell, ItemType>(itemsUsedInTravelCells);
-                _hoverCellTravelMap[cell] = new List<GridCell>(cellsInDirection);
                 cellsInDirection.Add(cell);
                 
                 current += dir;

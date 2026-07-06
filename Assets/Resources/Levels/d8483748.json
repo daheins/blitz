@@ -357,7 +357,9 @@
       "pieceIds": []
     },
     {
-      "pieceIds": []
+      "pieceIds": [
+        "shield"
+      ]
     },
     {
       "pieceIds": []
@@ -384,7 +386,9 @@
       "pieceIds": []
     },
     {
-      "pieceIds": []
+      "pieceIds": [
+        "shield"
+      ]
     },
     {
       "pieceIds": []

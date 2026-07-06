@@ -2687,6 +2687,7 @@ MonoBehaviour:
   goalPrefab: {fileID: 7246340937273291456, guid: 33a8720fc27c5431fb93bad901a94df7, type: 3}
   gridItems:
   - {fileID: 7246340937273291456, guid: ee3f191dafb1e47c1830c1f7b03f0cbf, type: 3}
+  - {fileID: 7246340937273291456, guid: 4b168a2431369476dbec711b1d47d219, type: 3}
   gridTerrains:
   - {fileID: 7246340937273291456, guid: 22124febfc9c744fe98c00c0a498ddf5, type: 3}
   - {fileID: 7246340937273291456, guid: feb1ee16f78a94d36936b1ab27fcfced, type: 3}

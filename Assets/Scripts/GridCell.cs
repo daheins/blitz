@@ -9,7 +9,7 @@ public enum HoverState { None, Valid, Current, Invalid }
 
 public interface IGridCellDelegate
 {
-    public void DidTapValidGridCell(GridCell gridCell);
+    public void DidTapGridCell(GridCell gridCell);
 }
 
 public class GridCell : MonoBehaviour
@@ -79,8 +79,10 @@ public class GridCell : MonoBehaviour
     
     // public bool CanPlayerMoveToCell(Dictionary<ItemType, int> itemsOwned, out List<ItemType> itemsUsed)
 
-    public bool CanPlayerMoveToCell()
+    public bool CanPlayerMoveToCell(Dictionary<ItemType, int> itemsOwned, out ItemType itemUsed)
     {
+        itemUsed = ItemType.None;
+        
         switch (TerrainPiece?.terrainType)
         {
             case TerrainType.Wall:
@@ -93,6 +95,13 @@ public class GridCell : MonoBehaviour
 
         if (EnemyPiece != null)
             return false;
+        
+        if (_hoverState == HoverState.Invalid)
+        {
+            if (itemsOwned[ItemType.Shield] < 1) return false;
+
+            itemUsed = ItemType.Shield;
+        }
 
         return true;
     }
@@ -175,9 +184,6 @@ public class GridCell : MonoBehaviour
             return;
         }
 
-        if (_hoverState == HoverState.Valid)
-        {
-            Delegate.DidTapValidGridCell(this);
-        }
+        Delegate.DidTapGridCell(this);
     }
 }
