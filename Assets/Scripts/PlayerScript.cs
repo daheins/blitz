@@ -11,6 +11,8 @@ public class PlayerScript : MonoBehaviour
     public GameObject playerAwakeNode;
     public GameObject playerAsleepNode;
 
+    private bool _isAwake = false;
+    
     private const float TweenDuration = .2f;
     private const float DragBodyRaiseY = .3f;
     private Vector3 BodyRaiseVector => Vector2.up * DragBodyRaiseY;
@@ -21,12 +23,20 @@ public class PlayerScript : MonoBehaviour
 
     public void SetupPlayerForLevel()
     {
+        _isAwake = false;
+
+        body.transform.localPosition = Vector3.zero;
+        
         playerAsleepNode.SetActive(true);
         playerAwakeNode.SetActive(false);
     }
 
-    public void WakeUp()
+    private void WakeUp()
     {
+        _isAwake = true;
+        
+        body.transform.localPosition = BodyRaiseVector;
+        
         playerAsleepNode.SetActive(false);
         playerAwakeNode.SetActive(true);
     }
@@ -34,10 +44,11 @@ public class PlayerScript : MonoBehaviour
     private void OnMouseDown()
     {
         if (Level.IsInEditMode) return;
-
-        body.transform.localPosition = BodyRaiseVector;
-
-        Level.PlayerLiftedUp();
+        
+        if (_isAwake) return;
+        
+        WakeUp();
+        Level.UpdateValidAndThreatenedCells();
     }
 
     public void CancelAllAnimations()

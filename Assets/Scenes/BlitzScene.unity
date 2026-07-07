@@ -2685,6 +2685,7 @@ MonoBehaviour:
   cellPrefab: {fileID: -3400639235224991317, guid: 60812073efb1549edbc023e652b93c4a, type: 3}
   playerPrefab: {fileID: 6098921609068047320, guid: 84109814fb81b41a08f9604c23b67018, type: 3}
   goalPrefab: {fileID: 7246340937273291456, guid: 33a8720fc27c5431fb93bad901a94df7, type: 3}
+  portalPrefab: {fileID: 7246340937273291456, guid: 9361f6ccb39ea4e88a4af73a1ce4b76d, type: 3}
   gridItems:
   - {fileID: 7246340937273291456, guid: ee3f191dafb1e47c1830c1f7b03f0cbf, type: 3}
   - {fileID: 7246340937273291456, guid: 4b168a2431369476dbec711b1d47d219, type: 3}

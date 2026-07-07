@@ -144,6 +144,8 @@ public class BlitzUI : MonoBehaviour
             return;
         }
         
+        gridLevel.PortalGoal?.UpdatePortal(gridLevel);
+        
         moveCounterParent.SetActive(true);
         moveCounterLabel.text = $"{gridLevel.MoveCounter}";
         moveTargetLabel.text = $"{levelData.moveTarget}";

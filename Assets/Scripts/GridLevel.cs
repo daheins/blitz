@@ -14,6 +14,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public GridCell cellPrefab;
     public GridPiece playerPrefab;
     public GridPiece goalPrefab;
+    public GridPiece portalPrefab;
     public List<GridPiece> gridItems;
     public List<GridPiece> gridTerrains;
     public List<GridPiece> gridEnemies;
@@ -24,6 +25,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     
     public PlayerScript Player { get; private set; }
     public GridCell[,] Cells { get; private set; }
+    public PortalGoal PortalGoal { get; private set; }
     
     private List<GridCell> _validCellsFromHover;
     // Map from each cell in the valid hover, to all the cells that it passes through
@@ -65,7 +67,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         
         PiecePrefabByIdentifier = new Dictionary<string, GridPiece>();
         PiecePrefabByIdentifier[playerPrefab.identifier] = playerPrefab;
-        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
+        PiecePrefabByIdentifier[goalPrefab.identifier] = portalPrefab;
 
         foreach (GridPiece gridPiece in gridItems.Concat(gridTerrains).Concat(gridEnemies))
         {
@@ -151,7 +153,9 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                 SetupPlayer(gridPiece.GetComponent<PlayerScript>(), cell, gridPiece);
                 break;
             case PieceType.Terrain:
+                break;
             case PieceType.Goal:
+                PortalGoal = gridPiece.GetComponent<PortalGoal>();
                 break;
             case PieceType.Item:
                 gridPiece.sprite.AddComponent<FloatingEffect>();
@@ -190,12 +194,6 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public void RestartLevel()
     {
         SetupGridForLevel(_levelData);
-    }
-
-    public void PlayerLiftedUp()
-    {
-        Player.WakeUp();
-        UpdateValidAndThreatenedCells();
     }
 
     public void DidTapGridCell(GridCell gridCell)
@@ -363,7 +361,6 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         _validCellsFromHover = new List<GridCell> { Player.playerCell };
         
         _playerMoveTravelMap = new Dictionary<GridCell, List<GridCell>>();
-        _playerMoveTravelMap[Player.playerCell] = new List<GridCell>();
 
         _cellItemMoveToMap = new();
         _cellItemPassThroughMap = new();
