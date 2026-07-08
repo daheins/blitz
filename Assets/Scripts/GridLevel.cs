@@ -448,6 +448,11 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
         foreach (GridCell cell in Cells)
         {
+            if (cell.TerrainPiece != null && cell.TerrainPiece.terrainType == TerrainType.Spikes)
+            {
+                _threatenedEnemyCells.Add(cell);
+            }
+            
             if (cell.EnemyPiece != null)
             {
                 List<GridCell> threatenedCells = EnemyPatternSystem.GetThreatenedCellsForEnemy(cell.EnemyPiece);
