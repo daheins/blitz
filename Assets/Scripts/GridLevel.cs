@@ -10,6 +10,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public EnemyPatternSystem EnemyPatternSystem;
     
     private LevelData _levelData;
+    private bool _isPortalLevel;
     
     public GridCell cellPrefab;
     public GridPiece playerPrefab;
@@ -67,7 +68,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         
         PiecePrefabByIdentifier = new Dictionary<string, GridPiece>();
         PiecePrefabByIdentifier[playerPrefab.identifier] = playerPrefab;
-        PiecePrefabByIdentifier[goalPrefab.identifier] = portalPrefab;
+        PiecePrefabByIdentifier[goalPrefab.identifier] = goalPrefab;
 
         foreach (GridPiece gridPiece in gridItems.Concat(gridTerrains).Concat(gridEnemies))
         {
@@ -75,9 +76,10 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         }
     }
 
-    public void SetupGridForLevel(LevelData data)
+    public void SetupGridForLevel(LevelData data, bool isPortalLevel = false)
     {
         _levelData = data;
+        _isPortalLevel = isPortalLevel;
         Debug.Log($"Loading Level: {data.levelIdentifier}");
         
         Cells = new GridCell[data.width,data.height];
@@ -142,6 +144,10 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     public void AddPieceToCell(GridCell cell, GridPiece gridPiecePrefab)
     {
+        // Horrible hack I will maybe fix later
+        if (gridPiecePrefab == goalPrefab && _isPortalLevel)
+            gridPiecePrefab = portalPrefab;
+        
         GridPiece gridPiece = Instantiate(gridPiecePrefab, cell.transform.position, Quaternion.identity,
             cell.pieceAnchor.transform);
         cell.AddCellPiece(gridPiece);
@@ -152,10 +158,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             case PieceType.Player:
                 SetupPlayer(gridPiece.GetComponent<PlayerScript>(), cell, gridPiece);
                 break;
-            case PieceType.Terrain:
-                break;
             case PieceType.Goal:
-                PortalGoal = gridPiece.GetComponent<PortalGoal>();
+                if (_isPortalLevel) PortalGoal = gridPiece.GetComponent<PortalGoal>();
                 break;
             case PieceType.Item:
                 gridPiece.sprite.AddComponent<FloatingEffect>();
@@ -163,6 +167,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             case PieceType.Enemy:
                 gridPiece.sprite.AddComponent<FloatingEffect>();
                 break;
+            case PieceType.Terrain:
             case PieceType.None:
                 break;
         }
