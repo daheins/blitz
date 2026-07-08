@@ -81,14 +81,15 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     public void SetupGridForLevel(LevelData data, bool isPortalLevel = false)
     {
+        Debug.Log($"Loading Level: {data.levelIdentifier}");
+        
         _levelData = data;
         _isPortalLevel = isPortalLevel;
-        Debug.Log($"Loading Level: {data.levelIdentifier}");
+        _isPlayerDamaged = false;
+        _validCellsFromHover = new List<GridCell>();
         
         Cells = new GridCell[data.width,data.height];
         
-        _validCellsFromHover = new List<GridCell>();
-
         foreach (GridPiece itemPiece in gridItems)
         {
             ItemInventory[itemPiece.itemType] = 0;
@@ -103,6 +104,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         GridCommandSystem.ClearHistory();
         
         MoveCounter = 0;
+        
+        UpdateThreatenedCells();
         
         BlitzUI.Instance.StartGridLevel();
     }
@@ -349,11 +352,13 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             SaveStateManager.Instance.SetLevelState(_levelData.levelIdentifier, true, MoveCounter, isPerfect);
             
             BlitzUI.Instance.DisplayPlayerVictory();
-        }
-
-        if (_isPlayerDamaged)
+        } else if (_isPlayerDamaged)
         {
             BlitzUI.Instance.DisplayPlayerDefeat();
+        }
+        else
+        {
+            BlitzUI.Instance.HideVictoryAndDefeatNodes();
         }
     }
 
@@ -365,6 +370,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public void ClearPlayerDamage()
     {
         _isPlayerDamaged = false;
+        
+        BlitzUI.Instance.HideVictoryAndDefeatNodes();
     }
 
     private void UpdateMoveTarget()

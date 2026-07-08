@@ -59,6 +59,9 @@ public class BlitzUI : MonoBehaviour
 
     public void StartGridLevel()
     {
+        victoryNode.SetActive(false);
+        defeatNode.SetActive(false);
+        
         ClearInventoryItemIcons();
         UpdateMoveCounter();
         UpdateUndoAndRestartState();
@@ -98,6 +101,12 @@ public class BlitzUI : MonoBehaviour
     {
         defeatNode.SetActive(true);
     }
+
+    public void HideVictoryAndDefeatNodes()
+    {
+        victoryNode.SetActive(false);
+        defeatNode.SetActive(false);
+    }
     
     public void DidTapNextLevel()
     {
@@ -106,13 +115,6 @@ public class BlitzUI : MonoBehaviour
         SaveStateManager.Instance.PlayNextLevel();
     }
 
-    public void DidTapRetryLevel()
-    {
-        defeatNode.SetActive(false);
-        
-        gridLevel.RestartLevel();
-    }
-    
     private void UpdateAllLevelButtons()
     {
         PlayerSaveState playerSaveState = SaveStateManager.Instance.PlayerSaveState;

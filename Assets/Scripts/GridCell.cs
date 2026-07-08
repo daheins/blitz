@@ -136,7 +136,7 @@ public class GridCell : MonoBehaviour
     {
         if (isThreatenedCell == IsThreatenedCell) return;
         
-        moveIndicatorThreatened.SetActive(isThreatenedCell);
+        moveIndicatorThreatened.SetActive(isThreatenedCell && TerrainPiece == null);
         IsThreatenedCell = isThreatenedCell;
     }
     
