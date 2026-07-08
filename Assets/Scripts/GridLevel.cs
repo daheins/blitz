@@ -35,8 +35,11 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     private Dictionary<GridCell, ItemType> _cellItemPassThroughMap;
     // Map from each cell in the valid hover, to the item that it uses to move into that cell
     private Dictionary<GridCell, ItemType> _cellItemMoveToMap;
+
+    private GridCell _mouseDownGridCell;
     
     private HashSet<GridCell> _threatenedEnemyCells;
+    private bool _isPlayerDamaged = false;
     
     private bool _isInEditMode;
 
@@ -201,8 +204,16 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         SetupGridForLevel(_levelData);
     }
 
-    public void DidTapGridCell(GridCell gridCell)
+    public void MouseDownInGridCell(GridCell gridCell)
     {
+        _mouseDownGridCell = gridCell;
+    }
+
+    public void MouseUpInGridCell(GridCell gridCell)
+    {
+        if (gridCell != _mouseDownGridCell)
+            return;
+        
         if (_playerMoveTravelMap == null || !_playerMoveTravelMap.ContainsKey(gridCell))
             return;
         
@@ -275,7 +286,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         
         UpdateValidAndThreatenedCells();
 
-        CheckForVictory();
+        CheckForVictoryAndDefeat();
     }
 
     public void IncrementMoveCounter()
@@ -328,7 +339,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         Player.AnimateToCell(cell);
     }
 
-    private void CheckForVictory()
+    private void CheckForVictoryAndDefeat()
     {
         if (Player.playerCell.GoalPiece != null)
         {
@@ -339,6 +350,21 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             
             BlitzUI.Instance.DisplayPlayerVictory();
         }
+
+        if (_isPlayerDamaged)
+        {
+            BlitzUI.Instance.DisplayPlayerDefeat();
+        }
+    }
+
+    public void MarkPlayerDamage()
+    {
+        _isPlayerDamaged = true;
+    }
+
+    public void ClearPlayerDamage()
+    {
+        _isPlayerDamaged = false;
     }
 
     private void UpdateMoveTarget()
@@ -355,13 +381,13 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     public void UpdateValidAndThreatenedCells()
     {
-        UpdateValidCells();
         UpdateThreatenedCells();
+        UpdateValidCells();
     }
 
     private void UpdateValidCells()
     {
-        _validCellsFromHover.ForEach(cell => cell.SetHoverState(HoverState.None));
+        _validCellsFromHover.ForEach(cell => cell.SetMoveState(false));
         
         _validCellsFromHover = new List<GridCell> { Player.playerCell };
         
@@ -383,8 +409,9 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             while (IsInBounds(current))
             {
                 GridCell cell = CellAtCoordinate(current);
-                
-                bool canMoveToCell = cell.CanPlayerMoveToCell(availableItems, out ItemType itemUsedMoveTo);
+
+                bool isThreatenedCell = _threatenedEnemyCells.Contains(cell);
+                bool canMoveToCell = cell.CanPlayerMoveToCell(availableItems, out ItemType itemUsedMoveTo, isThreatenedCell);
                 if (canMoveToCell)
                 {
                     _validCellsFromHover.Add(cell);
@@ -395,7 +422,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                         _cellItemMoveToMap[cell] = itemUsedMoveTo;
                     }
                     
-                    cell.SetHoverState(HoverState.Valid);
+                    cell.SetMoveState(true);
                 }
                 
                 bool canPassThroughCell = cell.CanPlayerPassThroughCell(availableItems, out ItemType itemUsedPassThrough);
@@ -418,22 +445,19 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     private void UpdateThreatenedCells()
     {
         _threatenedEnemyCells = new();
-        
-        Debug.Log("finding threatened cells");
 
         foreach (GridCell cell in Cells)
         {
             if (cell.EnemyPiece != null)
             {
-                Debug.Log($"this cell {cell} has an enemy {cell.EnemyPiece}");
                 List<GridCell> threatenedCells = EnemyPatternSystem.GetThreatenedCellsForEnemy(cell.EnemyPiece);
                 _threatenedEnemyCells.UnionWith(threatenedCells);
             }
         }
 
-        foreach (GridCell threatenedCell in _threatenedEnemyCells)
+        foreach (GridCell cell in _threatenedEnemyCells)
         {
-            threatenedCell.SetHoverState(HoverState.Invalid);
+            cell.SetThreatenedState(true);
         }
     }
 }

@@ -10,6 +10,7 @@ public class BlitzUI : MonoBehaviour
     
     public GridLevel gridLevel;
     public GameObject victoryNode;
+    public GameObject defeatNode;
 
     public InventoryItemIcon itemIconPrefab;
     public GameObject inventoryParent;
@@ -93,11 +94,23 @@ public class BlitzUI : MonoBehaviour
         victoryNode.SetActive(true);
     }
     
+    public void DisplayPlayerDefeat()
+    {
+        defeatNode.SetActive(true);
+    }
+    
     public void DidTapNextLevel()
     {
         victoryNode.SetActive(false);
 
         SaveStateManager.Instance.PlayNextLevel();
+    }
+
+    public void DidTapRetryLevel()
+    {
+        defeatNode.SetActive(false);
+        
+        gridLevel.RestartLevel();
     }
     
     private void UpdateAllLevelButtons()

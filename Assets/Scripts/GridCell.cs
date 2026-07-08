@@ -5,20 +5,18 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public enum HoverState { None, Valid, Current, Invalid }
-
 public interface IGridCellDelegate
 {
-    public void DidTapGridCell(GridCell gridCell);
+    public void MouseDownInGridCell(GridCell gridCell);
+    public void MouseUpInGridCell(GridCell gridCell);
 }
 
 public class GridCell : MonoBehaviour
 {
     public GameObject terrainAnchor;
     public GameObject pieceAnchor;
-    public GameObject hoverIndicatorValid;
-    public GameObject hoverIndicatorInvalid;
-    public GameObject hoverIndicatorCurrent;
+    public GameObject moveIndicatorValid;
+    public GameObject moveIndicatorThreatened;
 
     public IGridCellDelegate Delegate;
 
@@ -32,7 +30,8 @@ public class GridCell : MonoBehaviour
     public GridPiece GoalPiece { get; private set; }
     public GridPiece EnemyPiece { get; private set; }
 
-    private HoverState _hoverState; 
+    public bool IsValidMove { get; private set; }
+    public bool IsThreatenedCell { get; private set; }
 
     public Vector2Int GridCoordinates => new Vector2Int(gridX, gridY);
 
@@ -79,15 +78,15 @@ public class GridCell : MonoBehaviour
     
     // public bool CanPlayerMoveToCell(Dictionary<ItemType, int> itemsOwned, out List<ItemType> itemsUsed)
 
-    public bool CanPlayerMoveToCell(Dictionary<ItemType, int> itemsOwned, out ItemType itemUsed)
+    public bool CanPlayerMoveToCell(Dictionary<ItemType, int> itemsOwned, out ItemType itemUsed, bool isThreatened)
     {
         itemUsed = ItemType.None;
         
         switch (TerrainPiece?.terrainType)
         {
             case TerrainType.Wall:
-            case TerrainType.Spikes:
                 return false;
+            case TerrainType.Spikes:
             case TerrainType.Mud:
             case TerrainType.None:
                 break;
@@ -96,12 +95,8 @@ public class GridCell : MonoBehaviour
         if (EnemyPiece != null)
             return false;
         
-        if (_hoverState == HoverState.Invalid)
-        {
-            if (itemsOwned[ItemType.Shield] < 1) return false;
-
+        if (isThreatened && itemsOwned[ItemType.Shield] > 0)
             itemUsed = ItemType.Shield;
-        }
 
         return true;
     }
@@ -129,30 +124,20 @@ public class GridCell : MonoBehaviour
         return true;
     }
     
-    public void SetHoverState(HoverState hoverState)
+    public void SetMoveState(bool isValidMove)
     {
-        if (hoverState == _hoverState) return;
+        if (isValidMove == IsValidMove) return;
         
-        _hoverState = hoverState;
+        moveIndicatorValid.SetActive(isValidMove);
+        IsValidMove = isValidMove;
+    }
 
-        hoverIndicatorValid.SetActive(false);
-        hoverIndicatorInvalid.SetActive(false);
-        hoverIndicatorCurrent.SetActive(false);
+    public void SetThreatenedState(bool isThreatenedCell)
+    {
+        if (isThreatenedCell == IsThreatenedCell) return;
         
-        switch (hoverState)
-        {
-            case HoverState.Current:
-                hoverIndicatorCurrent.SetActive(true);
-                break;
-            case HoverState.Valid:
-                hoverIndicatorValid.SetActive(true);
-                break;
-            case HoverState.Invalid:
-                hoverIndicatorInvalid.SetActive(true);
-                break;
-            case HoverState.None:
-                break;
-        }
+        moveIndicatorThreatened.SetActive(isThreatenedCell);
+        IsThreatenedCell = isThreatenedCell;
     }
     
     public void ResetCell()
@@ -162,8 +147,8 @@ public class GridCell : MonoBehaviour
             Destroy(gridPiece.gameObject);
         }
         
-        hoverIndicatorValid.SetActive(false);
-        hoverIndicatorCurrent.SetActive(false);
+        moveIndicatorValid.SetActive(false);
+        moveIndicatorThreatened.SetActive(false);
         
         _gridPieces = new List<GridPiece>();
         TerrainPiece = null;
@@ -184,6 +169,14 @@ public class GridCell : MonoBehaviour
             return;
         }
 
-        Delegate.DidTapGridCell(this);
+        Delegate.MouseDownInGridCell(this);
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        
+        Delegate.MouseUpInGridCell(this);
     }
 }

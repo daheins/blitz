@@ -69,6 +69,11 @@ public class MoveCommand : ICommand
         
         _level.Player.playerCell = _endCell;
         _level.TransferPlayerToCell(_endCell, false);
+        
+        if (_endCell.IsThreatenedCell && !_itemsUsed.Values.Contains(ItemType.Shield))
+        {
+            _level.MarkPlayerDamage();
+        }
 
         _level.IncrementMoveCounter();
     }
@@ -92,6 +97,8 @@ public class MoveCommand : ICommand
         _level.TransferPlayerToCell(_startCell);
         
         _level.DecrementMoveCounter();
+        
+        _level.ClearPlayerDamage();
         
         BlitzUI.Instance.UpdateMoveCounter();
         
