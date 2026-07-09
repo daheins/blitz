@@ -180,4 +180,24 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         
         _currentSelectedButton = editorPieceButton;
     }
+
+    public void AddRowButton()
+    {
+        _editedLevelData.AddRow();
+    }
+
+    public void RemoveRowButton()
+    {
+        _editedLevelData.RemoveRow();
+    }
+
+    public void AddColumnButton()
+    {
+        _editedLevelData.AddColumn();
+    }
+
+    public void RemoveColumnButton()
+    {
+        _editedLevelData.RemoveColumn();
+    }
 }

@@ -70,4 +70,34 @@ public class LevelData
         CellData cellData = GetCell(x, y);
         cellData.pieceIds.Clear();
     }
+    
+    public void AddColumn()
+    {
+        width++;
+        for (int y = 0; y < height; y++)
+            SetCell(width - 1, y, new CellData());
+    }
+
+    public void RemoveColumn()
+    {
+        if (width <= 1) return;
+        for (int y = 0; y < height; y++)
+            CellMap.Remove(Key(width - 1, y));
+        width--;
+    }
+
+    public void AddRow()
+    {
+        height++;
+        for (int x = 0; x < width; x++)
+            SetCell(x, height - 1, new CellData());
+    }
+
+    public void RemoveRow()
+    {
+        if (height <= 1) return;
+        for (int x = 0; x < width; x++)
+            CellMap.Remove(Key(x, height - 1));
+        height--;
+    }
 }

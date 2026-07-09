@@ -13,7 +13,7 @@ public class PlayerSaveState
     public Dictionary<string, LevelState> LevelProgressStates = new();
     
     public bool FeatureUnlockHighScores = false;
-    public const int KLevelsToUnlockHighScores = 4;
+    public const int KLevelsToUnlockHighScores = 10;
     public bool FeatureUnlockUndoAndRestart = false;
     public const int KLevelsToUnlockUndoAndRestart = 2;
 }
