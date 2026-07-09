@@ -26,7 +26,11 @@ public class RadiusAttackPattern : IAttackPattern
             {
                 if (Mathf.Abs(x) == _radius || Mathf.Abs(y) == _radius)
                 {
-                    GridCell cell = level.Cells[enemyCell.gridX + x, enemyCell.gridY + y];
+                    int coorX = enemyCell.gridX + x;
+                    int coorY = enemyCell.gridY + y;
+                    if (!level.IsInBounds(coorX, coorY)) continue;
+                    
+                    GridCell cell = level.Cells[coorX, coorY];
                     if (cell != null)
                         cells.Add(cell);
                 }

@@ -63,13 +63,19 @@
       "pieceIds": []
     },
     {
-      "pieceIds": []
+      "pieceIds": [
+        "shield"
+      ]
     },
     {
-      "pieceIds": []
+      "pieceIds": [
+        "spring"
+      ]
     },
     {
-      "pieceIds": []
+      "pieceIds": [
+        "shield"
+      ]
     },
     {
       "pieceIds": []
@@ -110,7 +116,86 @@
       "pieceIds": []
     },
     {
+      "pieceIds": [
+        "spring"
+      ]
+    },
+    {
       "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": [
+        "spring"
+      ]
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": [
+        "shield"
+      ]
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": [
+        "wall"
+      ]
     },
     {
       "pieceIds": []
@@ -152,7 +237,25 @@
       "pieceIds": []
     },
     {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    {
       "pieceIds": []
+    },
+    {
+      "pieceIds": [
+        "goombaSmall"
+      ]
+    },
+    {
+      "pieceIds": []
+    },
+    {
+      "pieceIds": [
+        "wall"
+      ]
     },
     {
       "pieceIds": []
@@ -164,64 +267,9 @@
       "pieceIds": []
     },
     {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
+      "pieceIds": [
+        "spring"
+      ]
     },
     {
       "pieceIds": []
@@ -242,7 +290,7 @@
     },
     {
       "pieceIds": [
-        "goombaBig"
+        "wall"
       ]
     },
     {
@@ -285,7 +333,9 @@
       "pieceIds": []
     },
     {
-      "pieceIds": []
+      "pieceIds": [
+        "wall"
+      ]
     },
     {
       "pieceIds": []
@@ -306,31 +356,9 @@
       "pieceIds": []
     },
     {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
+      "pieceIds": [
+        "spring"
+      ]
     },
     {
       "pieceIds": []

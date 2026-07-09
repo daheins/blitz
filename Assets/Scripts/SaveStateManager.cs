@@ -139,6 +139,12 @@ public class SaveStateManager : MonoBehaviour
     {
         return AllLevelDatas.Count;
     }
+
+    public void UpdateLevelWithChanges(LevelData data, LevelData updatedLevel)
+    {
+        string json = JsonConvert.SerializeObject(updatedLevel);
+        JsonConvert.PopulateObject(json, data);
+    }
     
     public void SaveLevel(LevelData data)
     {

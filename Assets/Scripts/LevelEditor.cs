@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 
@@ -13,13 +14,16 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
     public GameObject itemPiecesPanel;
     public GameObject terrainPiecesPanel;
     public GameObject enemyPiecesPanel;
+    public GameObject editButton;
+    public TextMeshProUGUI quitButtonLabel;
 
     public EditorPieceButton editorPieceButtonPrefab;
-
-    public TextMeshProUGUI editLabel;
     
     private EditorPieceButton _currentSelectedButton;
     private bool _arePiecesLoaded;
+    private bool _levelHasEdits = false;
+    private LevelData _originalLevelData;
+    private LevelData _editedLevelData;
 
     private void Awake()
     {
@@ -31,59 +35,102 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         
         Instance = this;
         
-        editPanel.SetActive(false);
+        UpdateView();
     }
 
-    public void ToggleEditMode()
+    private void UpdateView()
     {
-        gridLevel.IsInEditMode = !gridLevel.IsInEditMode;
-        
-        // editLabel.text = $"Edit Mode: {(gridLevel.IsInEditMode ? "On" : "Off")}";
+        editButton.SetActive(false);
         editPanel.SetActive(gridLevel.IsInEditMode);
+        
+        if (gridLevel.IsInEditMode)
+        {
+            quitButtonLabel.text = _levelHasEdits ? "Quit (UNSAVED)" : "Quit";
+        }
+        else // not in edit mode
+        {
+            editButton.SetActive(true);
+        }
+    }
+
+    public void StartEditMode()
+    {
+        gridLevel.IsInEditMode = true;
+
+        _originalLevelData = gridLevel.GetLevelData();
+        string json = JsonConvert.SerializeObject(_originalLevelData, Formatting.Indented);
+        _editedLevelData = JsonConvert.DeserializeObject<LevelData>(json);
+        _editedLevelData.Filename = _originalLevelData.Filename;
 
         if (!_arePiecesLoaded)
         {
-            List<GridPiece> specialPieces = new List<GridPiece>
-            {
-                gridLevel.goalPrefab,
-                gridLevel.playerPrefab
-            };
-            
-            foreach (GridPiece piece in specialPieces)
-            {
-                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, specialPiecesPanel.transform);
-                editorPieceButton.Delegate = this;
-                editorPieceButton.LoadPiece(piece);
-            }
-            
-            foreach (GridPiece piece in gridLevel.gridItems)
-            {
-                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, itemPiecesPanel.transform);
-                editorPieceButton.Delegate = this;
-                editorPieceButton.LoadPiece(piece);
-            }
-            
-            foreach (GridPiece piece in gridLevel.gridTerrains)
-            {
-                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, terrainPiecesPanel.transform);
-                editorPieceButton.Delegate = this;
-                editorPieceButton.LoadPiece(piece);
-            }
-            
-            foreach (GridPiece piece in gridLevel.gridEnemies)
-            {
-                EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, enemyPiecesPanel.transform);
-                editorPieceButton.Delegate = this;
-                editorPieceButton.LoadPiece(piece);
-            }
-
-            _arePiecesLoaded = true;
+            LoadPieces();
         }
+
+        if (_currentSelectedButton != null)
+        {
+            // reset edit item button state
+            DidTapItemButton(_currentSelectedButton);
+        }
+        
+        UpdateView();
+    }
+
+    private void LoadPieces()
+    {
+        List<GridPiece> specialPieces = new List<GridPiece>
+        {
+            gridLevel.goalPrefab,
+            gridLevel.playerPrefab
+        };
+            
+        foreach (GridPiece piece in specialPieces)
+        {
+            EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, specialPiecesPanel.transform);
+            editorPieceButton.Delegate = this;
+            editorPieceButton.LoadPiece(piece);
+        }
+            
+        foreach (GridPiece piece in gridLevel.gridItems)
+        {
+            EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, itemPiecesPanel.transform);
+            editorPieceButton.Delegate = this;
+            editorPieceButton.LoadPiece(piece);
+        }
+            
+        foreach (GridPiece piece in gridLevel.gridTerrains)
+        {
+            EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, terrainPiecesPanel.transform);
+            editorPieceButton.Delegate = this;
+            editorPieceButton.LoadPiece(piece);
+        }
+            
+        foreach (GridPiece piece in gridLevel.gridEnemies)
+        {
+            EditorPieceButton editorPieceButton = Instantiate(editorPieceButtonPrefab, enemyPiecesPanel.transform);
+            editorPieceButton.Delegate = this;
+            editorPieceButton.LoadPiece(piece);
+        }
+
+        _arePiecesLoaded = true;
+    }
+
+    public void QuitEditMode()
+    {
+        editPanel.SetActive(false);
+        editButton.SetActive(true);
+
+        gridLevel.IsInEditMode = false;
+        
+        gridLevel.SetupGridForLevel(_editedLevelData);
     }
 
     public void SaveLevel()
     {
-        SaveStateManager.Instance.SaveLevel(gridLevel.GetLevelData());
+        SaveStateManager.Instance.UpdateLevelWithChanges(_originalLevelData, _editedLevelData);
+        SaveStateManager.Instance.SaveLevel(_originalLevelData);
+        _levelHasEdits = false;
+        UpdateView();
     }
 
     public void CreateNewLevel()
@@ -105,13 +152,18 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
                 return;
             
             gridLevel.AddPieceToCell(cell, _currentSelectedButton.GridPiece);
-            gridLevel.GetLevelData().AddPiece(cell.gridX, cell.gridY, _currentSelectedButton.GridPiece.identifier);
+            _editedLevelData.AddPiece(cell.gridX, cell.gridY, _currentSelectedButton.GridPiece.identifier);
+            gridLevel.UpdateThreatenedCells();
         }
         else
         {
             cell.ResetCell();
-            gridLevel.GetLevelData().RemoveAllPieces(cell.gridX, cell.gridY);
+            _editedLevelData.RemoveAllPieces(cell.gridX, cell.gridY);
+            gridLevel.UpdateThreatenedCells();
         }
+        
+        _levelHasEdits = true;
+        UpdateView();
     }
 
     public void DidTapItemButton(EditorPieceButton editorPieceButton)

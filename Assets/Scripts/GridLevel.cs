@@ -259,8 +259,13 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     private bool IsInBounds(Vector2Int gridCoordinate)
     {
-        if (gridCoordinate.x < 0 || gridCoordinate.x >= _levelData.width) return false;
-        if (gridCoordinate.y < 0 || gridCoordinate.y >= _levelData.height) return false;
+        return IsInBounds(gridCoordinate.x, gridCoordinate.y);
+    }
+
+    public bool IsInBounds(int x, int y)
+    {
+        if (x < 0 || x >= _levelData.width) return false;
+        if (y < 0 || y >= _levelData.height) return false;
 
         return true;
     }
@@ -449,7 +454,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         }
     }
 
-    private void UpdateThreatenedCells()
+    public void UpdateThreatenedCells()
     {
         _threatenedEnemyCells = new();
 
