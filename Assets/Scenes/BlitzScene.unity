@@ -657,7 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   showDebugUI: 1
-  startAtLastLevel: 1
+  startAtLastLevel: 0
   updateMoveTarget: 0
 --- !u!4 &180509980
 Transform:

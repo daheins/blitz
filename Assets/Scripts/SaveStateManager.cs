@@ -85,7 +85,6 @@ public class SaveStateManager : MonoBehaviour
             string json = File.ReadAllText(filePath);
             LevelData levelData = JsonConvert.DeserializeObject<LevelData>(json);
             levelData.Filename = Path.GetFileNameWithoutExtension(filePath);
-            levelData.FixCellsLength();
             levelsByIdentifier[levelData.levelIdentifier] = levelData;
         }
 #else
@@ -94,7 +93,6 @@ public class SaveStateManager : MonoBehaviour
         {
             LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
             levelData.Filename = levelFile.name;
-            levelData.FixCellsLength();
             levelsByIdentifier[levelData.levelIdentifier] = levelData;
         }
 #endif

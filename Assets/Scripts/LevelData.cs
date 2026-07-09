@@ -21,54 +21,53 @@ public class LevelData
     [NonSerialized] 
     public string Filename;
     
-    public CellData[] cells;
+    public Dictionary<string, CellData> CellMap = new();
+    
+    private string Key(int x, int y) => $"{x},{y}";
+    
+    public CellData GetCell(int x, int y)
+    {
+        CellMap.TryGetValue(Key(x, y), out CellData cell);
+        return cell;
+    }
+
+    public void SetCell(int x, int y, CellData cell)
+    {
+        CellMap[Key(x, y)] = cell;
+    }
     
     public LevelData()
     {
         width = 14;
         height = 10;
-        cells = new CellData[width * height];
-        for (int i = 0; i < cells.Length; i++)
-            cells[i] = new CellData();
+        CellMap = new();
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                SetCell(x, y, new CellData());
         
         moveTarget = 100;
-    }
-
-    public void FixCellsLength()
-    {
-        int targetSize = width * height;
-        int originalSize = cells.Length;
-        if (originalSize == targetSize) return;
-        
-        Array.Resize(ref cells, targetSize);
-
-        if (targetSize > originalSize)
-        {
-            for (int i = originalSize; i < targetSize; i++)
-                cells[i] = new CellData();
-        }
     }
     
     public List<string> GetPieceIds(int x, int y)
     {
-        return cells[y * width + x].pieceIds;
+        return GetCell(x, y).pieceIds;
     }
 
     public void AddPiece(int x, int y, string pieceId)
     {
-        CellData cellData = cells[y * width + x];
+        CellData cellData = GetCell(x, y);
         cellData.pieceIds.Add(pieceId);
     }
     
     public void RemovePiece(int x, int y, string pieceId)
     {
-        CellData cellData = cells[y * width + x];
+        CellData cellData = GetCell(x, y);
         cellData.pieceIds.Remove(pieceId);
     }
     
     public void RemoveAllPieces(int x, int y)
     {
-        CellData cellData = cells[y * width + x];
+        CellData cellData = GetCell(x, y);
         cellData.pieceIds.Clear();
     }
 }

@@ -4,503 +4,503 @@
   "width": 14,
   "height": 10,
   "moveTarget": 6,
-  "cells": [
-    {
+  "CellMap": {
+    "0,0": {
       "pieceIds": []
     },
-    {
+    "0,1": {
       "pieceIds": []
     },
-    {
+    "0,2": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "0,3": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "0,4": {
+      "pieceIds": []
+    },
+    "0,5": {
+      "pieceIds": []
+    },
+    "0,6": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "0,7": {
+      "pieceIds": []
+    },
+    "0,8": {
+      "pieceIds": []
+    },
+    "0,9": {
+      "pieceIds": []
+    },
+    "1,0": {
+      "pieceIds": []
+    },
+    "1,1": {
+      "pieceIds": []
+    },
+    "1,2": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "1,3": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "1,4": {
+      "pieceIds": []
+    },
+    "1,5": {
+      "pieceIds": []
+    },
+    "1,6": {
+      "pieceIds": []
+    },
+    "1,7": {
+      "pieceIds": []
+    },
+    "1,8": {
+      "pieceIds": []
+    },
+    "1,9": {
+      "pieceIds": []
+    },
+    "2,0": {
       "pieceIds": [
         "goal"
       ]
     },
-    {
+    "2,1": {
       "pieceIds": []
     },
-    {
-      "pieceIds": []
-    },
-    {
+    "2,2": {
       "pieceIds": [
         "wall"
       ]
     },
-    {
+    "2,3": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "2,4": {
+      "pieceIds": []
+    },
+    "2,5": {
+      "pieceIds": []
+    },
+    "2,6": {
+      "pieceIds": []
+    },
+    "2,7": {
       "pieceIds": [
         "wall"
       ]
     },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
+    "2,8": {
       "pieceIds": [
-        "spikes"
+        "player"
       ]
     },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
+    "2,9": {
       "pieceIds": []
     },
-    {
+    "3,0": {
       "pieceIds": []
     },
-    {
+    "3,1": {
       "pieceIds": []
     },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
+    "3,2": {
       "pieceIds": [
         "wall"
       ]
     },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
+    "3,3": {
       "pieceIds": [
         "spikes"
       ]
     },
-    {
+    "3,4": {
+      "pieceIds": []
+    },
+    "3,5": {
+      "pieceIds": []
+    },
+    "3,6": {
+      "pieceIds": []
+    },
+    "3,7": {
+      "pieceIds": []
+    },
+    "3,8": {
+      "pieceIds": []
+    },
+    "3,9": {
+      "pieceIds": []
+    },
+    "4,0": {
+      "pieceIds": []
+    },
+    "4,1": {
+      "pieceIds": []
+    },
+    "4,2": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "4,3": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "4,4": {
+      "pieceIds": []
+    },
+    "4,5": {
+      "pieceIds": []
+    },
+    "4,6": {
+      "pieceIds": []
+    },
+    "4,7": {
+      "pieceIds": []
+    },
+    "4,8": {
+      "pieceIds": []
+    },
+    "4,9": {
+      "pieceIds": []
+    },
+    "5,0": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "5,1": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "5,2": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "5,3": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "5,4": {
+      "pieceIds": []
+    },
+    "5,5": {
+      "pieceIds": []
+    },
+    "5,6": {
+      "pieceIds": []
+    },
+    "5,7": {
+      "pieceIds": []
+    },
+    "5,8": {
+      "pieceIds": []
+    },
+    "5,9": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "6,0": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "6,1": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "6,2": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "6,3": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "6,4": {
+      "pieceIds": []
+    },
+    "6,5": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "6,6": {
+      "pieceIds": []
+    },
+    "6,7": {
+      "pieceIds": []
+    },
+    "6,8": {
+      "pieceIds": []
+    },
+    "6,9": {
+      "pieceIds": []
+    },
+    "7,0": {
+      "pieceIds": []
+    },
+    "7,1": {
+      "pieceIds": []
+    },
+    "7,2": {
+      "pieceIds": []
+    },
+    "7,3": {
+      "pieceIds": []
+    },
+    "7,4": {
+      "pieceIds": []
+    },
+    "7,5": {
+      "pieceIds": []
+    },
+    "7,6": {
+      "pieceIds": []
+    },
+    "7,7": {
+      "pieceIds": []
+    },
+    "7,8": {
+      "pieceIds": []
+    },
+    "7,9": {
+      "pieceIds": []
+    },
+    "8,0": {
+      "pieceIds": []
+    },
+    "8,1": {
+      "pieceIds": []
+    },
+    "8,2": {
+      "pieceIds": []
+    },
+    "8,3": {
+      "pieceIds": []
+    },
+    "8,4": {
+      "pieceIds": []
+    },
+    "8,5": {
+      "pieceIds": []
+    },
+    "8,6": {
+      "pieceIds": []
+    },
+    "8,7": {
+      "pieceIds": []
+    },
+    "8,8": {
+      "pieceIds": []
+    },
+    "8,9": {
+      "pieceIds": [
+        "wall"
+      ]
+    },
+    "9,0": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "9,1": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "9,2": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "9,3": {
+      "pieceIds": []
+    },
+    "9,4": {
+      "pieceIds": []
+    },
+    "9,5": {
+      "pieceIds": []
+    },
+    "9,6": {
+      "pieceIds": []
+    },
+    "9,7": {
+      "pieceIds": []
+    },
+    "9,8": {
+      "pieceIds": []
+    },
+    "9,9": {
+      "pieceIds": []
+    },
+    "10,0": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "10,1": {
       "pieceIds": [
         "spikes",
         "spring"
       ]
     },
-    {
+    "10,2": {
       "pieceIds": [
         "spikes"
       ]
     },
-    {
+    "10,3": {
       "pieceIds": []
     },
-    {
+    "10,4": {
       "pieceIds": []
     },
-    {
+    "10,5": {
+      "pieceIds": []
+    },
+    "10,6": {
+      "pieceIds": []
+    },
+    "10,7": {
       "pieceIds": [
         "wall"
       ]
     },
-    {
+    "10,8": {
+      "pieceIds": []
+    },
+    "10,9": {
+      "pieceIds": []
+    },
+    "11,0": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "11,1": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "11,2": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "11,3": {
+      "pieceIds": []
+    },
+    "11,4": {
+      "pieceIds": []
+    },
+    "11,5": {
+      "pieceIds": []
+    },
+    "11,6": {
+      "pieceIds": []
+    },
+    "11,7": {
+      "pieceIds": [
+        "spikes"
+      ]
+    },
+    "11,8": {
+      "pieceIds": []
+    },
+    "11,9": {
+      "pieceIds": []
+    },
+    "12,0": {
+      "pieceIds": []
+    },
+    "12,1": {
+      "pieceIds": []
+    },
+    "12,2": {
+      "pieceIds": []
+    },
+    "12,3": {
+      "pieceIds": []
+    },
+    "12,4": {
+      "pieceIds": []
+    },
+    "12,5": {
       "pieceIds": [
         "wall"
       ]
     },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
+    "12,6": {
       "pieceIds": []
     },
-    {
+    "12,7": {
       "pieceIds": []
     },
-    {
+    "12,8": {
+      "pieceIds": []
+    },
+    "12,9": {
+      "pieceIds": []
+    },
+    "13,0": {
+      "pieceIds": []
+    },
+    "13,1": {
+      "pieceIds": []
+    },
+    "13,2": {
+      "pieceIds": []
+    },
+    "13,3": {
+      "pieceIds": []
+    },
+    "13,4": {
       "pieceIds": [
         "spikes"
       ]
     },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "player"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "spikes"
-      ]
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": []
-    },
-    {
-      "pieceIds": [
-        "wall"
-      ]
-    },
-    {
+    "13,5": {
       "pieceIds": []
     },
-    {
+    "13,6": {
       "pieceIds": []
     },
-    {
+    "13,7": {
       "pieceIds": []
     },
-    {
+    "13,8": {
       "pieceIds": []
     },
-    {
+    "13,9": {
       "pieceIds": []
     }
-  ]
+  }
 }
