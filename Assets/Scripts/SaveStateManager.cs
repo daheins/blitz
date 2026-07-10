@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,14 +17,17 @@ public class SaveStateManager : MonoBehaviour
     public PlayerSaveState PlayerSaveState { get; private set; }
     public List<LevelData> AllLevelDatas { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         Instance = this;
-
+        
         LoadAllLevelPaths();
         
         LoadSaveState();
+    }
 
+    private void Start()
+    {
         int levelIndexToStart = 0;
         if (DevelopmentTools.Instance.startAtLastLevel)
         {

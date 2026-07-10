@@ -27,13 +27,16 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     private void Awake()
     {
+        Instance = this;
+    }
+
+    private void Start()
+    {
         if (!DevelopmentTools.Instance.showDebugUI)
         {
             gameObject.SetActive(false);
             return;
         }
-        
-        Instance = this;
         
         UpdateView();
     }

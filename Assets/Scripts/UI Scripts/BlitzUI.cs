@@ -15,46 +15,17 @@ public class BlitzUI : MonoBehaviour
     public InventoryItemIcon itemIconPrefab;
     public GameObject inventoryParent;
 
-    public GameObject moveCounterParent;
-    public TextMeshProUGUI moveCounterLabel;
-    public TextMeshProUGUI moveTargetLabel;
+    // public GameObject moveCounterParent;
+    // public TextMeshProUGUI moveCounterLabel;
+    // public TextMeshProUGUI moveTargetLabel;
     
     public GameObject undoAndRestartInfoNode;
-    
-    // Levels
-    public Transform levelsParent;
-    public Transform levelsScreen;
-    public LevelButton levelButtonPrefab;
-    public GameObject perfectLevelExplanation;
-    private Dictionary<string, LevelButton> _levelButtonsByIdentifier;
-    // Levels end
 
     private List<InventoryItemIcon> _inventoryIcons = new List<InventoryItemIcon>();
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
-        levelsScreen.gameObject.SetActive(false);
-
-        CreateLevelButtons();
-        UpdateAllLevelButtons();
-    }
-
-    private void CreateLevelButtons()
-    {
-        _levelButtonsByIdentifier = new();
-        
-        foreach (var levelData in SaveStateManager.Instance.AllLevelDatas)
-        {
-            LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
-            levelButton.LoadWithLevelData(levelData);
-
-            _levelButtonsByIdentifier[levelData.levelIdentifier] = levelButton;
-        }
     }
 
     public void StartGridLevel()
@@ -67,17 +38,6 @@ public class BlitzUI : MonoBehaviour
         UpdateUndoAndRestartState();
     }
     
-    
-    public void ToggleLevels()
-    {
-        levelsScreen.gameObject.SetActive(!levelsScreen.gameObject.activeSelf);
-        perfectLevelExplanation.SetActive(SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores);
-
-        if (levelsScreen.gameObject.activeSelf)
-        {
-            UpdateAllLevelButtons();
-        }
-    }
     
     void Update()
     {
@@ -115,21 +75,6 @@ public class BlitzUI : MonoBehaviour
         SaveStateManager.Instance.PlayNextLevel();
     }
 
-    private void UpdateAllLevelButtons()
-    {
-        PlayerSaveState playerSaveState = SaveStateManager.Instance.PlayerSaveState;
-        
-        foreach (var pair in _levelButtonsByIdentifier)
-        {
-            LevelData levelData = pair.Value.LevelData;
-            var levelState = playerSaveState.LevelProgressStates[pair.Key];
-            
-            int moveTarget = levelData.moveTarget;
-            bool isPerfect = moveTarget == levelState.highScore;
-            pair.Value.UpdateState(levelState.isComplete, isPerfect);
-        }
-    }
-
     public void AddInventoryItemIcon(GridPiece gridPiece)
     {
         InventoryItemIcon inventoryItemIcon = Instantiate(itemIconPrefab, inventoryParent.transform);
@@ -150,20 +95,25 @@ public class BlitzUI : MonoBehaviour
         _inventoryIcons.Clear();
     }
 
+    public void TapLevelsButton()
+    {
+        MenuViewManager.Instance.ToggleLevels();
+    }
+
     public void UpdateMoveCounter()
     {
-        LevelData levelData = gridLevel.GetLevelData();
-        if (levelData.moveTarget <= 0 || !SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores)
-        {
-            moveCounterParent.SetActive(false);
-            return;
-        }
-        
-        gridLevel.PortalGoal?.UpdatePortal(gridLevel);
-        
-        moveCounterParent.SetActive(true);
-        moveCounterLabel.text = $"{gridLevel.MoveCounter}";
-        moveTargetLabel.text = $"{levelData.moveTarget}";
+        // LevelData levelData = gridLevel.GetLevelData();
+        // if (levelData.moveTarget <= 0 || !SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores)
+        // {
+        //     moveCounterParent.SetActive(false);
+        //     return;
+        // }
+        //
+        // gridLevel.PortalGoal?.UpdatePortal(gridLevel);
+        //
+        // moveCounterParent.SetActive(true);
+        // moveCounterLabel.text = $"{gridLevel.MoveCounter}";
+        // moveTargetLabel.text = $"{levelData.moveTarget}";
     }
 
     public void UpdateUndoAndRestartState()

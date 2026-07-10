@@ -26,7 +26,6 @@ public class LevelButton : MonoBehaviour
     
     public void DidTapLevelButton()
     {
-        BlitzUI.Instance.ToggleLevels();
-        SaveStateManager.Instance.gridLevel.SetupGridForLevel(LevelData);
+        MenuViewManager.Instance.DisplayGridLevel(LevelData);
     }
 }
