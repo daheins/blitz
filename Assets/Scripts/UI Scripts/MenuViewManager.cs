@@ -7,10 +7,12 @@ public class MenuViewManager : MonoBehaviour
     public static MenuViewManager Instance;
     
     public GridLevel gridLevel;
+
+    public Transform menuMain;
+    public Transform menuLevelSelect;
     
     // Levels
     public Transform levelsParent;
-    public Transform levelsScreen;
     public LevelButton levelButtonPrefab;
     private Dictionary<string, LevelButton> _levelButtonsByIdentifier;
     // Levels end
@@ -22,7 +24,9 @@ public class MenuViewManager : MonoBehaviour
 
     private void Start()
     {
-        levelsScreen.gameObject.SetActive(false);
+        HideAllMenus();
+        
+        GoToHomeScreen();
 
         CreateLevelButtons();
     }
@@ -39,15 +43,20 @@ public class MenuViewManager : MonoBehaviour
             _levelButtonsByIdentifier[levelData.levelIdentifier] = levelButton;
         }
     }
-    
-    public void ToggleLevels()
-    {
-        levelsScreen.gameObject.SetActive(!levelsScreen.gameObject.activeSelf);
 
-        if (levelsScreen.gameObject.activeSelf)
-        {
-            UpdateAllLevelButtons();
-        }
+    public void GoToHomeScreen()
+    {
+        HideAllMenus();
+        
+        menuMain.gameObject.SetActive(true);
+    }
+    
+    public void GoToLevelSelectScreen()
+    {
+        HideAllMenus();
+        
+        menuLevelSelect.gameObject.SetActive(true);
+        UpdateAllLevelButtons();
     }
     
     private void UpdateAllLevelButtons()
@@ -74,6 +83,7 @@ public class MenuViewManager : MonoBehaviour
 
     private void HideAllMenus()
     {
-        levelsScreen.gameObject.SetActive(false);
+        menuMain.gameObject.SetActive(false);
+        menuLevelSelect.gameObject.SetActive(false);
     }
 }

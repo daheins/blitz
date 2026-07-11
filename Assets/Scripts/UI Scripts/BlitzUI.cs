@@ -97,7 +97,7 @@ public class BlitzUI : MonoBehaviour
 
     public void TapLevelsButton()
     {
-        MenuViewManager.Instance.ToggleLevels();
+        MenuViewManager.Instance.GoToLevelSelectScreen();
     }
 
     public void UpdateMoveCounter()
