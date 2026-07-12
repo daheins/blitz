@@ -10,11 +10,12 @@ public class MenuViewManager : MonoBehaviour
 
     public Transform menuMain;
     public Transform menuLevelSelect;
+    public GameObject portalLockedNode;
     
     // Levels
     public Transform levelsParent;
     public LevelButton levelButtonPrefab;
-    private Dictionary<string, LevelButton> _levelButtonsByIdentifier;
+    private List<LevelButton> _levelButtons;
     // Levels end
 
     private void Awake()
@@ -33,14 +34,14 @@ public class MenuViewManager : MonoBehaviour
     
     private void CreateLevelButtons()
     {
-        _levelButtonsByIdentifier = new();
+        _levelButtons = new();
         
         foreach (var levelData in SaveStateManager.Instance.AllLevelDatas)
         {
             LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
             levelButton.LoadWithLevelData(levelData);
 
-            _levelButtonsByIdentifier[levelData.levelIdentifier] = levelButton;
+            _levelButtons.Add(levelButton);
         }
     }
 
@@ -49,6 +50,13 @@ public class MenuViewManager : MonoBehaviour
         HideAllMenus();
         
         menuMain.gameObject.SetActive(true);
+
+        portalLockedNode.SetActive(true);
+
+        if (SaveStateManager.Instance.PlayerSaveState.FeatureUnlockPortalMode)
+        {
+            portalLockedNode.SetActive(false);
+        }
     }
     
     public void GoToLevelSelectScreen()
@@ -58,19 +66,30 @@ public class MenuViewManager : MonoBehaviour
         menuLevelSelect.gameObject.SetActive(true);
         UpdateAllLevelButtons();
     }
+
+    public void GoToPortalMode()
+    {
+        if (!SaveStateManager.Instance.PlayerSaveState.FeatureUnlockPortalMode) return;
+    }
     
     private void UpdateAllLevelButtons()
     {
         PlayerSaveState playerSaveState = SaveStateManager.Instance.PlayerSaveState;
-        
-        foreach (var pair in _levelButtonsByIdentifier)
+
+        bool foundUnbeatenLevel = false;
+        foreach (LevelButton levelButton in _levelButtons)
         {
-            LevelData levelData = pair.Value.LevelData;
-            var levelState = playerSaveState.LevelProgressStates[pair.Key];
+            if (foundUnbeatenLevel)
+            {
+                levelButton.UpdateState(false, true);
+                continue;
+            }
             
-            int moveTarget = levelData.moveTarget;
-            bool isPerfect = moveTarget == levelState.highScore;
-            pair.Value.UpdateState(levelState.isComplete, isPerfect);
+            bool isComplete = playerSaveState.LevelProgressStates[levelButton.LevelData.levelIdentifier].isComplete;
+            levelButton.UpdateState(isComplete, false);
+
+            if (!isComplete)
+                foundUnbeatenLevel = true;
         }
     }
 
@@ -80,6 +99,7 @@ public class MenuViewManager : MonoBehaviour
         
         gridLevel.SetupGridForLevel(levelData);
     }
+    
 
     private void HideAllMenus()
     {

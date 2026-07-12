@@ -161,7 +161,10 @@ public class SaveStateManager : MonoBehaviour
     {
         LevelState levelState = PlayerSaveState.LevelProgressStates[levelIdentifier];
         levelState.isComplete = isComplete;
-        levelState.highScore = highScore;
+        if (highScore < levelState.highScore)
+        {
+            levelState.highScore = highScore;
+        }
         
         CheckFeatureUnlocks();
         

@@ -5,7 +5,7 @@ public class LevelButton : MonoBehaviour
 {
     public TextMeshProUGUI levelText;
     public GameObject levelCompleteHighlight;
-    public GameObject levelPerfectHighlight;
+    public GameObject levelLockedNode;
 
     public LevelData LevelData { get; private set; }
 
@@ -18,14 +18,16 @@ public class LevelButton : MonoBehaviour
         UpdateState(false, false);
     }
 
-    public void UpdateState(bool isComplete, bool isPerfect)
+    public void UpdateState(bool isComplete, bool isLocked)
     {
         levelCompleteHighlight.SetActive(isComplete);
-        levelPerfectHighlight.SetActive(isPerfect && SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores);
+        levelLockedNode.SetActive(isLocked);
     }
     
     public void DidTapLevelButton()
     {
+        if (levelLockedNode.activeSelf) return;
+        
         MenuViewManager.Instance.DisplayGridLevel(LevelData);
     }
 }
