@@ -8,6 +8,7 @@ public class DevelopmentTools : MonoBehaviour
     public bool showDebugUI;
     public bool startAtLastLevel;
     public bool updateMoveTarget;
+    public bool canPlayLockedLevels;
 
     private void Awake()
     {

@@ -26,7 +26,7 @@ public class LevelButton : MonoBehaviour
     
     public void DidTapLevelButton()
     {
-        if (levelLockedNode.activeSelf) return;
+        if (levelLockedNode.activeSelf && !DevelopmentTools.Instance.canPlayLockedLevels) return;
         
         MenuViewManager.Instance.DisplayGridLevel(LevelData);
     }

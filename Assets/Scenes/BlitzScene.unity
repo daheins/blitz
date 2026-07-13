@@ -562,6 +562,7 @@ MonoBehaviour:
   showDebugUI: 1
   startAtLastLevel: 0
   updateMoveTarget: 0
+  canPlayLockedLevels: 1
 --- !u!4 &180509980
 Transform:
   m_ObjectHideFlags: 0
@@ -1497,7 +1498,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 921, y: 452.5}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &517547107
 GameObject:
@@ -2195,7 +2196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -435.5, y: -206.25}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &591206509
@@ -2242,7 +2243,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: StartEditMode
         m_Mode: 1
@@ -3304,7 +3305,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: RemoveColumnButton
         m_Mode: 1
@@ -4933,7 +4934,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: QuitEditMode
         m_Mode: 1
@@ -5132,7 +5133,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: AddRowButton
         m_Mode: 1
@@ -6329,7 +6330,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: CreateNewLevel
         m_Mode: 1
@@ -6660,7 +6661,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: SaveLevel
         m_Mode: 1
@@ -6930,7 +6931,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: AddColumnButton
         m_Mode: 1
@@ -7401,7 +7402,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 537248877}
         m_TargetAssemblyTypeName: LevelEditor, Assembly-CSharp
         m_MethodName: RemoveRowButton
         m_Mode: 1

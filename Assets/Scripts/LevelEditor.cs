@@ -125,7 +125,7 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
         gridLevel.IsInEditMode = false;
         
-        gridLevel.SetupGridForLevel(_editedLevelData);
+        gridLevel.SetupGridForLevel(_originalLevelData);
     }
 
     public void SaveLevel()
