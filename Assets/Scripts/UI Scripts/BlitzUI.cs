@@ -170,4 +170,14 @@ public class BlitzUI : MonoBehaviour
     {
         undoAndRestartInfoNode.SetActive(SaveStateManager.Instance.PlayerSaveState.FeatureUnlockUndoAndRestart);
     }
+
+    public void DidTapUndoButton()
+    {
+        gridLevel.GridCommandSystem.Undo();
+    }
+    
+    public void DidTapRestartButton()
+    {
+        gridLevel.RestartLevel();
+    }
 }

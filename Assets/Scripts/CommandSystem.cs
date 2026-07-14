@@ -102,7 +102,6 @@ public class MoveCommand : ICommand
             _level.EarnItem(item);
         }
         
-        Debug.Log("undoing");
         if (_pieceRemovedAtEndCellIdentifier != null)
         {
             GridPiece piecePrefab = GridLevel.PiecePrefabByIdentifier[_pieceRemovedAtEndCellIdentifier];
