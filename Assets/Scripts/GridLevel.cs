@@ -97,7 +97,8 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
         BuildLevelGridCells();
         
-        Player?.SetupPlayerForLevel();
+        if (Player != null)
+            Player.SetupPlayerForLevel();
 
         FitCameraToGrid();
         

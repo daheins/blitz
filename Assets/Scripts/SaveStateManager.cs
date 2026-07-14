@@ -12,17 +12,26 @@ public class SaveStateManager : MonoBehaviour
     public GridLevel gridLevel;
     
     private static string LevelsPath => Path.Combine(Application.dataPath, "Resources", "Levels");
+    private static string ManifestPath => Path.Combine(Application.dataPath, "Resources", "level_manifest.json");
     private static string PrefsSaveState = "SaveState";
 
     public PlayerSaveState PlayerSaveState { get; private set; }
     public List<LevelData> AllLevelDatas { get; private set; }
 
+    private LevelManifest _levelManifest;
+
     private void Awake()
     {
         Instance = this;
-        
+
+        LoadLevelManifest();
         LoadAllLevelPaths();
-        
+        LoadSaveState();
+    }
+
+    public void ReloadFromManifest()
+    {
+        LoadAllLevelPaths();
         LoadSaveState();
     }
 
@@ -76,11 +85,19 @@ public class SaveStateManager : MonoBehaviour
         }
     }
 
+    private void LoadLevelManifest()
+    {
+#if UNITY_EDITOR
+        string manifestJson = File.ReadAllText(ManifestPath);
+        _levelManifest = JsonConvert.DeserializeObject<LevelManifest>(manifestJson);
+#else
+        TextAsset manifestAsset = Resources.Load<TextAsset>("level_manifest");
+        _levelManifest = JsonConvert.DeserializeObject<LevelManifest>(manifestAsset.text);
+#endif
+    }
+
     private void LoadAllLevelPaths()
     {
-        TextAsset manifestAsset = Resources.Load<TextAsset>("level_manifest");
-        LevelManifest manifest = JsonConvert.DeserializeObject<LevelManifest>(manifestAsset.text);
-
         Dictionary<string, LevelData> levelsByIdentifier = new();
 #if UNITY_EDITOR
         string[] filePaths = Directory.GetFiles(LevelsPath, "*.json");
@@ -100,16 +117,23 @@ public class SaveStateManager : MonoBehaviour
             levelsByIdentifier[levelData.levelIdentifier] = levelData;
         }
 #endif
-
+        
         AllLevelDatas = new();
-        foreach (string id in manifest.levelIdentifiers)
+        foreach (string id in _levelManifest.levelIdentifiers)
         {
             if (levelsByIdentifier.TryGetValue(id, out LevelData levelData))
                 AllLevelDatas.Add(levelData);
             else
                 Debug.LogWarning($"Manifest references unknown level: {id}");
         }
+    }
 
+    public void AddLevelToManifest(string levelIdentifier)
+    {
+        _levelManifest.levelIdentifiers.Add(levelIdentifier);
+        
+        string json = JsonConvert.SerializeObject(_levelManifest, Formatting.Indented);
+        File.WriteAllText(ManifestPath, json);
     }
 
     public void PlayNextLevel()

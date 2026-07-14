@@ -132,6 +132,7 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
     {
         SaveStateManager.Instance.UpdateLevelWithChanges(_originalLevelData, _editedLevelData);
         SaveStateManager.Instance.SaveLevel(_originalLevelData);
+        
         _levelHasEdits = false;
         UpdateView();
     }
@@ -145,6 +146,12 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
         levelData.Filename = guid;
         
         gridLevel.SetupGridForLevel(levelData);
+
+        StartEditMode();
+        
+        SaveStateManager.Instance.SaveLevel(levelData);
+        SaveStateManager.Instance.AddLevelToManifest(guid);
+        SaveStateManager.Instance.ReloadFromManifest();
     }
 
     public void DidTapEditCell(GridCell cell)
