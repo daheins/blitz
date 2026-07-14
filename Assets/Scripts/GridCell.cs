@@ -81,6 +81,9 @@ public class GridCell : MonoBehaviour
     public bool CanPlayerMoveToCell(Dictionary<ItemType, int> itemsOwned, out ItemType itemUsed, bool isThreatened)
     {
         itemUsed = ItemType.None;
+
+        if (EnemyPiece != null)
+            return false;
         
         switch (TerrainPiece?.terrainType)
         {
@@ -90,10 +93,12 @@ public class GridCell : MonoBehaviour
             case TerrainType.Mud:
             case TerrainType.None:
                 break;
+            case TerrainType.Lock:
+                if (itemsOwned[ItemType.Key] < 1) return false;
+                
+                itemUsed = ItemType.Key;
+                break;
         }
-
-        if (EnemyPiece != null)
-            return false;
         
         if (isThreatened && itemsOwned[ItemType.Shield] > 0)
             itemUsed = ItemType.Shield;
@@ -104,9 +109,14 @@ public class GridCell : MonoBehaviour
     public bool CanPlayerPassThroughCell(Dictionary<ItemType, int> itemsOwned, out ItemType itemUsed)
     {
         itemUsed = ItemType.None;
+
+        if (EnemyPiece != null)
+            return false;
         
         switch (TerrainPiece?.terrainType)
         {
+            case TerrainType.Lock:
+                return false;
             case TerrainType.Wall:
                 if (itemsOwned[ItemType.Spring] < 1) return false;
                 
@@ -117,9 +127,6 @@ public class GridCell : MonoBehaviour
             case TerrainType.None:
                 break;
         }
-
-        if (EnemyPiece != null)
-            return false;
 
         return true;
     }

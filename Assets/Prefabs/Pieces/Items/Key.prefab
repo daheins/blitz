@@ -77,11 +77,11 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1853893943
-  m_SortingLayer: 3
+  m_SortingLayerID: 1484619857
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2545538383540501887, guid: f2dfe9bb7d3f640a5a18e18850c84ecc, type: 3}
+  m_Sprite: {fileID: 6063359866685732961, guid: 0c72cdff027fd44028fa20dd83764a3e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 7583392084297247680}
   - component: {fileID: 7246340937273291456}
   m_Layer: 0
-  m_Name: Big Goomba
+  m_Name: Key
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,13 +137,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba2d457c1660412e998dbfffc95b4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridItem
-  pieceType: 5
-  identifier: goombaBig
-  displayName: Goomba
+  pieceType: 4
+  identifier: key
+  displayName: Key
   sprite: {fileID: 2476019932673291201}
-  itemType: 0
+  itemType: 3
   terrainType: 0
-  enemyType: 2
+  enemyType: 0
 --- !u!1 &5389225406950525926
 GameObject:
   m_ObjectHideFlags: 0

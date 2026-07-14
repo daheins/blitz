@@ -285,9 +285,19 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                 gridItemsRemoved[cell] = cell.ItemPiece.itemType;
             }
         }
+
+        GridPiece pieceRemovedAtEndCell = null;
+        if (itemsUsedInMove != null && itemsUsedInMove.Keys.Contains(endCell))
+        {
+            ItemType itemUsed = itemsUsedInMove[endCell];
+            if (MoveCommand.IsPieceRemovedByItemOnMove(itemUsed, endCell.TerrainPiece))
+            {
+                pieceRemovedAtEndCell = endCell.TerrainPiece;
+            }
+        }
         
         MoveCommand moveCommand = new MoveCommand(this, Player.playerCell, endCell,
-            itemsUsedInMove, gridItemsRemoved);
+            itemsUsedInMove, gridItemsRemoved, pieceRemovedAtEndCell);
         GridCommandSystem.Execute(moveCommand);
         
         BlitzUI.Instance.UpdateMoveCounter();

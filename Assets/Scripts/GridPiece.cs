@@ -2,8 +2,8 @@ using UnityEngine;
 
 public enum PieceType { None, Player, Terrain, Goal, Item, Enemy }
 
-public enum ItemType { None, Spring, Shield, }
-public enum TerrainType { None, Wall, Mud, Spikes, }
+public enum ItemType { None, Spring, Shield, Key }
+public enum TerrainType { None, Wall, Mud, Spikes, Lock }
 public enum EnemyType { None, GoombaSmall, GoombaBig,  }
 
 public class GridPiece : MonoBehaviour

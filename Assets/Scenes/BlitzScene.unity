@@ -4590,9 +4590,11 @@ MonoBehaviour:
   gridItems:
   - {fileID: 7246340937273291456, guid: ee3f191dafb1e47c1830c1f7b03f0cbf, type: 3}
   - {fileID: 7246340937273291456, guid: 4b168a2431369476dbec711b1d47d219, type: 3}
+  - {fileID: 7246340937273291456, guid: 7e9a937955963444a9975e5d6874d71f, type: 3}
   gridTerrains:
   - {fileID: 7246340937273291456, guid: 22124febfc9c744fe98c00c0a498ddf5, type: 3}
   - {fileID: 7246340937273291456, guid: feb1ee16f78a94d36936b1ab27fcfced, type: 3}
+  - {fileID: 7246340937273291456, guid: 35bf1a3decafb4a588ad8f90afef48c4, type: 3}
   gridEnemies:
   - {fileID: 7246340937273291456, guid: f9e651847d47940a78e46095aaad1d9f, type: 3}
   - {fileID: 7246340937273291456, guid: d5a1bc0b9a34a4872b79849092162456, type: 3}

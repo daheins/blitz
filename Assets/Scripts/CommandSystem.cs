@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public interface ICommand
 {
@@ -38,18 +39,20 @@ public class MoveCommand : ICommand
     private GridCell _endCell;
     private Dictionary<GridCell, ItemType> _itemsUsed;
     private Dictionary<GridCell, ItemType> _gridItemsRemoved;
+    private GridPiece _pieceRemovedAtEndCell;
+    private string _pieceRemovedAtEndCellIdentifier;
     
     public MoveCommand(GridLevel level, GridCell startCell, GridCell endCell,
-        // List<ItemType> itemsGained = null,
         Dictionary<GridCell, ItemType> itemsUsed = null,
-        // Dictionary<GridCell, GridPiece> piecesAdded = null,
-        Dictionary<GridCell, ItemType> gridItemsRemoved = null)
+        Dictionary<GridCell, ItemType> gridItemsRemoved = null,
+        GridPiece pieceRemovedAtEndCell = null)
     {
         _level = level;
         _startCell = startCell;
         _endCell = endCell;
         _itemsUsed = itemsUsed ?? new();
         _gridItemsRemoved = gridItemsRemoved ?? new Dictionary<GridCell, ItemType>();
+        _pieceRemovedAtEndCell = pieceRemovedAtEndCell;
     }
 
     public void Execute()
@@ -69,6 +72,12 @@ public class MoveCommand : ICommand
         
         _level.Player.playerCell = _endCell;
         _level.TransferPlayerToCell(_endCell, false);
+
+        if (_pieceRemovedAtEndCell != null)
+        {
+            _pieceRemovedAtEndCellIdentifier = _pieceRemovedAtEndCell.identifier;
+            _endCell.RemoveCellPiece(_pieceRemovedAtEndCell);
+        }
         
         if (_endCell.IsThreatenedCell && !_itemsUsed.Values.Contains(ItemType.Shield))
         {
@@ -93,6 +102,13 @@ public class MoveCommand : ICommand
             _level.EarnItem(item);
         }
         
+        Debug.Log("undoing");
+        if (_pieceRemovedAtEndCellIdentifier != null)
+        {
+            GridPiece piecePrefab = GridLevel.PiecePrefabByIdentifier[_pieceRemovedAtEndCellIdentifier];
+            _level.AddPieceToCell(_endCell, piecePrefab);
+        }
+        
         _level.Player.playerCell = _startCell;
         _level.TransferPlayerToCell(_startCell);
         
@@ -103,6 +119,17 @@ public class MoveCommand : ICommand
         BlitzUI.Instance.UpdateMoveCounter();
         
         _level.UpdateValidAndThreatenedCells();
+    }
+    
+    public static bool IsPieceRemovedByItemOnMove(ItemType itemType, GridPiece gridPiece)
+    {
+        switch (itemType)
+        {
+            case ItemType.Key:
+                return gridPiece.terrainType == TerrainType.Lock;
+        }
+
+        return false;
     }
 }
 
