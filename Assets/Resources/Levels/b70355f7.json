@@ -3,7 +3,7 @@
   "levelName": "temp name",
   "width": 12,
   "height": 10,
-  "moveTarget": 100,
+  "moveTarget": 6,
   "CellMap": {
     "0,0": {
       "pieceIds": []

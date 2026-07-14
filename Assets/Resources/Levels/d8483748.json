@@ -3,7 +3,7 @@
   "levelName": "temp name",
   "width": 12,
   "height": 10,
-  "moveTarget": 100,
+  "moveTarget": 5,
   "CellMap": {
     "0,0": {
       "pieceIds": []
@@ -69,7 +69,9 @@
       "pieceIds": []
     },
     "2,1": {
-      "pieceIds": []
+      "pieceIds": [
+        "player"
+      ]
     },
     "2,2": {
       "pieceIds": []
@@ -129,9 +131,7 @@
       "pieceIds": []
     },
     "4,1": {
-      "pieceIds": [
-        "player"
-      ]
+      "pieceIds": []
     },
     "4,2": {
       "pieceIds": []
@@ -320,7 +320,9 @@
       "pieceIds": []
     },
     "9,8": {
-      "pieceIds": []
+      "pieceIds": [
+        "goal"
+      ]
     },
     "9,9": {
       "pieceIds": []

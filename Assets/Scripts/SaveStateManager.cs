@@ -11,20 +11,31 @@ public class SaveStateManager : MonoBehaviour
     
     public GridLevel gridLevel;
     
-    private static string LevelsPath => Path.Combine(Application.dataPath, "Resources", "Levels");
+    private static string LevelsPath => Path.Combine(Application.dataPath, "Resources", LevelsResourceString);
     private static string ManifestPath => Path.Combine(Application.dataPath, "Resources", "level_manifest.json");
-    private static string PrefsSaveState = "SaveState";
+    private const string LevelsResourceString = "Levels";
+    private const string ManifestResourceString = "level_manifest";
+    
+    private static string PortalManifestPath => Path.Combine(Application.dataPath, "Resources", "portal_level_manifest.json");
+    private const string PortalManifestResourceString = "portal_level_manifest";
+    
+    private const string PrefsSaveState = "SaveState";
 
     public PlayerSaveState PlayerSaveState { get; private set; }
-    public List<LevelData> AllLevelDatas { get; private set; }
+    public Dictionary<string, LevelData> LevelDatas { get; private set; }
 
     private LevelManifest _levelManifest;
+    private List<LevelData> _allManifestLevels;
+    
+    private LevelManifest _portalLevelManifest;
+    private List<LevelData> _allPortalLevels;
+    private int _currentPortalIndex = -1;
 
     private void Awake()
     {
         Instance = this;
 
-        LoadLevelManifest();
+        LoadLevelManifest(ManifestPath, ManifestResourceString, out _levelManifest);
         LoadAllLevelPaths();
         LoadSaveState();
     }
@@ -40,12 +51,12 @@ public class SaveStateManager : MonoBehaviour
         int levelIndexToStart = 0;
         if (DevelopmentTools.Instance.startAtLastLevel)
         {
-            levelIndexToStart = LevelCount() - 1;
+            levelIndexToStart = _allManifestLevels.Count - 1;
         }
         else
         {
             // Claude did this, it's messy but works for now
-            int firstIncomplete = AllLevelDatas.FindIndex(levelData => 
+            int firstIncomplete = _allManifestLevels.FindIndex(levelData => 
                 PlayerSaveState.LevelProgressStates.TryGetValue(levelData.levelIdentifier, out LevelState state) && !state.isComplete);
 
             if (firstIncomplete != -1)
@@ -68,7 +79,7 @@ public class SaveStateManager : MonoBehaviour
         }
         
         bool didModifySaveState = false;
-        foreach (LevelData levelData in AllLevelDatas)
+        foreach (LevelData levelData in _allManifestLevels)
         {
             if (!saveState.LevelProgressStates.ContainsKey(levelData.levelIdentifier))
             {
@@ -85,20 +96,27 @@ public class SaveStateManager : MonoBehaviour
         }
     }
 
-    private void LoadLevelManifest()
+    public List<LevelData> GetManifestLevels(bool portal = false)
+    {
+        if (portal) return _allPortalLevels;
+
+        return _allManifestLevels;
+    }
+
+    private void LoadLevelManifest(string path, string resourceString, out LevelManifest manifest)
     {
 #if UNITY_EDITOR
-        string manifestJson = File.ReadAllText(ManifestPath);
-        _levelManifest = JsonConvert.DeserializeObject<LevelManifest>(manifestJson);
+        string manifestJson = File.ReadAllText(path);
+        manifest = JsonConvert.DeserializeObject<LevelManifest>(manifestJson);
 #else
-        TextAsset manifestAsset = Resources.Load<TextAsset>("level_manifest");
-        _levelManifest = JsonConvert.DeserializeObject<LevelManifest>(manifestAsset.text);
+        TextAsset manifestAsset = Resources.Load<TextAsset>(resourceString);
+        manifest = JsonConvert.DeserializeObject<LevelManifest>(manifestAsset.text);
 #endif
     }
 
     private void LoadAllLevelPaths()
     {
-        Dictionary<string, LevelData> levelsByIdentifier = new();
+        LevelDatas = new();
 #if UNITY_EDITOR
         string[] filePaths = Directory.GetFiles(LevelsPath, "*.json");
         foreach (string filePath in filePaths)
@@ -106,7 +124,7 @@ public class SaveStateManager : MonoBehaviour
             string json = File.ReadAllText(filePath);
             LevelData levelData = JsonConvert.DeserializeObject<LevelData>(json);
             levelData.Filename = Path.GetFileNameWithoutExtension(filePath);
-            levelsByIdentifier[levelData.levelIdentifier] = levelData;
+            LevelDatas[levelData.levelIdentifier] = levelData;
         }
 #else
         TextAsset[] levelFiles = Resources.LoadAll<TextAsset>("Levels");
@@ -114,15 +132,15 @@ public class SaveStateManager : MonoBehaviour
         {
             LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
             levelData.Filename = levelFile.name;
-            levelsByIdentifier[levelData.levelIdentifier] = levelData;
+            LevelDatas[levelData.levelIdentifier] = levelData;
         }
 #endif
         
-        AllLevelDatas = new();
+        _allManifestLevels = new();
         foreach (string id in _levelManifest.levelIdentifiers)
         {
-            if (levelsByIdentifier.TryGetValue(id, out LevelData levelData))
-                AllLevelDatas.Add(levelData);
+            if (LevelDatas.TryGetValue(id, out LevelData levelData))
+                _allManifestLevels.Add(levelData);
             else
                 Debug.LogWarning($"Manifest references unknown level: {id}");
         }
@@ -139,10 +157,10 @@ public class SaveStateManager : MonoBehaviour
     public void PlayNextLevel()
     {
         string currentIdentifier = gridLevel.GetLevelData().levelIdentifier;
-        int currentIndex = AllLevelDatas.FindIndex(l => l.levelIdentifier == currentIdentifier);
+        int currentIndex = _allManifestLevels.FindIndex(l => l.levelIdentifier == currentIdentifier);
 
         int nextIndex = currentIndex + 1;
-        if (nextIndex >= AllLevelDatas.Count)
+        if (nextIndex >= _allManifestLevels.Count)
             nextIndex = 0;
 
         PlayLevelAtIndex(nextIndex);
@@ -150,20 +168,48 @@ public class SaveStateManager : MonoBehaviour
 
     private void PlayLevelAtIndex(int levelIndex)
     {
-        if (levelIndex < 0 || levelIndex >= AllLevelDatas.Count)
+        if (levelIndex < 0 || levelIndex >= _allManifestLevels.Count)
         {
-            Debug.LogError($"Trying to load level #{levelIndex} but there are {AllLevelDatas.Count} different levels!");
+            Debug.LogError($"Trying to load level #{levelIndex} but there are {_allManifestLevels.Count} different levels!");
             return;
         }
         
-        LevelData levelData = AllLevelDatas[levelIndex];
+        LevelData levelData = _allManifestLevels[levelIndex];
         
         gridLevel.SetupGridForLevel(levelData);
     }
 
-    public int LevelCount()
+    public void LoadPortalManifest()
     {
-        return AllLevelDatas.Count;
+        LoadLevelManifest(PortalManifestPath, PortalManifestResourceString, out _portalLevelManifest);
+
+        _allPortalLevels = new();
+        foreach (string id in _portalLevelManifest.levelIdentifiers)
+        {
+            if (LevelDatas.TryGetValue(id, out LevelData levelData))
+                _allPortalLevels.Add(levelData);
+            else
+                Debug.LogWarning($"Portal manifest references unknown level: {id}");
+        }
+    }
+
+    public void StartPortalChallenge()
+    {
+        LoadPortalManifest();
+
+        _currentPortalIndex = 0;
+
+        LevelData levelData = _allPortalLevels[_currentPortalIndex];
+        gridLevel.SetupGridForLevel(levelData, true);
+    }
+
+    public void PlayNextPortalLevel()
+    {
+        _currentPortalIndex++;
+        
+        LevelData levelData = _allPortalLevels[_currentPortalIndex];
+        
+        gridLevel.SetupGridForLevel(levelData, true);
     }
 
     public void UpdateLevelWithChanges(LevelData data, LevelData updatedLevel)
@@ -208,6 +254,21 @@ public class SaveStateManager : MonoBehaviour
         {
             PlayerSaveState.FeatureUnlockUndoAndRestart = true;
         }
+
+        if (totalLevelsComplete >= _allManifestLevels.Count)
+        {
+            PlayerSaveState.FeatureUnlockPortalMode = true;
+        }
+    }
+
+    public bool IsOnFinalPortalLevel()
+    {
+        return _currentPortalIndex == _allPortalLevels.Count - 1;
+    }
+
+    public float GetPortalTimeScore()
+    {
+        return 4.44f;
     }
 
     private void WriteSaveState()

@@ -118,15 +118,15 @@ RectTransform:
   m_GameObject: {fileID: 1417502028178372464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7583392084297247680}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.043, y: 0.054}
-  m_SizeDelta: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.025, y: 0.008}
+  m_SizeDelta: {x: 1.3, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &4915287511412852912
 MeshRenderer:
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 55
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 72f81be8b0bbc4785a52130ab5412234, type: 2}
   m_sharedMaterial: {fileID: -4857648117796595063, guid: 72f81be8b0bbc4785a52130ab5412234, type: 2}
@@ -224,12 +224,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 10.4
   m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 6
-  m_fontSizeMax: 10
+  m_fontSizeMin: 8
+  m_fontSizeMax: 16
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

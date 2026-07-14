@@ -10,7 +10,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public EnemyPatternSystem EnemyPatternSystem;
     
     private LevelData _levelData;
-    private bool _isPortalLevel;
+    public bool IsPortalLevel { get; private set; }
     
     public GridCell cellPrefab;
     public GridPiece playerPrefab;
@@ -84,7 +84,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         Debug.Log($"Loading Level: {data.levelIdentifier}");
         
         _levelData = data;
-        _isPortalLevel = isPortalLevel;
+        IsPortalLevel = isPortalLevel;
         _isPlayerDamaged = false;
         _validCellsFromHover = new List<GridCell>();
         
@@ -152,7 +152,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     public void AddPieceToCell(GridCell cell, GridPiece gridPiecePrefab)
     {
         // Horrible hack I will maybe fix later
-        if (gridPiecePrefab == goalPrefab && _isPortalLevel)
+        if (gridPiecePrefab == goalPrefab && IsPortalLevel)
             gridPiecePrefab = portalPrefab;
         
         GridPiece gridPiece = Instantiate(gridPiecePrefab, cell.transform.position, Quaternion.identity,
@@ -166,7 +166,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
                 SetupPlayer(gridPiece.GetComponent<PlayerScript>(), cell, gridPiece);
                 break;
             case PieceType.Goal:
-                if (_isPortalLevel) PortalGoal = gridPiece.GetComponent<PortalGoal>();
+                if (IsPortalLevel) PortalGoal = gridPiece.GetComponent<PortalGoal>();
                 break;
             case PieceType.Item:
                 gridPiece.sprite.AddComponent<FloatingEffect>();
@@ -205,7 +205,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
 
     public void RestartLevel()
     {
-        SetupGridForLevel(_levelData);
+        SetupGridForLevel(_levelData, IsPortalLevel);
     }
 
     public void MouseDownInGridCell(GridCell gridCell)
@@ -368,6 +368,9 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             SaveStateManager.Instance.SetLevelState(_levelData.levelIdentifier, true, MoveCounter, isPerfect);
             
             BlitzUI.Instance.DisplayPlayerVictory();
+        } else if (MoveCounter >= _levelData.moveTarget)
+        {
+            BlitzUI.Instance.DisplayPlayerDefeat(BlitzUI.DefeatReasonPortal);
         } else if (_isPlayerDamaged)
         {
             BlitzUI.Instance.DisplayPlayerDefeat();

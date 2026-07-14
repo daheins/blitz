@@ -13,7 +13,7 @@ public class LevelButton : MonoBehaviour
     {
         LevelData = levelData;
 
-        levelText.text = $"{SaveStateManager.Instance.AllLevelDatas.IndexOf(levelData) + 1}";
+        levelText.text = $"{SaveStateManager.Instance.GetManifestLevels().IndexOf(levelData) + 1}";
 
         UpdateState(false, false);
     }

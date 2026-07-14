@@ -3,21 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlitzUI : MonoBehaviour
 {
+    public const string DefeatReasonSpikes = "You stepped on spikes and died!";
+    public const string DefeatReasonPortal = "The portal closed without you!";
+    public const string DefeatReasonEnemy = "You got killed by an enemy!";
+    public const string DefeatReasonDamage = "You died!";
+        
     public static BlitzUI Instance;
     
     public GridLevel gridLevel;
     public GameObject victoryNode;
     public GameObject defeatNode;
+    
+    // Portal Results
+    public GameObject portalResultsNode;
+    public TextMeshProUGUI totalPortalLabel;
+    public TextMeshProUGUI portalTimeScoreLabel;
 
     public InventoryItemIcon itemIconPrefab;
     public GameObject inventoryParent;
 
-    // public GameObject moveCounterParent;
-    // public TextMeshProUGUI moveCounterLabel;
-    // public TextMeshProUGUI moveTargetLabel;
+    public TextMeshProUGUI defeatTextLabel;
     
     public GameObject undoAndRestartInfoNode;
 
@@ -32,6 +41,8 @@ public class BlitzUI : MonoBehaviour
     {
         victoryNode.SetActive(false);
         defeatNode.SetActive(false);
+        
+        portalResultsNode.SetActive(false);
         
         ClearInventoryItemIcons();
         UpdateMoveCounter();
@@ -57,9 +68,11 @@ public class BlitzUI : MonoBehaviour
         victoryNode.SetActive(true);
     }
     
-    public void DisplayPlayerDefeat()
+    public void DisplayPlayerDefeat(string defeatReason = DefeatReasonDamage)
     {
         defeatNode.SetActive(true);
+
+        defeatTextLabel.text = defeatReason;
     }
 
     public void HideVictoryAndDefeatNodes()
@@ -72,7 +85,34 @@ public class BlitzUI : MonoBehaviour
     {
         victoryNode.SetActive(false);
 
-        SaveStateManager.Instance.PlayNextLevel();
+        if (gridLevel.IsPortalLevel)
+        {
+            if (SaveStateManager.Instance.IsOnFinalPortalLevel())
+            {
+                ShowPortalResults();
+            }
+            else
+            {
+                SaveStateManager.Instance.PlayNextPortalLevel();
+            }
+        }
+        else
+        {
+            SaveStateManager.Instance.PlayNextLevel();
+        }
+    }
+
+    private void ShowPortalResults()
+    {
+        portalResultsNode.SetActive(true);
+
+        totalPortalLabel.text = $"{SaveStateManager.Instance.GetManifestLevels(true).Count}";
+        portalTimeScoreLabel.text = $"{SaveStateManager.Instance.GetPortalTimeScore()}s";
+    }
+
+    public void DidTapPortalChallengeOverButton()
+    {
+        MenuViewManager.Instance.GoToHomeScreen();
     }
 
     public void AddInventoryItemIcon(GridPiece gridPiece)
@@ -102,18 +142,7 @@ public class BlitzUI : MonoBehaviour
 
     public void UpdateMoveCounter()
     {
-        // LevelData levelData = gridLevel.GetLevelData();
-        // if (levelData.moveTarget <= 0 || !SaveStateManager.Instance.PlayerSaveState.FeatureUnlockHighScores)
-        // {
-        //     moveCounterParent.SetActive(false);
-        //     return;
-        // }
-        //
-        // gridLevel.PortalGoal?.UpdatePortal(gridLevel);
-        //
-        // moveCounterParent.SetActive(true);
-        // moveCounterLabel.text = $"{gridLevel.MoveCounter}";
-        // moveTargetLabel.text = $"{levelData.moveTarget}";
+        gridLevel.PortalGoal?.UpdatePortal(gridLevel);
     }
 
     public void UpdateUndoAndRestartState()

@@ -36,7 +36,7 @@ public class MenuViewManager : MonoBehaviour
     {
         _levelButtons = new();
         
-        foreach (var levelData in SaveStateManager.Instance.AllLevelDatas)
+        foreach (var levelData in SaveStateManager.Instance.GetManifestLevels())
         {
             LevelButton levelButton = Instantiate(levelButtonPrefab, levelsParent);
             levelButton.LoadWithLevelData(levelData);
@@ -70,6 +70,10 @@ public class MenuViewManager : MonoBehaviour
     public void GoToPortalMode()
     {
         if (!SaveStateManager.Instance.PlayerSaveState.FeatureUnlockPortalMode) return;
+        
+        HideAllMenus();
+        
+        SaveStateManager.Instance.StartPortalChallenge();
     }
     
     private void UpdateAllLevelButtons()
