@@ -17,6 +17,9 @@ public class BlitzUI : MonoBehaviour
     public GridLevel gridLevel;
     public GameObject victoryNode;
     public GameObject defeatNode;
+
+    public GameObject portalTimerNode;
+    public TextMeshProUGUI totalChallengeTimerLabel;
     
     // Portal Results
     public GameObject portalResultsNode;
@@ -32,6 +35,8 @@ public class BlitzUI : MonoBehaviour
 
     private List<InventoryItemIcon> _inventoryIcons = new List<InventoryItemIcon>();
 
+    public GameTimer portalChallengeTimer;
+
     private void Awake()
     {
         Instance = this;
@@ -42,11 +47,18 @@ public class BlitzUI : MonoBehaviour
         victoryNode.SetActive(false);
         defeatNode.SetActive(false);
         
+        portalTimerNode.SetActive(gridLevel.IsPortalLevel);
+        
         portalResultsNode.SetActive(false);
         
         ClearInventoryItemIcons();
         UpdateMoveCounter();
         UpdateUndoAndRestartState();
+    }
+
+    public void StartPortalTimer()
+    {
+        portalChallengeTimer.StartTimer();
     }
     
     
@@ -61,11 +73,18 @@ public class BlitzUI : MonoBehaviour
         {
             gridLevel.RestartLevel();
         }
+
+        if (gridLevel.IsPortalLevel)
+        {
+            totalChallengeTimerLabel.text = portalChallengeTimer.GetFormattedTime();
+        }
     }
     
     public void DisplayPlayerVictory()
     {
         victoryNode.SetActive(true);
+        
+        portalChallengeTimer.PauseTimer();
     }
     
     public void DisplayPlayerDefeat(string defeatReason = DefeatReasonDamage)
@@ -94,6 +113,7 @@ public class BlitzUI : MonoBehaviour
             else
             {
                 SaveStateManager.Instance.PlayNextPortalLevel();
+                portalChallengeTimer.ResumeTimer();
             }
         }
         else
@@ -104,10 +124,11 @@ public class BlitzUI : MonoBehaviour
 
     private void ShowPortalResults()
     {
+        Debug.Log("showing portal results");
         portalResultsNode.SetActive(true);
 
         totalPortalLabel.text = $"{SaveStateManager.Instance.GetManifestLevels(true).Count}";
-        portalTimeScoreLabel.text = $"{SaveStateManager.Instance.GetPortalTimeScore()}s";
+        portalTimeScoreLabel.text = portalChallengeTimer.GetFormattedTime();
     }
 
     public void DidTapPortalChallengeOverButton()

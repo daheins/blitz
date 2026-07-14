@@ -201,6 +201,8 @@ public class SaveStateManager : MonoBehaviour
 
         LevelData levelData = _allPortalLevels[_currentPortalIndex];
         gridLevel.SetupGridForLevel(levelData, true);
+
+        BlitzUI.Instance.StartPortalTimer();
     }
 
     public void PlayNextPortalLevel()
@@ -264,11 +266,6 @@ public class SaveStateManager : MonoBehaviour
     public bool IsOnFinalPortalLevel()
     {
         return _currentPortalIndex == _allPortalLevels.Count - 1;
-    }
-
-    public float GetPortalTimeScore()
-    {
-        return 4.44f;
     }
 
     private void WriteSaveState()

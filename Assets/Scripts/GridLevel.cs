@@ -368,7 +368,7 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
             SaveStateManager.Instance.SetLevelState(_levelData.levelIdentifier, true, MoveCounter, isPerfect);
             
             BlitzUI.Instance.DisplayPlayerVictory();
-        } else if (MoveCounter >= _levelData.moveTarget)
+        } else if (IsPortalLevel && MoveCounter >= _levelData.moveTarget)
         {
             BlitzUI.Instance.DisplayPlayerDefeat(BlitzUI.DefeatReasonPortal);
         } else if (_isPlayerDamaged)
