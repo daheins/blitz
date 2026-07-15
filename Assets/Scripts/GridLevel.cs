@@ -364,8 +364,11 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
         {
             UpdateMoveTarget();
 
-            bool isPerfect = MoveCounter == _levelData.moveTarget;
-            SaveStateManager.Instance.SetLevelState(_levelData.levelIdentifier, true, MoveCounter, isPerfect);
+            if (!IsPortalLevel)
+            {
+                bool isPerfect = MoveCounter == _levelData.moveTarget;
+                SaveStateManager.Instance.SetLevelState(_levelData.levelIdentifier, true, MoveCounter, isPerfect);
+            }
             
             BlitzUI.Instance.DisplayPlayerVictory();
         } else if (IsPortalLevel && MoveCounter >= _levelData.moveTarget)
