@@ -472,6 +472,12 @@ public class GridLevel : MonoBehaviour, IGridCellDelegate
     {
         _threatenedEnemyCells = new();
 
+
+        foreach (GridCell cell in Cells)
+        {
+            cell.SetThreatenedState(false);
+        }
+
         foreach (GridCell cell in Cells)
         {
             if (cell.TerrainPiece != null && cell.TerrainPiece.terrainType == TerrainType.Spikes)

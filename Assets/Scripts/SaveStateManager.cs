@@ -46,25 +46,6 @@ public class SaveStateManager : MonoBehaviour
         LoadSaveState();
     }
 
-    private void Start()
-    {
-        int levelIndexToStart = 0;
-        if (DevelopmentTools.Instance.startAtLastLevel)
-        {
-            levelIndexToStart = _allManifestLevels.Count - 1;
-        }
-        else
-        {
-            // Claude did this, it's messy but works for now
-            int firstIncomplete = _allManifestLevels.FindIndex(levelData => 
-                PlayerSaveState.LevelProgressStates.TryGetValue(levelData.levelIdentifier, out LevelState state) && !state.isComplete);
-
-            if (firstIncomplete != -1)
-                levelIndexToStart = firstIncomplete;
-        }
-        PlayLevelAtIndex(levelIndexToStart);
-    }
-
     private void LoadSaveState()
     {
         PlayerSaveState saveState;

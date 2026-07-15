@@ -27,6 +27,8 @@ public class MenuViewManager : MonoBehaviour
     {
         HideAllMenus();
         
+        LevelEditor.Instance.gameObject.SetActive(DevelopmentTools.Instance.showDebugUI);
+        
         GoToHomeScreen();
 
         CreateLevelButtons();

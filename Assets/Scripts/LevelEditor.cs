@@ -32,12 +32,6 @@ public class LevelEditor : MonoBehaviour, IItemButtonDelegate
 
     private void Start()
     {
-        if (!DevelopmentTools.Instance.showDebugUI)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-        
         UpdateView();
     }
 

@@ -20,6 +20,7 @@ public class BlitzUI : MonoBehaviour
 
     public GameObject portalTimerNode;
     public TextMeshProUGUI totalChallengeTimerLabel;
+    public TextMeshProUGUI levelCounterLabel;
     
     // Portal Results
     public GameObject portalResultsNode;
@@ -54,13 +55,12 @@ public class BlitzUI : MonoBehaviour
         ClearInventoryItemIcons();
         UpdateMoveCounter();
         UpdateUndoAndRestartState();
-    }
 
-    public void StartPortalTimer()
-    {
-        portalChallengeTimer.StartTimer();
+        if (gridLevel.IsPortalLevel)
+        {
+            UpdatePortalLevelCounter();
+        }
     }
-    
     
     void Update()
     {
@@ -78,6 +78,19 @@ public class BlitzUI : MonoBehaviour
         {
             totalChallengeTimerLabel.text = portalChallengeTimer.GetFormattedTime();
         }
+    }
+
+    public void StartPortalTimer()
+    {
+        portalChallengeTimer.StartTimer();
+    }
+
+    private void UpdatePortalLevelCounter()
+    {
+        List<LevelData> portalLevels = SaveStateManager.Instance.GetManifestLevels(true);
+        int levelIndex = portalLevels.IndexOf(gridLevel.GetLevelData());
+        
+        levelCounterLabel.text = $"{levelIndex + 1}/{portalLevels.Count}";
     }
     
     public void DisplayPlayerVictory()
