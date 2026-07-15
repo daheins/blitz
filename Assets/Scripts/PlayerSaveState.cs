@@ -15,6 +15,6 @@ public class PlayerSaveState
     public bool FeatureUnlockHighScores = false;
     public const int KLevelsToUnlockHighScores = 10;
     public bool FeatureUnlockUndoAndRestart = false;
-    public const int KLevelsToUnlockUndoAndRestart = 2;
+    public const int KLevelsToUnlockUndoAndRestart = 1;
     public bool FeatureUnlockPortalMode = false;
 }
